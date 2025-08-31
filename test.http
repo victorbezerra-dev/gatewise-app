@@ -1,0 +1,7 @@
+POST http://localhost:8080/realms/master/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=authorization_code
+&code=b4d1b323-3c28-4428-9adb-6b7b03387c1d.a9397981-18e0-42d3-b9ad-2014ba2d52d2.ffd7967f-1ff2-4bd7-8f41-0edcf3f4a59e
+&client_id=gatewise-app
+&redirect_uri=com.gatewise.app://auth
