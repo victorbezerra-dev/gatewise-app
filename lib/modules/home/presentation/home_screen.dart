@@ -149,7 +149,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
           const SizedBox(height: 16),
           state.openLabStatus.when(
-            loading: () => const CircularProgressIndicator(),
+            loading: () => Center(
+              child: const CircularProgressIndicator(color: Colors.white),
+            ),
             error: (err, _) => Column(
               children: [
                 const Icon(Icons.error, color: Colors.red, size: 48),

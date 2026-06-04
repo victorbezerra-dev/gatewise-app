@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/providers/custom_http_client_provider.dart';
+import '../../host/presentation/dialog_notifier.dart';
 import '../domain/entities/open_lab_request.dart';
 import '../domain/interfaces/signing_service.dart';
 import '../domain/value_objects/access_grant_status_vo.dart';
@@ -39,14 +40,16 @@ final homeNotifierProvider = StateNotifierProvider<HomeNotifier, HomeState>(
   (ref) => HomeNotifier(
     ref.read(labRepositoryProvider),
     ref.read(signingServiceProvider),
+    ref,
   ),
 );
 
 class HomeNotifier extends StateNotifier<HomeState> {
   final LabRepository _repository;
   final SigningService _signingService;
+  final Ref ref;
 
-  HomeNotifier(this._repository, this._signingService)
+  HomeNotifier(this._repository, this._signingService, this.ref)
     : super(
         HomeState(
           accessStatus: AccessStatusUi.pendingRequest,
@@ -94,6 +97,7 @@ class HomeNotifier extends StateNotifier<HomeState> {
   }
 
   Future<void> openLab() async {
+    ref.read(dialogProvider.notifier).showLoading();
     state = state.copyWith(openLabStatus: const AsyncLoading());
     try {
       final timestamp = DateTime.now().millisecondsSinceEpoch;
