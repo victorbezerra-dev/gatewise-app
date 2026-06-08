@@ -24,22 +24,30 @@ class AuthFlowNotifier extends StateNotifier<AsyncValue<void>> {
   AuthFlowNotifier(this._authNotifier, this._userRepository, this._keyManager)
     : super(const AsyncData(null));
 
-  Future<void> loginFlow() async {
+  Future<void> _initializeSession() async {
+    final token = await SecureStore.accessToken;
+    if (token == null) throw Exception("Token inválido após autenticação.");
+
+    await _userRepository.fetchAndSaveUserProfile();
+
+    await _keyManager.ensureKeyPairExists();
+    final publicKey = await _keyManager.getPublicKey();
+    if (publicKey == null) throw Exception("Erro ao obter chave pública.");
+
+    await _userRepository.updatePublicKey(publicKey);
+  }
+
+  Future<void> loginFlow() => _runFlow(_authNotifier.login);
+
+  Future<void> registerFlow() => _runFlow(_authNotifier.register);
+
+  Future<void> _runFlow(Future<void> Function() authenticate) async {
     state = const AsyncLoading();
     try {
-      await _authNotifier.login();
-
-      final token = await SecureStore.accessToken;
-      if (token == null) throw Exception("Token inválido após login.");
-
-      await _userRepository.fetchAndSaveUserProfile();
-
-      await _keyManager.ensureKeyPairExists();
-      final publicKey = await _keyManager.getPublicKey();
-      if (publicKey == null) throw Exception("Erro ao obter chave pública.");
-
-      await _userRepository.updatePublicKey(publicKey);
-
+      await authenticate();
+      await _initializeSession();
+      state = const AsyncData(null);
+    } on AuthCancelledException {
       state = const AsyncData(null);
     } catch (e, st) {
       state = AsyncError(e, st);

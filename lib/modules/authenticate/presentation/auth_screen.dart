@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/auth/auth_notifier.dart';
 import '../../../core/auth/auth_state.dart';
+import '../../../core/providers/user_profile_provider.dart';
 import 'auth_flow_notifier.dart';
 
 class AuthLoginScreen extends ConsumerWidget {
@@ -12,7 +13,6 @@ class AuthLoginScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final authState = ref.watch(authProvider);
     final loginState = ref.watch(authFlowNotifierProvider);
     final loginNotifier = ref.read(authFlowNotifierProvider.notifier);
     final logoWidth = MediaQuery.of(context).size.width * 0.6;
@@ -28,7 +28,16 @@ class AuthLoginScreen extends ConsumerWidget {
     ref.listen<AsyncValue<void>>(authFlowNotifierProvider, (prev, next) {
       next.whenOrNull(
         data: (_) {
+          final authState = ref.read(authProvider);
+          if (authState is! AuthAuthenticated) {
+            log(
+              "Login flow finished without authenticated user. Staying on login screen.",
+            );
+            return;
+          }
+
           log("Login flow completed successfully.");
+          ref.invalidate(userProfileProvider);
           context.go('/main');
         },
         error: (err, _) {
@@ -65,16 +74,6 @@ class AuthLoginScreen extends ConsumerWidget {
                     offset: const Offset(0, -80),
                     child: Column(
                       children: [
-                        if (authState is AuthUnauthenticated &&
-                            authState.error != null)
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 16),
-                            child: Text(
-                              'Erro: ${authState.error}',
-                              style: const TextStyle(color: Colors.redAccent),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
                         const Text(
                           'Acesse sua conta com segurança.',
                           style: TextStyle(color: Colors.white70, fontSize: 16),
@@ -87,6 +86,9 @@ class AuthLoginScreen extends ConsumerWidget {
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Color(0xFF4D9EF6),
+                              elevation: 0,
+                              shadowColor: Colors.transparent,
+                              surfaceTintColor: Colors.transparent,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
@@ -113,6 +115,38 @@ class AuthLoginScreen extends ConsumerWidget {
                                     ),
                                   ),
                           ),
+                        ),
+                        const SizedBox(height: 20),
+                        Wrap(
+                          alignment: WrapAlignment.center,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: [
+                            const Text(
+                              'Ainda não tem cadastro?',
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 14,
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: isLoading
+                                  ? null
+                                  : () => loginNotifier.registerFlow(),
+                              style: TextButton.styleFrom(
+                                foregroundColor: const Color(0xFF4D9EF6),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 4,
+                                ),
+                              ),
+                              child: const Text(
+                                'Cadastre-se',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
