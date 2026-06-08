@@ -41,6 +41,24 @@ class AuthNotifier extends StateNotifier<AuthState> {
     );
   }
 
+  Uri _logoutUri({String? idToken}) {
+    final issuerUri = Uri.parse(AuthConfig.issuer);
+    final normalizedIssuerPath = issuerUri.path.replaceAll(RegExp(r'/+$'), '');
+    final queryParameters = <String, String>{
+      'client_id': AuthConfig.clientId,
+      'post_logout_redirect_uri': AuthConfig.redirectUri,
+    };
+
+    if (idToken != null && idToken.isNotEmpty) {
+      queryParameters['id_token_hint'] = idToken;
+    }
+
+    return issuerUri.replace(
+      path: '$normalizedIssuerPath/protocol/openid-connect/logout',
+      queryParameters: queryParameters,
+    );
+  }
+
   Future<void> _authenticate({bool openRegistration = false}) async {
     final issuer = await Issuer.discover(Uri.parse(AuthConfig.issuer));
     final client = Client(issuer, AuthConfig.clientId);
@@ -148,7 +166,23 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> logout() async {
-    await SecureStore.clearAll();
-    state = AuthUnauthenticated();
+    state = AuthLoading();
+    final idToken = await SecureStore.idToken;
+
+    try {
+      await FlutterWebAuth2.authenticate(
+        url: _logoutUri(idToken: idToken).toString(),
+        callbackUrlScheme: AuthConfig.redirectUri.split('://').first,
+        options: const FlutterWebAuth2Options(
+          preferEphemeral: true,
+          intentFlags: ephemeralIntentFlags,
+        ),
+      );
+    } catch (e) {
+      log('Error ending Keycloak session: $e');
+    } finally {
+      await SecureStore.clearAll();
+      state = AuthUnauthenticated();
+    }
   }
 }

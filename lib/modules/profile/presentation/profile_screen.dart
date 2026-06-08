@@ -119,6 +119,7 @@ class ProfileScreen extends ConsumerWidget {
                   _LogoutButton(
                     onPressed: () async {
                       await ref.read(authProvider.notifier).logout();
+                      ref.invalidate(userProfileProvider);
                       if (context.mounted) {
                         context.go('/auth-login');
                       }
