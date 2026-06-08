@@ -17,7 +17,7 @@ class LabRepository {
     }
 
     final response = await httpClient.post(
-      '/api/Labs/1/open',
+      '/api/Spaces/1/open',
       body: jsonEncode(request.toJson()),
       headers: {
         'Authorization': 'Bearer $accessToken',
