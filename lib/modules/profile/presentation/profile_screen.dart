@@ -7,130 +7,125 @@ import '../../../core/config/app_config.dart';
 import '../../../core/domain/entities/user_entity.dart';
 import '../../../core/domain/value_objects/user_type_vo.dart';
 import '../../../core/providers/user_profile_provider.dart';
+import '../../../core/theme/gatewise_theme.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
-
-  static const _backgroundColor = Color(0xFF101C2B);
-  static const _surfaceColor = Color(0xFF17283D);
-  static const _surfaceColorLight = Color(0xFF1D314A);
-  static const _primaryColor = Color(0xFF3C87CF);
-  static const _dangerColor = Color(0xFFE85D75);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final profileAsync = ref.watch(userProfileProvider);
 
-    return ColoredBox(
-      color: _backgroundColor,
-      child: profileAsync.when(
-        loading: () => const _ProfileLoadingView(),
-        error: (error, _) => _ProfileMessageView(
-          icon: Icons.error_outline_rounded,
-          title: 'Erro ao carregar perfil',
-          message: error.toString(),
-          actionLabel: 'Tentar novamente',
-          onAction: () => ref.invalidate(userProfileProvider),
-        ),
-        data: (user) {
-          if (user == null) {
-            return const _ProfileMessageView(
-              icon: Icons.person_off_outlined,
-              title: 'Usuário não encontrado',
-              message: 'Faça login novamente para atualizar seus dados.',
-            );
-          }
+    return profileAsync.when(
+      loading: () => const _ProfileLoadingView(),
+      error: (error, _) => _ProfileMessageView(
+        icon: Icons.error_outline_rounded,
+        title: 'Erro ao carregar perfil',
+        message: error.toString(),
+        actionLabel: 'Tentar novamente',
+        onAction: () => ref.invalidate(userProfileProvider),
+      ),
+      data: (user) {
+        if (user == null) {
+          return const _ProfileMessageView(
+            icon: Icons.person_off_outlined,
+            title: 'Usuário não encontrado',
+            message: 'Faça login novamente para atualizar seus dados.',
+          );
+        }
 
-          return RefreshIndicator(
-            color: _primaryColor,
-            backgroundColor: _surfaceColor,
-            onRefresh: () async => ref.refresh(userProfileProvider.future),
-            child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              padding: const EdgeInsets.fromLTRB(18, 8, 18, 104),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const SizedBox(height: 25),
-                  const Text(
-                    'Perfil',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
+        return RefreshIndicator(
+          color: GateWiseColors.electricBlue,
+          backgroundColor: GateWiseColors.surface,
+          onRefresh: () async => ref.refresh(userProfileProvider.future),
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.fromLTRB(18, 8, 18, 104),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 18),
+                const Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Meu Perfil',
+                        style: TextStyle(
+                          color: GateWiseColors.textPrimary,
+                          fontSize: 25,
+                          height: 1.05,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: -0.8,
+                        ),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 14),
-                  _ProfileHeader(user: user),
+                  ],
+                ),
+                const SizedBox(height: 18),
+                _ProfileHeader(user: user),
+                const SizedBox(height: 18),
+                const _SectionTitle(title: 'Dados da conta'),
+                const SizedBox(height: 8),
+                _InfoList(
+                  children: [
+                    _InfoRow(
+                      icon: Icons.person_outline_rounded,
+                      label: 'Nome',
+                      value: user.name,
+                    ),
+                    _InfoRow(
+                      icon: Icons.mail_outline_rounded,
+                      label: 'E-mail',
+                      value: user.email,
+                    ),
+                    _InfoRow(
+                      icon: Icons.badge_outlined,
+                      label: 'Matrícula',
+                      value: user.registrationNumber,
+                      showDivider: false,
+                    ),
+                  ],
+                ),
+                if (_hasDeviceInfo(user)) ...[
                   const SizedBox(height: 18),
-                  _SectionTitle(title: 'Dados da conta'),
+                  const _SectionTitle(title: 'Dispositivo'),
                   const SizedBox(height: 8),
                   _InfoList(
                     children: [
                       _InfoRow(
-                        icon: Icons.person_outline_rounded,
-                        label: 'Nome',
-                        value: user.name,
+                        icon: Icons.phone_android_rounded,
+                        label: 'Modelo',
+                        value: user.deviceModel,
                       ),
                       _InfoRow(
-                        icon: Icons.mail_outline_rounded,
-                        label: 'E-mail',
-                        value: user.email,
+                        icon: Icons.precision_manufacturing_outlined,
+                        label: 'Fabricante',
+                        value: user.deviceManufactureName,
                       ),
                       _InfoRow(
-                        icon: Icons.badge_outlined,
-                        label: 'Matrícula',
-                        value: user.registrationNumber,
-                      ),
-                      _InfoRow(
-                        icon: Icons.verified_user_outlined,
-                        label: 'Tipo',
-                        value: _safeUserTypeLabel(user.userType),
+                        icon: Icons.memory_rounded,
+                        label: 'Sistema',
+                        value: _formatOperationalSystem(user),
                         showDivider: false,
                       ),
                     ],
                   ),
-                  if (_hasDeviceInfo(user)) ...[
-                    const SizedBox(height: 18),
-                    _SectionTitle(title: 'Dispositivo'),
-                    const SizedBox(height: 8),
-                    _InfoList(
-                      children: [
-                        _InfoRow(
-                          icon: Icons.phone_android_rounded,
-                          label: 'Modelo',
-                          value: user.deviceModel,
-                        ),
-                        _InfoRow(
-                          icon: Icons.precision_manufacturing_outlined,
-                          label: 'Fabricante',
-                          value: user.deviceManufactureName,
-                        ),
-                        _InfoRow(
-                          icon: Icons.memory_rounded,
-                          label: 'Sistema',
-                          value: _formatOperationalSystem(user),
-                          showDivider: false,
-                        ),
-                      ],
-                    ),
-                  ],
-                  const SizedBox(height: 22),
-                  _LogoutButton(
-                    onPressed: () async {
-                      await ref.read(authProvider.notifier).logout();
-                      ref.invalidate(userProfileProvider);
-                      if (context.mounted) {
-                        context.go('/auth-login');
-                      }
-                    },
-                  ),
                 ],
-              ),
+                const SizedBox(height: 22),
+                _LogoutButton(
+                  onPressed: () async {
+                    await ref.read(authProvider.notifier).logout();
+                    ref.invalidate(userProfileProvider);
+                    if (context.mounted) {
+                      context.go('/auth-login');
+                    }
+                  },
+                ),
+              ],
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -167,13 +162,10 @@ class _ProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GlassPanel(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: ProfileScreen._surfaceColor,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
-      ),
+      borderRadius: 22,
+      opacity: 0.68,
       child: Row(
         children: [
           _ProfileAvatar(user: user),
@@ -231,12 +223,19 @@ class _ProfileAvatar extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(
-          color: ProfileScreen._primaryColor.withValues(alpha: 0.65),
+          color: GateWiseColors.electricBlue.withValues(alpha: 0.72),
           width: 2,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: GateWiseColors.electricBlue.withValues(alpha: 0.2),
+            blurRadius: 18,
+            offset: const Offset(0, 8),
+          ),
+        ],
       ),
       child: CircleAvatar(
-        backgroundColor: ProfileScreen._surfaceColorLight,
+        backgroundColor: GateWiseColors.surfaceLight,
         backgroundImage: avatarUrl != null ? NetworkImage(avatarUrl) : null,
         child: avatarUrl == null
             ? Text(
@@ -288,10 +287,10 @@ class _CompactBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
       decoration: BoxDecoration(
-        color: ProfileScreen._primaryColor.withValues(alpha: 0.14),
+        color: GateWiseColors.electricBlue.withValues(alpha: 0.14),
         borderRadius: BorderRadius.circular(999),
         border: Border.all(
-          color: ProfileScreen._primaryColor.withValues(alpha: 0.28),
+          color: GateWiseColors.electricBlue.withValues(alpha: 0.28),
         ),
       ),
       child: Row(
@@ -299,14 +298,14 @@ class _CompactBadge extends StatelessWidget {
         children: [
           const Icon(
             Icons.shield_outlined,
-            color: ProfileScreen._primaryColor,
+            color: GateWiseColors.electricBlue,
             size: 13,
           ),
           const SizedBox(width: 5),
           Text(
             text,
             style: const TextStyle(
-              color: ProfileScreen._primaryColor,
+              color: GateWiseColors.electricBlue,
               fontSize: 11,
               fontWeight: FontWeight.w600,
             ),
@@ -342,12 +341,10 @@ class _InfoList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: ProfileScreen._surfaceColor,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.07)),
-      ),
+    return GlassPanel(
+      padding: EdgeInsets.zero,
+      borderRadius: 18,
+      opacity: 0.56,
       child: Column(children: children),
     );
   }
@@ -378,7 +375,7 @@ class _InfoRow extends StatelessWidget {
             children: [
               Icon(
                 icon,
-                color: ProfileScreen._primaryColor.withValues(alpha: 0.9),
+                color: GateWiseColors.electricBlue.withValues(alpha: 0.9),
                 size: 19,
               ),
               const SizedBox(width: 12),
@@ -434,9 +431,9 @@ class _LogoutButton extends StatelessWidget {
       child: OutlinedButton.icon(
         onPressed: onPressed,
         style: OutlinedButton.styleFrom(
-          foregroundColor: ProfileScreen._dangerColor,
+          foregroundColor: GateWiseColors.danger,
           side: BorderSide(
-            color: ProfileScreen._dangerColor.withValues(alpha: 0.42),
+            color: GateWiseColors.danger.withValues(alpha: 0.42),
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
@@ -465,14 +462,14 @@ class _ProfileLoadingView extends StatelessWidget {
             width: 26,
             height: 26,
             child: CircularProgressIndicator(
-              color: ProfileScreen._primaryColor,
+              color: GateWiseColors.electricBlue,
               strokeWidth: 2.4,
             ),
           ),
           SizedBox(height: 12),
           Text(
             'Carregando perfil...',
-            style: TextStyle(color: Colors.white70, fontSize: 13),
+            style: TextStyle(color: GateWiseColors.textSecondary, fontSize: 13),
           ),
         ],
       ),
@@ -500,17 +497,14 @@ class _ProfileMessageView extends StatelessWidget {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(22),
-        child: Container(
+        child: GlassPanel(
           padding: const EdgeInsets.all(18),
-          decoration: BoxDecoration(
-            color: ProfileScreen._surfaceColor,
-            borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
-          ),
+          borderRadius: 18,
+          opacity: 0.68,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(icon, size: 38, color: ProfileScreen._primaryColor),
+              Icon(icon, size: 38, color: GateWiseColors.electricBlue),
               const SizedBox(height: 12),
               Text(
                 title,

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:signalr_netcore/hub_connection.dart';
 
+import '../../../core/theme/gatewise_theme.dart';
 import '../../access_history/presentation/access_history_screen.dart';
 import '../../home/presentation/home_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
@@ -84,39 +85,55 @@ class _HostScreenState extends ConsumerState<HostScreen> {
     return Stack(
       children: [
         Scaffold(
-          backgroundColor: const Color(0xFF101C2B),
+          backgroundColor: GateWiseColors.background,
           extendBody: true,
-          body: Column(
-            children: [
-              SizedBox(height: 20),
-              Expanded(
-                child: PageView(
-                  controller: _pageController,
-                  physics: const NeverScrollableScrollPhysics(),
-                  children: const [
-                    HomeScreen(),
-                    AccessHistoryScreen(),
-                    ProfileScreen(),
-                  ],
+          body: TechBackground(
+            child: Column(
+              children: [
+                SafeArea(
+                  bottom: false,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 8, bottom: 10),
+                    child: Image.asset(
+                      'assets/images/gatewise-mini-logo.png',
+                      width: 130,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
                 ),
-              ),
-            ],
+                Expanded(
+                  child: PageView(
+                    controller: _pageController,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: const [
+                      HomeScreen(),
+                      AccessHistoryScreen(),
+                      ProfileScreen(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
           bottomNavigationBar: AnimatedNotchBottomBar(
             notchBottomBarController: _controller,
-            color: Colors.white,
+            color: GateWiseColors.surface,
             showLabel: true,
             textOverflow: TextOverflow.visible,
             maxLine: 1,
-            shadowElevation: 5,
+            shadowElevation: 0,
             kBottomRadius: 28.0,
-            notchColor: Colors.white,
+            notchColor: GateWiseColors.electricBlue,
             removeMargins: false,
             bottomBarWidth: 500,
             showShadow: false,
             durationInMilliSeconds: 300,
-            itemLabelStyle: const TextStyle(fontSize: 10),
-            elevation: 1,
+            itemLabelStyle: const TextStyle(
+              fontSize: 10,
+              color: GateWiseColors.textSecondary,
+              fontWeight: FontWeight.w700,
+            ),
+            elevation: 0,
             kIconSize: 24.0,
             onTap: (index) {
               _pageController.jumpToPage(index);
@@ -125,22 +142,34 @@ class _HostScreenState extends ConsumerState<HostScreen> {
               BottomBarItem(
                 inActiveItem: const Icon(
                   Icons.home_filled,
-                  color: Colors.blueGrey,
+                  color: GateWiseColors.textMuted,
                 ),
                 activeItem: const Icon(
                   Icons.home_filled,
-                  color: Color(0xFF101C2B),
+                  color: GateWiseColors.background,
                 ),
                 itemLabel: 'Início',
               ),
               BottomBarItem(
-                inActiveItem: const Icon(Icons.history, color: Colors.blueGrey),
-                activeItem: const Icon(Icons.history, color: Color(0xFF101C2B)),
+                inActiveItem: const Icon(
+                  Icons.history,
+                  color: GateWiseColors.textMuted,
+                ),
+                activeItem: const Icon(
+                  Icons.history,
+                  color: GateWiseColors.background,
+                ),
                 itemLabel: 'Histórico',
               ),
               BottomBarItem(
-                inActiveItem: const Icon(Icons.person, color: Colors.blueGrey),
-                activeItem: const Icon(Icons.person, color: Color(0xFF101C2B)),
+                inActiveItem: const Icon(
+                  Icons.person,
+                  color: GateWiseColors.textMuted,
+                ),
+                activeItem: const Icon(
+                  Icons.person,
+                  color: GateWiseColors.background,
+                ),
                 itemLabel: 'Perfil',
               ),
             ],

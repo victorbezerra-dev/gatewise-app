@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/auth/auth_notifier.dart';
 import '../../../core/auth/auth_state.dart';
 import '../../../core/providers/user_profile_provider.dart';
+import '../../../core/theme/gatewise_theme.dart';
 import 'auth_flow_notifier.dart';
 
 class AuthLoginScreen extends ConsumerWidget {
@@ -52,106 +53,114 @@ class AuthLoginScreen extends ConsumerWidget {
     final isLoading = loginState is AsyncLoading;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0B1C2C),
-      body: SafeArea(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 380),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Transform.translate(
-                    offset: const Offset(0, -30),
-                    child: Image.asset(
-                      'assets/images/gatewise-logo.png',
-                      width: logoWidth,
-                      fit: BoxFit.contain,
+      backgroundColor: GateWiseColors.background,
+      body: TechBackground(
+        child: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 410),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const TechStatusPill(
+                      label: 'Plataforma de automação IoT',
+                      icon: Icons.lock_outline_rounded,
                     ),
-                  ),
-                  Transform.translate(
-                    offset: const Offset(0, -80),
-                    child: Column(
-                      children: [
-                        const Text(
-                          'Acesse sua conta com segurança.',
-                          style: TextStyle(color: Colors.white70, fontSize: 16),
-                          textAlign: TextAlign.center,
+                    const SizedBox(height: 24),
+                    Container(
+                      padding: const EdgeInsets.all(18),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: RadialGradient(
+                          colors: [
+                            GateWiseColors.neonCyan.withValues(alpha: 0.2),
+                            GateWiseColors.electricBlue.withValues(alpha: 0.08),
+                            Colors.transparent,
+                          ],
                         ),
-                        const SizedBox(height: 32),
-                        SizedBox(
-                          width: double.infinity,
-                          height: 60,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xFF4D9EF6),
-                              elevation: 0,
-                              shadowColor: Colors.transparent,
-                              surfaceTintColor: Colors.transparent,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
+                      ),
+                      child: Image.asset(
+                        'assets/images/gatewise-logo.png',
+                        width: logoWidth.clamp(190.0, 260.0).toDouble(),
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    GlassPanel(
+                      child: Column(
+                        children: [
+                          const Text(
+                            'A porta de entrada para ambientes inteligentes.',
+                            style: TextStyle(
+                              color: GateWiseColors.textPrimary,
+                              fontSize: 22,
+                              height: 1.15,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: -0.4,
                             ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            'Conecte, automatize e proteja qualquer ambiente, em qualquer escala, de forma inteligente.',
+                            style: TextStyle(
+                              color: Colors.white.withValues(alpha: 0.62),
+                              fontSize: 14,
+                              height: 1.45,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 26),
+                          NeonGradientButton(
+                            label: 'Entrar com GateWise',
+                            icon: Icons.login_rounded,
+                            isLoading: isLoading,
+                            gradient: const [
+                              GateWiseColors.electricBlue,
+                              GateWiseColors.electricBlue,
+                            ],
                             onPressed: isLoading
                                 ? null
                                 : () => loginNotifier.loginFlow(),
-                            child: isLoading
-                                ? const SizedBox(
-                                    width: 20,
-                                    height: 20,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.white,
-                                      ),
-                                    ),
-                                  )
-                                : const Text(
-                                    'Entrar com GateWise',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                    ),
-                                  ),
                           ),
-                        ),
-                        const SizedBox(height: 20),
-                        Wrap(
-                          alignment: WrapAlignment.center,
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          children: [
-                            const Text(
-                              'Ainda não tem cadastro?',
-                              style: TextStyle(
-                                color: Colors.white70,
-                                fontSize: 14,
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: isLoading
-                                  ? null
-                                  : () => loginNotifier.registerFlow(),
-                              style: TextButton.styleFrom(
-                                foregroundColor: const Color(0xFF4D9EF6),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 4,
-                                ),
-                              ),
-                              child: const Text(
-                                'Cadastre-se',
+                          const SizedBox(height: 18),
+                          Wrap(
+                            alignment: WrapAlignment.center,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            children: [
+                              Text(
+                                'Ainda não tem cadastro?',
                                 style: TextStyle(
+                                  color: Colors.white.withValues(alpha: 0.62),
                                   fontSize: 14,
-                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                              TextButton(
+                                onPressed: isLoading
+                                    ? null
+                                    : () => loginNotifier.registerFlow(),
+                                style: TextButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 4,
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Cadastre-se',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
