@@ -49,7 +49,7 @@ class CustomHttpClientImpl implements CustomHttpClient {
   ) async {
     final token = await SecureStore.accessToken;
     return {
-      'Authorization': token != null ? 'Bearer $token' : '',
+      if (token != null) 'Authorization': 'Bearer $token',
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       ...?customHeaders,
