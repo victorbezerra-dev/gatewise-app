@@ -20,5 +20,7 @@ class OrganizationMembershipDto {
         ),
         role: OrganizationMemberRole.fromJson(json['role']?.toString()),
         joinedAt: DateTime.tryParse(json['joinedAt']?.toString() ?? ''),
+        startsAt: DateTime.tryParse(json['startsAt']?.toString() ?? ''),
+        expiresAt: DateTime.tryParse(json['expiresAt']?.toString() ?? ''),
       );
 }

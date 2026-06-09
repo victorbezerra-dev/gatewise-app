@@ -7,6 +7,7 @@ import 'package:signalr_netcore/hub_connection.dart';
 import '../../../core/theme/gatewise_theme.dart';
 import '../../access_history/presentation/access_history_screen.dart';
 import '../../home/presentation/home_screen.dart';
+import '../../organizations/presentation/organizations_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
 import 'dialog_notifier.dart';
 import 'host_websocket_provider.dart';
@@ -107,6 +108,7 @@ class _HostScreenState extends ConsumerState<HostScreen> {
                     physics: const NeverScrollableScrollPhysics(),
                     children: const [
                       HomeScreen(),
+                      OrganizationsScreen(),
                       AccessHistoryScreen(),
                       ProfileScreen(),
                     ],
@@ -149,6 +151,17 @@ class _HostScreenState extends ConsumerState<HostScreen> {
                   color: GateWiseColors.background,
                 ),
                 itemLabel: 'Início',
+              ),
+              BottomBarItem(
+                inActiveItem: const Icon(
+                  Icons.business_rounded,
+                  color: GateWiseColors.textMuted,
+                ),
+                activeItem: const Icon(
+                  Icons.business_rounded,
+                  color: GateWiseColors.background,
+                ),
+                itemLabel: 'Orgs',
               ),
               BottomBarItem(
                 inActiveItem: const Icon(

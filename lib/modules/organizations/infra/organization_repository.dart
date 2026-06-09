@@ -46,13 +46,15 @@ class OrganizationRepository {
     return _decodeList(response.data, OrganizationMembershipDto.fromJson);
   }
 
-  Future<Organization> getById(int id) async {
+  Future<OrganizationMembership> getById(int id) async {
     final path = '$_basePath/$id';
     _logRequest('GET', path);
     final response = await httpClient.get(path);
     _logResponse('GET', path, response);
     _ensureSuccess(response.statusCode, response.data, expected: const [200]);
-    return OrganizationDto.fromJson(response.data as Map<String, dynamic>);
+    return OrganizationMembershipDto.fromJson(
+      response.data as Map<String, dynamic>,
+    );
   }
 
   Future<Organization> create(OrganizationPayload payload) async {

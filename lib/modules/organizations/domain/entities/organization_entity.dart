@@ -23,9 +23,13 @@ class OrganizationMembership {
     required this.organization,
     required this.role,
     required this.joinedAt,
+    this.startsAt,
+    this.expiresAt,
   });
 
   final Organization organization;
   final OrganizationMemberRole role;
   final DateTime? joinedAt;
+  final DateTime? startsAt;
+  final DateTime? expiresAt;
 }
