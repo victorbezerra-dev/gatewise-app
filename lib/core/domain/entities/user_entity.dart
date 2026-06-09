@@ -1,3 +1,5 @@
+import '../value_objects/user_type_vo.dart';
+
 class User {
   final String id;
   final String name;
@@ -24,17 +26,35 @@ class User {
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-    id: json['id'],
-    name: json['name'],
-    email: json['email'],
-    registrationNumber: json['registrationNumber'],
-    userAvatarUrl: json['userAvatarUrl'] ?? '',
-    userType: json['userType'],
-    operationalSystem: json['operationalSystem'] ?? '',
-    operationalSystemVersion: json['operationalSystemVersion'] ?? '',
-    deviceModel: json['deviceModel'] ?? '',
-    deviceManufactureName: json['deviceManufactureName'] ?? '',
+    id: json['id']?.toString() ?? '',
+    name: json['name']?.toString() ?? '',
+    email: json['email']?.toString() ?? '',
+    registrationNumber: json['registrationNumber']?.toString() ?? '',
+    userAvatarUrl: json['userAvatarUrl']?.toString() ?? '',
+    userType: _parseUserType(json['userType']),
+    operationalSystem: json['operationalSystem']?.toString() ?? '',
+    operationalSystemVersion:
+        json['operationalSystemVersion']?.toString() ?? '',
+    deviceModel: json['deviceModel']?.toString() ?? '',
+    deviceManufactureName: json['deviceManufactureName']?.toString() ?? '',
   );
+
+  static int _parseUserType(Object? value) {
+    if (value is int) return value;
+    if (value is num) return value.toInt();
+    if (value is String) {
+      final numericValue = int.tryParse(value);
+      if (numericValue != null) return numericValue;
+
+      try {
+        return UserType.fromString(value).index;
+      } catch (_) {
+        return UserType.visitor.index;
+      }
+    }
+
+    return UserType.visitor.index;
+  }
 
   Map<String, dynamic> toJson() => {
     'id': id,
