@@ -1,15 +1,27 @@
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 
 abstract class CustomHttpClient {
-  Future<http.Response> get(String path, {Map<String, String>? headers});
+  Future<Response<dynamic>> get(String path, {Map<String, String>? headers});
 
-  Future<http.Response> post(
+  Future<Response<dynamic>> post(
     String path, {
     Map<String, String>? headers,
     Object? body,
   });
 
-  Future<http.Response> patch(
+  Future<Response<dynamic>> patch(
+    String path, {
+    Map<String, String>? headers,
+    Object? body,
+  });
+
+  Future<Response<dynamic>> put(
+    String path, {
+    Map<String, String>? headers,
+    Object? body,
+  });
+
+  Future<Response<dynamic>> delete(
     String path, {
     Map<String, String>? headers,
     Object? body,

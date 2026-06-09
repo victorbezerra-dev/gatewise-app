@@ -14,7 +14,7 @@ class UserRepository {
     if (response.statusCode != 200) {
       throw Exception('Error fetching user data');
     }
-    final user = User.fromJson(jsonDecode(response.body));
+    final user = User.fromJson(response.data as Map<String, dynamic>);
     await SecureStore.saveUserJson(jsonEncode(user.toJson()));
     return user;
   }
