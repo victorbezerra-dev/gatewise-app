@@ -1,4 +1,5 @@
 enum OrganizationMemberRole {
+  admin('Admin'),
   owner('Owner'),
   manager('Manager'),
   member('Member');
@@ -9,6 +10,8 @@ enum OrganizationMemberRole {
 
   String get label {
     switch (this) {
+      case OrganizationMemberRole.admin:
+        return 'Admin';
       case OrganizationMemberRole.owner:
         return 'Owner';
       case OrganizationMemberRole.manager:
@@ -17,6 +20,10 @@ enum OrganizationMemberRole {
         return 'Member';
     }
   }
+
+  bool get canManageOrganization =>
+      this == OrganizationMemberRole.admin ||
+      this == OrganizationMemberRole.owner;
 
   static OrganizationMemberRole fromJson(String? value) {
     return OrganizationMemberRole.values.firstWhere(
