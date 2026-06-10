@@ -1,0 +1,245 @@
+import 'dart:convert';
+import 'dart:developer';
+
+import 'package:dio/dio.dart';
+
+import '../../../core/domain/interfaces/custom_http_client.dart';
+import '../domain/entities/access_grant_entity.dart';
+import '../domain/entities/space_entity.dart';
+import 'dtos/access_grant_dto.dart';
+import 'dtos/space_dto.dart';
+import 'dtos/space_payload_dto.dart';
+
+class SpaceApiException implements Exception {
+  const SpaceApiException(this.message, {this.statusCode});
+
+  final String message;
+  final int? statusCode;
+
+  @override
+  String toString() => message;
+}
+
+class SpaceRepository {
+  SpaceRepository(this.httpClient);
+
+  final CustomHttpClient httpClient;
+  static const _spacesPath = '/api/spaces';
+  static const _grantsPath = '/api/accessgrants';
+
+  // ── Spaces ────────────────────────────────────────────────────────────────
+
+  Future<List<Space>> listSpaces() async {
+    _logRequest('GET', _spacesPath);
+    final response = await httpClient.get(_spacesPath);
+    _logResponse('GET', _spacesPath, response);
+    _ensureSuccess(response.statusCode, response.data, expected: const [200]);
+    return _decodeList(response.data, SpaceDto.fromJson);
+  }
+
+  Future<Space> getSpaceById(int id) async {
+    final path = '$_spacesPath/$id';
+    _logRequest('GET', path);
+    final response = await httpClient.get(path);
+    _logResponse('GET', path, response);
+    _ensureSuccess(response.statusCode, response.data, expected: const [200]);
+    return SpaceDto.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  Future<Space> createSpace(SpacePayload payload) async {
+    final body = jsonEncode(payload.toJson());
+    _logRequest('POST', _spacesPath, body: body);
+    final response = await httpClient.post(_spacesPath, body: body);
+    _logResponse('POST', _spacesPath, response);
+    _ensureSuccess(
+      response.statusCode,
+      response.data,
+      expected: const [200, 201],
+    );
+    return SpaceDto.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  Future<void> updateSpace(int id, SpacePayload payload) async {
+    final path = '$_spacesPath/$id';
+    final body = jsonEncode(payload.toJson());
+    _logRequest('PUT', path, body: body);
+    final response = await httpClient.put(path, body: body);
+    _logResponse('PUT', path, response);
+    _ensureSuccess(
+      response.statusCode,
+      response.data,
+      expected: const [200, 204],
+    );
+  }
+
+  Future<void> deleteSpace(int id) async {
+    final path = '$_spacesPath/$id';
+    _logRequest('DELETE', path);
+    final response = await httpClient.delete(path);
+    _logResponse('DELETE', path, response);
+    _ensureSuccess(
+      response.statusCode,
+      response.data,
+      expected: const [200, 204],
+    );
+  }
+
+  Future<void> openSpace(
+    int id, {
+    required int timestamp,
+    required String signature,
+  }) async {
+    final path = '$_spacesPath/$id/open';
+    final body = jsonEncode({'timestamp': timestamp, 'signature': signature});
+    _logRequest('POST', path, body: body);
+    final response = await httpClient.post(path, body: body);
+    _logResponse('POST', path, response);
+    if (response.statusCode == 403) {
+      throw SpaceApiException(
+        _messageForOpenSpace403(response.data),
+        statusCode: 403,
+      );
+    }
+    _ensureSuccess(response.statusCode, response.data, expected: const [200]);
+  }
+
+  String _messageForOpenSpace403(dynamic data) {
+    final raw = data is String
+        ? data.toLowerCase()
+        : data is Map
+            ? jsonEncode(data).toLowerCase()
+            : '';
+    if (raw.contains('not started') || raw.contains('not_started') || raw.contains('nao iniciado')) {
+      return 'Seu acesso a este espaço ainda não começou.';
+    }
+    if (raw.contains('expired') || raw.contains('expirado')) {
+      return 'Seu acesso a este espaço expirou.';
+    }
+    return 'Você não tem permissão para abrir este espaço.';
+  }
+
+  // ── Access Grants ─────────────────────────────────────────────────────────
+
+  Future<void> requestAccess(RequestAccessPayload payload) async {
+    const path = '$_grantsPath/request-access';
+    final body = jsonEncode(payload.toJson());
+    _logRequest('POST', path, body: body);
+    final response = await httpClient.post(path, body: body);
+    _logResponse('POST', path, response);
+    _ensureSuccess(
+      response.statusCode,
+      response.data,
+      expected: const [200, 201],
+    );
+  }
+
+  Future<List<AccessGrant>> listMyGrants(String userId) async {
+    final path = '$_grantsPath/user/$userId';
+    _logRequest('GET', path);
+    final response = await httpClient.get(path);
+    _logResponse('GET', path, response);
+    _ensureSuccess(response.statusCode, response.data, expected: const [200]);
+    return _decodeList(response.data, AccessGrantDto.fromJson);
+  }
+
+  Future<List<AccessGrant>> listAllGrants() async {
+    _logRequest('GET', _grantsPath);
+    final response = await httpClient.get(_grantsPath);
+    _logResponse('GET', _grantsPath, response);
+    _ensureSuccess(response.statusCode, response.data, expected: const [200]);
+    return _decodeList(response.data, AccessGrantDto.fromJson);
+  }
+
+  Future<AccessGrant> getGrantById(int id) async {
+    final path = '$_grantsPath/$id';
+    _logRequest('GET', path);
+    final response = await httpClient.get(path);
+    _logResponse('GET', path, response);
+    _ensureSuccess(response.statusCode, response.data, expected: const [200]);
+    return AccessGrantDto.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  Future<void> reviewGrant(int id, AccessGrantReviewPayload payload) async {
+    final path = '$_grantsPath/$id/review';
+    final body = jsonEncode(payload.toJson());
+    _logRequest('PUT', path, body: body);
+    final response = await httpClient.put(path, body: body);
+    _logResponse('PUT', path, response);
+    _ensureSuccess(
+      response.statusCode,
+      response.data,
+      expected: const [200, 204],
+    );
+  }
+
+  Future<void> deleteGrant(int id) async {
+    final path = '$_grantsPath/$id';
+    _logRequest('DELETE', path);
+    final response = await httpClient.delete(path);
+    _logResponse('DELETE', path, response);
+    _ensureSuccess(
+      response.statusCode,
+      response.data,
+      expected: const [200, 204],
+    );
+  }
+
+  // ── Helpers ───────────────────────────────────────────────────────────────
+
+  void _logRequest(String method, String path, {String? body}) {
+    log(
+      '[Spaces API] $method $path${body == null ? '' : ' body=$body'}',
+      name: 'SpaceRepository',
+    );
+  }
+
+  void _logResponse(String method, String path, Response<dynamic> response) {
+    log(
+      '[Spaces API] $method $path -> ${response.statusCode} body=${response.data}',
+      name: 'SpaceRepository',
+    );
+  }
+
+  List<T> _decodeList<T>(
+    dynamic data,
+    T Function(Map<String, dynamic>) fromJson,
+  ) {
+    final list = data as List<dynamic>;
+    return list
+        .map((item) => fromJson((item as Map).cast<String, dynamic>()))
+        .toList();
+  }
+
+  void _ensureSuccess(
+    int? statusCode,
+    dynamic data, {
+    required List<int> expected,
+  }) {
+    if (expected.contains(statusCode)) return;
+    final body = data == null
+        ? ''
+        : data is String
+            ? data
+            : jsonEncode(data);
+    throw SpaceApiException(
+      _messageForStatus(statusCode ?? 0, body),
+      statusCode: statusCode,
+    );
+  }
+
+  String _messageForStatus(int statusCode, String body) {
+    switch (statusCode) {
+      case 400:
+        return 'Dados inválidos ou requisição incorreta.';
+      case 403:
+        return 'Você não tem permissão para executar esta ação.';
+      case 404:
+        return 'Space não encontrado.';
+      case 409:
+        return 'Já existe uma solicitação de acesso para este space.';
+      default:
+        if (body.trim().isNotEmpty) return 'Erro $statusCode: $body';
+        return 'Erro inesperado ($statusCode).';
+    }
+  }
+}
