@@ -455,23 +455,13 @@ class _ProfileLoadingView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(
-            width: 26,
-            height: 26,
-            child: CircularProgressIndicator(
-              color: GateWiseColors.electricBlue,
-              strokeWidth: 2.4,
-            ),
-          ),
-          SizedBox(height: 12),
-          Text(
-            'Carregando perfil...',
-            style: TextStyle(color: GateWiseColors.textSecondary, fontSize: 13),
-          ),
-        ],
+      child: SizedBox(
+        width: 28,
+        height: 28,
+        child: CircularProgressIndicator(
+          color: GateWiseColors.electricBlue,
+          strokeWidth: 2.5,
+        ),
       ),
     );
   }
