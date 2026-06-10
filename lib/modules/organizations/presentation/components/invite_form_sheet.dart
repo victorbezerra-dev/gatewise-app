@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/gatewise_theme.dart';
+import '../../../spaces/domain/entities/space_entity.dart';
+import '../../../spaces/presentation/space_providers.dart';
 import '../../domain/value_objects/organization_member_role_vo.dart';
 import '../../infra/dtos/create_invite_dto.dart';
 import 'sheet_scaffold.dart';
 
-class InviteFormSheet extends StatefulWidget {
+class InviteFormSheet extends ConsumerStatefulWidget {
   const InviteFormSheet({super.key});
 
   @override
-  State<InviteFormSheet> createState() => _InviteFormSheetState();
+  ConsumerState<InviteFormSheet> createState() => _InviteFormSheetState();
 }
 
-class _InviteFormSheetState extends State<InviteFormSheet> {
+class _InviteFormSheetState extends ConsumerState<InviteFormSheet> {
   OrganizationMemberRole _role = OrganizationMemberRole.member;
   final _expiresController = TextEditingController(text: '7');
   final _usesController = TextEditingController(text: '10');
   DateTime? _memberStartsAt;
   DateTime? _memberExpiresAt;
+  final Set<int> _selectedSpaceIds = {};
 
   @override
   void dispose() {
@@ -28,6 +32,9 @@ class _InviteFormSheetState extends State<InviteFormSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final isManager = _role == OrganizationMemberRole.manager;
+    final spacesAsync = ref.watch(spaceControllerProvider).spaces;
+
     return SheetScaffold(
       title: 'Criar convite',
       child: Column(
@@ -46,8 +53,10 @@ class _InviteFormSheetState extends State<InviteFormSheet> {
                       DropdownMenuItem(value: role, child: Text(role.label)),
                 )
                 .toList(),
-            onChanged: (value) =>
-                setState(() => _role = value ?? OrganizationMemberRole.member),
+            onChanged: (value) => setState(() {
+              _role = value ?? OrganizationMemberRole.member;
+              _selectedSpaceIds.clear();
+            }),
           ),
           const SizedBox(height: 12),
           TextField(
@@ -83,6 +92,20 @@ class _InviteFormSheetState extends State<InviteFormSheet> {
             value: _memberExpiresAt,
             onChanged: (date) => setState(() => _memberExpiresAt = date),
           ),
+          if (isManager) ...[
+            const SizedBox(height: 16),
+            _SpaceSelector(
+              spacesAsync: spacesAsync,
+              selectedIds: _selectedSpaceIds,
+              onToggle: (id) => setState(() {
+                if (_selectedSpaceIds.contains(id)) {
+                  _selectedSpaceIds.remove(id);
+                } else {
+                  _selectedSpaceIds.add(id);
+                }
+              }),
+            ),
+          ],
           const SizedBox(height: 16),
           NeonGradientButton(
             label: 'Gerar convite',
@@ -91,16 +114,34 @@ class _InviteFormSheetState extends State<InviteFormSheet> {
               GateWiseColors.electricBlue,
               GateWiseColors.electricBlue,
             ],
-            onPressed: () => Navigator.of(context).pop(
-              CreateInvitePayload(
-                role: _role,
-                expiresInDays: _parseOptionalInt(_expiresController.text),
-                maxUses: _parseOptionalInt(_usesController.text),
-                memberStartsAt: _memberStartsAt,
-                memberExpiresAt: _memberExpiresAt,
+            onPressed: (isManager && _selectedSpaceIds.isEmpty)
+                ? null
+                : () => Navigator.of(context).pop(
+                      CreateInvitePayload(
+                        role: _role,
+                        expiresInDays:
+                            _parseOptionalInt(_expiresController.text),
+                        maxUses: _parseOptionalInt(_usesController.text),
+                        memberStartsAt: _memberStartsAt,
+                        memberExpiresAt: _memberExpiresAt,
+                        spaceIds: isManager
+                            ? _selectedSpaceIds.toList()
+                            : null,
+                      ),
+                    ),
+          ),
+          if (isManager && _selectedSpaceIds.isEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Text(
+                'Selecione ao menos um espaço para o Manager.',
+                style: TextStyle(
+                  color: GateWiseColors.danger.withValues(alpha: 0.8),
+                  fontSize: 12,
+                ),
+                textAlign: TextAlign.center,
               ),
             ),
-          ),
         ],
       ),
     );
@@ -110,6 +151,103 @@ class _InviteFormSheetState extends State<InviteFormSheet> {
     final normalized = value.trim();
     if (normalized.isEmpty) return null;
     return int.tryParse(normalized);
+  }
+}
+
+class _SpaceSelector extends StatelessWidget {
+  const _SpaceSelector({
+    required this.spacesAsync,
+    required this.selectedIds,
+    required this.onToggle,
+  });
+
+  final AsyncValue<List<Space>> spacesAsync;
+  final Set<int> selectedIds;
+  final void Function(int) onToggle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            const Icon(
+              Icons.sensor_door_rounded,
+              size: 16,
+              color: GateWiseColors.textSecondary,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              'Espaços do Manager *',
+              style: TextStyle(
+                color: Colors.white.withValues(alpha: 0.7),
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        spacesAsync.when(
+          loading: () => const Center(
+            child: Padding(
+              padding: EdgeInsets.all(8),
+              child: CircularProgressIndicator(
+                color: GateWiseColors.electricBlue,
+                strokeWidth: 2,
+              ),
+            ),
+          ),
+          error: (_, __) => Text(
+            'Não foi possível carregar os espaços.',
+            style: TextStyle(
+              color: GateWiseColors.danger.withValues(alpha: 0.8),
+              fontSize: 12,
+            ),
+          ),
+          data: (spaces) {
+            if (spaces.isEmpty) {
+              return Text(
+                'Nenhum espaço cadastrado.',
+                style: TextStyle(
+                  color: Colors.white.withValues(alpha: 0.5),
+                  fontSize: 12,
+                ),
+              );
+            }
+            return Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final space in spaces)
+                  FilterChip(
+                    label: Text(space.name),
+                    selected: selectedIds.contains(space.id),
+                    onSelected: (_) => onToggle(space.id),
+                    backgroundColor:
+                        GateWiseColors.surfaceLight.withValues(alpha: 0.3),
+                    selectedColor:
+                        GateWiseColors.electricBlue.withValues(alpha: 0.22),
+                    checkmarkColor: GateWiseColors.electricBlue,
+                    side: BorderSide(
+                      color: selectedIds.contains(space.id)
+                          ? GateWiseColors.electricBlue.withValues(alpha: 0.6)
+                          : Colors.white.withValues(alpha: 0.12),
+                    ),
+                    labelStyle: TextStyle(
+                      color: selectedIds.contains(space.id)
+                          ? GateWiseColors.electricBlue
+                          : Colors.white.withValues(alpha: 0.7),
+                      fontSize: 13,
+                    ),
+                  ),
+              ],
+            );
+          },
+        ),
+      ],
+    );
   }
 }
 
@@ -126,51 +264,131 @@ class _DatePickerField extends StatelessWidget {
   final DateTime? value;
   final ValueChanged<DateTime?> onChanged;
 
+  bool get _hasValue => value != null;
+
+  String get _formattedDate {
+    final d = value!;
+    final day = d.day.toString().padLeft(2, '0');
+    final month = d.month.toString().padLeft(2, '0');
+    final hour = d.hour.toString().padLeft(2, '0');
+    final minute = d.minute.toString().padLeft(2, '0');
+    return '$day/$month/${d.year}  $hour:$minute';
+  }
+
+  Future<void> _pick(BuildContext context) async {
+    final pickedDate = await showDatePicker(
+      context: context,
+      initialDate: value ?? DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2100),
+      builder: _pickerTheme,
+    );
+    if (pickedDate == null || !context.mounted) return;
+
+    final pickedTime = await showTimePicker(
+      context: context,
+      initialTime: _hasValue
+          ? TimeOfDay.fromDateTime(value!)
+          : TimeOfDay.now(),
+      builder: _pickerTheme,
+    );
+    if (!context.mounted) return;
+
+    onChanged(DateTime(
+      pickedDate.year,
+      pickedDate.month,
+      pickedDate.day,
+      pickedTime?.hour ?? 0,
+      pickedTime?.minute ?? 0,
+    ));
+  }
+
+  static Widget _pickerTheme(BuildContext context, Widget? child) => Theme(
+        data: Theme.of(context).copyWith(
+          colorScheme: Theme.of(context).colorScheme.copyWith(
+            primary: GateWiseColors.electricBlue,
+            surface: GateWiseColors.surface,
+          ),
+        ),
+        child: child!,
+      );
+
   @override
   Widget build(BuildContext context) {
-    final displayText = value == null
-        ? 'Vazio = sem restrição'
-        : '${value!.day.toString().padLeft(2, '0')}/'
-              '${value!.month.toString().padLeft(2, '0')}/'
-              '${value!.year}';
-
     return GestureDetector(
-      onTap: () async {
-        final picked = await showDatePicker(
-          context: context,
-          initialDate: value ?? DateTime.now(),
-          firstDate: DateTime(2020),
-          lastDate: DateTime(2100),
-          builder: (context, child) => Theme(
-            data: Theme.of(context).copyWith(
-              colorScheme: Theme.of(context).colorScheme.copyWith(
-                primary: GateWiseColors.electricBlue,
-                surface: GateWiseColors.surface,
-              ),
-            ),
-            child: child!,
+      onTap: () => _pick(context),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
+        decoration: BoxDecoration(
+          color: _hasValue
+              ? GateWiseColors.electricBlue.withValues(alpha: 0.08)
+              : GateWiseColors.surfaceLight.withValues(alpha: 0.18),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: _hasValue
+                ? GateWiseColors.electricBlue.withValues(alpha: 0.45)
+                : Colors.white.withValues(alpha: 0.1),
+            width: _hasValue ? 1.4 : 1,
           ),
-        );
-        onChanged(picked);
-      },
-      child: InputDecorator(
-        decoration: InputDecoration(
-          labelText: label,
-          prefixIcon: Icon(icon),
-          suffixIcon: value != null
-              ? IconButton(
-                  icon: const Icon(Icons.clear_rounded, size: 18),
-                  onPressed: () => onChanged(null),
-                )
-              : const Icon(Icons.calendar_today_rounded, size: 18),
         ),
-        child: Text(
-          displayText,
-          style: TextStyle(
-            color: value == null
-                ? GateWiseColors.textMuted
-                : GateWiseColors.textPrimary,
-            fontSize: 14,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                size: 20,
+                color: _hasValue
+                    ? GateWiseColors.electricBlue
+                    : GateWiseColors.textSecondary,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      label,
+                      style: TextStyle(
+                        color: _hasValue
+                            ? GateWiseColors.electricBlue
+                            : GateWiseColors.textSecondary,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.4,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      _hasValue ? _formattedDate : 'Não definido',
+                      style: TextStyle(
+                        color: _hasValue
+                            ? GateWiseColors.textPrimary
+                            : Colors.white.withValues(alpha: 0.3),
+                        fontSize: 14,
+                        fontWeight:
+                            _hasValue ? FontWeight.w700 : FontWeight.w400,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (_hasValue)
+                GestureDetector(
+                  onTap: () => onChanged(null),
+                  child: Icon(
+                    Icons.close_rounded,
+                    size: 18,
+                    color: Colors.white.withValues(alpha: 0.4),
+                  ),
+                )
+              else
+                Icon(
+                  Icons.calendar_month_rounded,
+                  size: 18,
+                  color: Colors.white.withValues(alpha: 0.2),
+                ),
+            ],
           ),
         ),
       ),

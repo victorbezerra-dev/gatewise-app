@@ -10,6 +10,9 @@ class OrganizationInvite {
     required this.usesCount,
     required this.expiresAt,
     required this.createdAt,
+    this.memberStartsAt,
+    this.memberExpiresAt,
+    this.spaceIds = const [],
   });
 
   final int id;
@@ -20,4 +23,7 @@ class OrganizationInvite {
   final int usesCount;
   final DateTime? expiresAt;
   final DateTime? createdAt;
+  final DateTime? memberStartsAt;
+  final DateTime? memberExpiresAt;
+  final List<int> spaceIds;
 }

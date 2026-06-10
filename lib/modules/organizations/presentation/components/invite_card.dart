@@ -7,13 +7,17 @@ import 'org_ui_helpers.dart';
 import 'role_badge.dart';
 
 class InviteCard extends StatelessWidget {
-  const InviteCard({super.key, required this.invite, required this.onRevoke});
+  const InviteCard({super.key, required this.invite, this.onRevoke});
 
   final OrganizationInvite invite;
-  final VoidCallback onRevoke;
+  final VoidCallback? onRevoke;
 
   @override
   Widget build(BuildContext context) {
+    final hasSpaces = invite.spaceIds.isNotEmpty;
+    final hasMemberWindow =
+        invite.memberStartsAt != null || invite.memberExpiresAt != null;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: GlassPanel(
@@ -47,14 +51,15 @@ class InviteCard extends StatelessWidget {
                     color: GateWiseColors.electricBlue,
                   ),
                 ),
-                IconButton(
-                  tooltip: 'Revogar convite',
-                  onPressed: onRevoke,
-                  icon: const Icon(
-                    Icons.link_off_rounded,
-                    color: GateWiseColors.danger,
+                if (onRevoke != null)
+                  IconButton(
+                    tooltip: 'Revogar convite',
+                    onPressed: onRevoke,
+                    icon: const Icon(
+                      Icons.link_off_rounded,
+                      color: GateWiseColors.danger,
+                    ),
                   ),
-                ),
               ],
             ),
             Wrap(
@@ -77,6 +82,12 @@ class InviteCard extends StatelessWidget {
                   icon: Icons.group_add_rounded,
                   color: GateWiseColors.amber,
                 ),
+                if (hasSpaces)
+                  TechStatusPill(
+                    label: '${invite.spaceIds.length} ESPAÇO${invite.spaceIds.length == 1 ? '' : 'S'}',
+                    icon: Icons.sensor_door_rounded,
+                    color: GateWiseColors.electricBlue,
+                  ),
               ],
             ),
             const SizedBox(height: 8),
@@ -87,6 +98,16 @@ class InviteCard extends StatelessWidget {
                 fontSize: 12,
               ),
             ),
+            if (hasMemberWindow) ...[
+              const SizedBox(height: 4),
+              Text(
+                'Acesso do membro: ${formatDate(invite.memberStartsAt)} → ${formatDate(invite.memberExpiresAt)}',
+                style: TextStyle(
+                  color: Colors.white.withValues(alpha: 0.54),
+                  fontSize: 12,
+                ),
+              ),
+            ],
           ],
         ),
       ),

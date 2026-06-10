@@ -7,6 +7,7 @@ class CreateInvitePayload {
     this.maxUses,
     this.memberStartsAt,
     this.memberExpiresAt,
+    this.spaceIds,
   });
 
   final OrganizationMemberRole role;
@@ -14,6 +15,7 @@ class CreateInvitePayload {
   final int? maxUses;
   final DateTime? memberStartsAt;
   final DateTime? memberExpiresAt;
+  final List<int>? spaceIds;
 
   Map<String, dynamic> toJson() => {
     'role': role.apiValue,
@@ -23,5 +25,6 @@ class CreateInvitePayload {
       'memberStartsAt': memberStartsAt!.toUtc().toIso8601String(),
     if (memberExpiresAt != null)
       'memberExpiresAt': memberExpiresAt!.toUtc().toIso8601String(),
+    if (spaceIds != null && spaceIds!.isNotEmpty) 'spaceIds': spaceIds,
   };
 }
