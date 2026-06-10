@@ -8,13 +8,13 @@ class OrganizationHeader extends StatelessWidget {
   const OrganizationHeader({
     super.key,
     required this.organization,
-    required this.onEdit,
-    required this.onDelete,
+    this.onEdit,
+    this.onDelete,
   });
 
   final Organization organization;
-  final VoidCallback onEdit;
-  final VoidCallback onDelete;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -75,32 +75,37 @@ class OrganizationHeader extends StatelessWidget {
               height: 1.42,
             ),
           ),
-          const SizedBox(height: 14),
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: onEdit,
-                  icon: const Icon(Icons.edit_rounded, size: 18),
-                  label: const Text('Editar'),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: onDelete,
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: GateWiseColors.danger,
-                    side: BorderSide(
-                      color: GateWiseColors.danger.withValues(alpha: 0.42),
+          if (onEdit != null || onDelete != null) ...[
+            const SizedBox(height: 14),
+            Row(
+              children: [
+                if (onEdit != null)
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: onEdit,
+                      icon: const Icon(Icons.edit_rounded, size: 18),
+                      label: const Text('Editar'),
                     ),
                   ),
-                  icon: const Icon(Icons.delete_outline_rounded, size: 18),
-                  label: const Text('Deletar'),
-                ),
-              ),
-            ],
-          ),
+                if (onEdit != null && onDelete != null)
+                  const SizedBox(width: 10),
+                if (onDelete != null)
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: onDelete,
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: GateWiseColors.danger,
+                        side: BorderSide(
+                          color: GateWiseColors.danger.withValues(alpha: 0.42),
+                        ),
+                      ),
+                      icon: const Icon(Icons.delete_outline_rounded, size: 18),
+                      label: const Text('Deletar'),
+                    ),
+                  ),
+              ],
+            ),
+          ],
         ],
       ),
     );

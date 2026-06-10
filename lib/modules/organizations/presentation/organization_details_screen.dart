@@ -101,6 +101,9 @@ class _OrganizationDetailsScreenState
                 );
               }
 
+              final canManage =
+                  state.viewerMembership?.role.canManageOrganization ?? false;
+
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -108,10 +111,13 @@ class _OrganizationDetailsScreenState
                     padding: const EdgeInsets.fromLTRB(18, 10, 18, 0),
                     child: OrganizationHeader(
                       organization: organization,
-                      onEdit: () =>
-                          _openEditForm(context, organization, notifier),
-                      onDelete: () =>
-                          _confirmDelete(context, organization, notifier),
+                      onEdit: canManage
+                          ? () => _openEditForm(context, organization, notifier)
+                          : null,
+                      onDelete: canManage
+                          ? () =>
+                              _confirmDelete(context, organization, notifier)
+                          : null,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -129,6 +135,7 @@ class _OrganizationDetailsScreenState
                           state: state,
                           organizationId: organization.id,
                           notifier: notifier,
+                          canManage: canManage,
                           onRemoveMember: (member) => _confirmRemoveMember(
                             context,
                             organization.id,
@@ -499,12 +506,14 @@ class _MembersTab extends StatelessWidget {
     required this.state,
     required this.organizationId,
     required this.notifier,
+    required this.canManage,
     required this.onRemoveMember,
   });
 
   final OrganizationState state;
   final int organizationId;
   final OrganizationController notifier;
+  final bool canManage;
   final void Function(OrganizationMember) onRemoveMember;
 
   @override
@@ -529,14 +538,16 @@ class _MembersTab extends StatelessWidget {
                     icon: Icons.people_outline_rounded,
                     title: 'Nenhum membro listado',
                     message:
-                        'A listagem de membros aparece para admin, Owner ou Manager.',
+                        'A listagem de membros aparece para Admin, Owner ou Manager.',
                   )
                 : Column(
                     children: members
                         .map(
                           (member) => MemberCard(
                             member: member,
-                            onRemove: () => onRemoveMember(member),
+                            onRemove: canManage
+                                ? () => onRemoveMember(member)
+                                : null,
                           ),
                         )
                         .toList(),

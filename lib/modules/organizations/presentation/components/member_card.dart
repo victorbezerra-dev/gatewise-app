@@ -6,10 +6,10 @@ import '../../domain/value_objects/organization_member_role_vo.dart';
 import 'role_badge.dart';
 
 class MemberCard extends StatelessWidget {
-  const MemberCard({super.key, required this.member, required this.onRemove});
+  const MemberCard({super.key, required this.member, this.onRemove});
 
   final OrganizationMember member;
-  final VoidCallback onRemove;
+  final VoidCallback? onRemove;
 
   @override
   Widget build(BuildContext context) {
@@ -63,17 +63,14 @@ class MemberCard extends StatelessWidget {
                 ],
               ),
             ),
-            IconButton(
-              onPressed: member.role == OrganizationMemberRole.owner
-                  ? null
-                  : onRemove,
-              icon: Icon(
-                Icons.person_remove_alt_1_rounded,
-                color: member.role == OrganizationMemberRole.owner
-                    ? GateWiseColors.textMuted
-                    : GateWiseColors.danger,
+            if (onRemove != null && member.role != OrganizationMemberRole.owner)
+              IconButton(
+                onPressed: onRemove,
+                icon: const Icon(
+                  Icons.person_remove_alt_1_rounded,
+                  color: GateWiseColors.danger,
+                ),
               ),
-            ),
           ],
         ),
       ),
