@@ -4,6 +4,7 @@ import '../../../core/providers/custom_http_client_provider.dart';
 import '../domain/entities/organization_entity.dart';
 import '../domain/entities/organization_invite_entity.dart';
 import '../domain/entities/organization_member_entity.dart';
+import '../domain/value_objects/organization_member_role_vo.dart';
 import '../infra/dtos/create_invite_dto.dart';
 import '../infra/dtos/organization_payload_dto.dart';
 import '../infra/organization_repository.dart';
@@ -20,7 +21,7 @@ final organizationControllerProvider =
 class OrganizationState {
   const OrganizationState({
     this.memberships = const AsyncLoading(),
-    this.adminOrganizations = const AsyncData([]),
+    this.ownedOrganizations = const AsyncData([]),
     this.selectedOrganization = const AsyncData(null),
     this.viewerMembership,
     this.members = const AsyncData([]),
@@ -30,7 +31,7 @@ class OrganizationState {
   });
 
   final AsyncValue<List<OrganizationMembership>> memberships;
-  final AsyncValue<List<Organization>> adminOrganizations;
+  final AsyncValue<List<Organization>> ownedOrganizations;
   final AsyncValue<Organization?> selectedOrganization;
   final OrganizationMembership? viewerMembership;
   final AsyncValue<List<OrganizationMember>> members;
@@ -40,7 +41,7 @@ class OrganizationState {
 
   OrganizationState copyWith({
     AsyncValue<List<OrganizationMembership>>? memberships,
-    AsyncValue<List<Organization>>? adminOrganizations,
+    AsyncValue<List<Organization>>? ownedOrganizations,
     AsyncValue<Organization?>? selectedOrganization,
     OrganizationMembership? viewerMembership,
     bool clearViewerMembership = false,
@@ -52,7 +53,7 @@ class OrganizationState {
   }) {
     return OrganizationState(
       memberships: memberships ?? this.memberships,
-      adminOrganizations: adminOrganizations ?? this.adminOrganizations,
+      ownedOrganizations: ownedOrganizations ?? this.ownedOrganizations,
       selectedOrganization: selectedOrganization ?? this.selectedOrganization,
       viewerMembership: clearViewerMembership
           ? null
@@ -91,20 +92,20 @@ class OrganizationController extends StateNotifier<OrganizationState> {
 
   Future<void> loadAdminOrganizations({bool silent = false}) async {
     if (!silent) {
-      state = state.copyWith(adminOrganizations: const AsyncLoading());
+      state = state.copyWith(ownedOrganizations: const AsyncLoading());
     }
 
     try {
       final data = await _repository.listOrganizations();
-      state = state.copyWith(adminOrganizations: AsyncData(data));
+      state = state.copyWith(ownedOrganizations: AsyncData(data));
     } on OrganizationApiException catch (e, st) {
       if (e.statusCode == 403) {
-        state = state.copyWith(adminOrganizations: const AsyncData([]));
+        state = state.copyWith(ownedOrganizations: const AsyncData([]));
         return;
       }
-      state = state.copyWith(adminOrganizations: AsyncError(e, st));
+      state = state.copyWith(ownedOrganizations: AsyncError(e, st));
     } catch (e, st) {
-      state = state.copyWith(adminOrganizations: AsyncError(e, st));
+      state = state.copyWith(ownedOrganizations: AsyncError(e, st));
     }
   }
 
@@ -222,6 +223,45 @@ class OrganizationController extends StateNotifier<OrganizationState> {
     final result = await _runAction(() async {
       await _repository.revokeInvite(organizationId, inviteId);
       await loadInvites(organizationId);
+      return true;
+    });
+    return result ?? false;
+  }
+
+  Future<bool> removeSpaceFromInvite(
+    int organizationId,
+    int inviteId,
+    int spaceId,
+  ) async {
+    final result = await _runAction(() async {
+      await _repository.removeSpaceFromInvite(organizationId, inviteId, spaceId);
+      await loadInvites(organizationId);
+      return true;
+    });
+    return result ?? false;
+  }
+
+  Future<bool> updateMemberRole(
+    int organizationId,
+    int memberId,
+    OrganizationMemberRole role,
+  ) async {
+    final result = await _runAction(() async {
+      await _repository.updateMemberRole(organizationId, memberId, role);
+      await loadMembers(organizationId);
+      return true;
+    });
+    return result ?? false;
+  }
+
+  Future<bool> removeSpaceManager(
+    int organizationId,
+    int spaceId,
+    int spaceManagerId,
+  ) async {
+    final result = await _runAction(() async {
+      await _repository.removeSpaceManager(organizationId, spaceId, spaceManagerId);
+      await loadMembers(organizationId);
       return true;
     });
     return result ?? false;

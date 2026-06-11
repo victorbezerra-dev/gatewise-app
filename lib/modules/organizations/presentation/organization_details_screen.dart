@@ -4,10 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/gatewise_theme.dart';
+import '../../spaces/domain/entities/space_entity.dart';
 import '../../spaces/presentation/components/space_card.dart';
 import '../../spaces/presentation/space_providers.dart';
 import '../domain/entities/organization_entity.dart';
 import '../domain/entities/organization_invite_entity.dart';
+import '../domain/value_objects/organization_member_role_vo.dart';
 import '../domain/entities/organization_member_entity.dart';
 import '../infra/dtos/create_invite_dto.dart';
 import '../infra/dtos/organization_payload_dto.dart';
@@ -142,20 +144,42 @@ class _OrganizationDetailsScreenState
                             member,
                             notifier,
                           ),
+                          onChangeRole: (member) => _changeRole(
+                            context,
+                            organization.id,
+                            member,
+                            notifier,
+                          ),
+                          onRemoveFromSpace: (member) => _confirmRemoveFromSpace(
+                            context,
+                            organization.id,
+                            member,
+                            notifier,
+                          ),
                         ),
                         _InvitesTab(
                           state: state,
                           organizationId: organization.id,
                           notifier: notifier,
+                          viewerMembership: state.viewerMembership,
                           onCreateInvite: () => _openInviteForm(
                             context,
                             organization.id,
                             notifier,
+                            state.viewerMembership,
                           ),
                           onRevokeInvite: (invite) => _confirmRevokeInvite(
                             context,
                             organization.id,
                             invite,
+                            notifier,
+                          ),
+                          onRemoveSpace: (invite, spaceId) =>
+                              _confirmRemoveSpaceFromInvite(
+                            context,
+                            organization.id,
+                            invite,
+                            spaceId,
                             notifier,
                           ),
                         ),
@@ -197,12 +221,13 @@ class _OrganizationDetailsScreenState
     BuildContext context,
     int organizationId,
     OrganizationController notifier,
+    OrganizationMembership? viewerMembership,
   ) async {
     final payload = await showModalBottomSheet<CreateInvitePayload>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => const InviteFormSheet(),
+      builder: (_) => InviteFormSheet(viewerMembership: viewerMembership),
     );
     if (payload == null) return;
 
@@ -265,6 +290,143 @@ class _OrganizationDetailsScreenState
     showSnack(context, 'Membro removido.');
   }
 
+  Future<void> _changeRole(
+    BuildContext context,
+    int organizationId,
+    OrganizationMember member,
+    OrganizationController notifier,
+  ) async {
+    final newRole = await showDialog<OrganizationMemberRole>(
+      context: context,
+      builder: (ctx) => SimpleDialog(
+        backgroundColor: GateWiseColors.surface,
+        title: Text(
+          'Alterar role de ${member.name}',
+          style: const TextStyle(color: Colors.white, fontSize: 16),
+        ),
+        children: OrganizationMemberRole.values
+            .where((r) => r != member.role)
+            .map(
+              (role) => SimpleDialogOption(
+                onPressed: () => Navigator.of(ctx).pop(role),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.shield_rounded,
+                      size: 16,
+                      color: switch (role) {
+                        OrganizationMemberRole.owner => GateWiseColors.mint,
+                        OrganizationMemberRole.manager => GateWiseColors.amber,
+                        OrganizationMemberRole.member =>
+                          GateWiseColors.electricBlue,
+                      },
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      role.label,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+            .toList(),
+      ),
+    );
+    if (newRole == null || !context.mounted) return;
+
+    final ok = await notifier.updateMemberRole(organizationId, member.id, newRole);
+    if (!context.mounted) return;
+    if (!ok) {
+      showActionError(context, ref);
+      return;
+    }
+    showSnack(context, 'Role de ${member.name} atualizado para ${newRole.label}.');
+  }
+
+  Future<void> _confirmRemoveFromSpace(
+    BuildContext context,
+    int organizationId,
+    OrganizationMember member,
+    OrganizationController notifier,
+  ) async {
+    final allSpaces = ref.read(spaceControllerProvider).spaces.valueOrNull ?? [];
+    final orgSpaces =
+        allSpaces.where((s) => s.organizationId == organizationId).toList();
+
+    if (orgSpaces.isEmpty) {
+      showSnack(
+        context,
+        'Nenhum espaço encontrado nesta organização.',
+        isError: true,
+      );
+      return;
+    }
+
+    final space = await showDialog<Space>(
+      context: context,
+      builder: (ctx) => SimpleDialog(
+        backgroundColor: GateWiseColors.surface,
+        title: Text(
+          'Remover ${member.name} de qual espaço?',
+          style: const TextStyle(color: Colors.white, fontSize: 16),
+        ),
+        children: orgSpaces
+            .map(
+              (s) => SimpleDialogOption(
+                onPressed: () => Navigator.of(ctx).pop(s),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.maps_home_work_rounded,
+                      size: 16,
+                      color: GateWiseColors.mint,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        s.name,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+            .toList(),
+      ),
+    );
+    if (space == null || !context.mounted) return;
+
+    final confirmed = await confirm(
+      context,
+      title: 'Remover manager do espaço?',
+      message:
+          'Remover ${member.name} como manager de "${space.name}"?',
+      confirmLabel: 'Remover',
+      danger: true,
+    );
+    if (!confirmed || !context.mounted) return;
+
+    final ok = await notifier.removeSpaceManager(
+      organizationId,
+      space.id,
+      member.id,
+    );
+    if (!context.mounted) return;
+    if (!ok) {
+      showActionError(context, ref);
+      return;
+    }
+    showSnack(context, '${member.name} removido de "${space.name}".');
+  }
+
   Future<void> _confirmRevokeInvite(
     BuildContext context,
     int organizationId,
@@ -287,6 +449,43 @@ class _OrganizationDetailsScreenState
       return;
     }
     showSnack(context, 'Convite revogado.');
+  }
+
+  Future<void> _confirmRemoveSpaceFromInvite(
+    BuildContext context,
+    int organizationId,
+    OrganizationInvite invite,
+    int spaceId,
+    OrganizationController notifier,
+  ) async {
+    final space = invite.spaces.firstWhere(
+      (s) => s.spaceId == spaceId,
+      orElse: () => ManagedSpace(spaceId: spaceId, name: 'este espaço'),
+    );
+    final isLast = invite.spaces.length == 1;
+
+    final confirmed = await confirm(
+      context,
+      title: 'Remover espaço?',
+      message: isLast
+          ? 'Remover "${space.name}" desativará o convite ${invite.code}.'
+          : 'Remover "${space.name}" do convite ${invite.code}?',
+      confirmLabel: 'Remover',
+      danger: true,
+    );
+    if (!confirmed) return;
+
+    final ok = await notifier.removeSpaceFromInvite(
+      organizationId,
+      invite.id,
+      spaceId,
+    );
+    if (!context.mounted) return;
+    if (!ok) {
+      showActionError(context, ref);
+      return;
+    }
+    showSnack(context, isLast ? 'Espaço removido. Convite desativado.' : 'Espaço removido.');
   }
 }
 
@@ -508,6 +707,8 @@ class _MembersTab extends StatelessWidget {
     required this.notifier,
     required this.canManage,
     required this.onRemoveMember,
+    required this.onChangeRole,
+    required this.onRemoveFromSpace,
   });
 
   final OrganizationState state;
@@ -515,6 +716,8 @@ class _MembersTab extends StatelessWidget {
   final OrganizationController notifier;
   final bool canManage;
   final void Function(OrganizationMember) onRemoveMember;
+  final void Function(OrganizationMember) onChangeRole;
+  final void Function(OrganizationMember) onRemoveFromSpace;
 
   @override
   Widget build(BuildContext context) {
@@ -548,6 +751,13 @@ class _MembersTab extends StatelessWidget {
                             onRemove: canManage
                                 ? () => onRemoveMember(member)
                                 : null,
+                            onChangeRole: canManage
+                                ? () => onChangeRole(member)
+                                : null,
+                            onRemoveFromSpace: (canManage &&
+                                    member.role != OrganizationMemberRole.owner)
+                                ? () => onRemoveFromSpace(member)
+                                : null,
                           ),
                         )
                         .toList(),
@@ -564,18 +774,26 @@ class _InvitesTab extends StatelessWidget {
     required this.state,
     required this.organizationId,
     required this.notifier,
+    required this.viewerMembership,
     required this.onCreateInvite,
     required this.onRevokeInvite,
+    required this.onRemoveSpace,
   });
 
   final OrganizationState state;
   final int organizationId;
   final OrganizationController notifier;
+  final OrganizationMembership? viewerMembership;
   final VoidCallback onCreateInvite;
   final void Function(OrganizationInvite) onRevokeInvite;
+  final void Function(OrganizationInvite, int spaceId) onRemoveSpace;
 
   @override
   Widget build(BuildContext context) {
+    final canRevoke = viewerMembership?.role.canManageOrganization ?? false;
+    final canRemoveSpace = canRevoke ||
+        viewerMembership?.role == OrganizationMemberRole.manager;
+
     return RefreshIndicator(
       color: GateWiseColors.electricBlue,
       backgroundColor: GateWiseColors.surface,
@@ -614,7 +832,12 @@ class _InvitesTab extends StatelessWidget {
                         .map(
                           (invite) => InviteCard(
                             invite: invite,
-                            onRevoke: () => onRevokeInvite(invite),
+                            onRevoke: canRevoke
+                                ? () => onRevokeInvite(invite)
+                                : null,
+                            onRemoveSpace: canRemoveSpace
+                                ? (spaceId) => onRemoveSpace(invite, spaceId)
+                                : null,
                           ),
                         )
                         .toList(),

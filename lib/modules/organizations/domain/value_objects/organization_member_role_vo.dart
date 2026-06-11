@@ -20,7 +20,6 @@ enum OrganizationMemberRole {
 
   bool get canManageOrganization => this == OrganizationMemberRole.owner;
 
-  // Backend: Owner=0, Manager=1, Member=2
   int get apiInt {
     switch (this) {
       case OrganizationMemberRole.owner:
@@ -32,7 +31,6 @@ enum OrganizationMemberRole {
     }
   }
 
-  // Aceita string ("Owner") ou int (0) — memberships usam string, invites usam int
   static OrganizationMemberRole fromJson(dynamic value) {
     if (value is int) {
       switch (value) {

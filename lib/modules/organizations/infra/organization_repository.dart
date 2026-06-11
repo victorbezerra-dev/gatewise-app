@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 
 import '../../../core/domain/interfaces/custom_http_client.dart';
 import '../domain/entities/organization_entity.dart';
+import '../domain/value_objects/organization_member_role_vo.dart';
 import '../domain/entities/organization_invite_entity.dart';
 import '../domain/entities/organization_member_entity.dart';
 import 'dtos/create_invite_dto.dart';
@@ -140,6 +141,44 @@ class OrganizationRepository {
 
   Future<void> revokeInvite(int organizationId, int inviteId) async {
     final path = '$_basePath/$organizationId/invites/$inviteId';
+    _logRequest('DELETE', path);
+    final response = await httpClient.delete(path);
+    _logResponse('DELETE', path, response);
+    _ensureSuccess(response.statusCode, response.data, expected: const [204]);
+  }
+
+  Future<void> removeSpaceFromInvite(
+    int organizationId,
+    int inviteId,
+    int spaceId,
+  ) async {
+    final path = '$_basePath/$organizationId/invites/$inviteId/spaces/$spaceId';
+    _logRequest('DELETE', path);
+    final response = await httpClient.delete(path);
+    _logResponse('DELETE', path, response);
+    _ensureSuccess(response.statusCode, response.data, expected: const [204]);
+  }
+
+  Future<void> updateMemberRole(
+    int organizationId,
+    int memberId,
+    OrganizationMemberRole role,
+  ) async {
+    final path = '$_basePath/$organizationId/members/$memberId/role';
+    final body = jsonEncode({'role': role.apiInt});
+    _logRequest('PUT', path, body: body);
+    final response = await httpClient.put(path, body: body);
+    _logResponse('PUT', path, response);
+    _ensureSuccess(response.statusCode, response.data, expected: const [204]);
+  }
+
+  Future<void> removeSpaceManager(
+    int organizationId,
+    int spaceId,
+    int spaceManagerId,
+  ) async {
+    final path =
+        '$_basePath/$organizationId/spaces/$spaceId/managers/$spaceManagerId';
     _logRequest('DELETE', path);
     final response = await httpClient.delete(path);
     _logResponse('DELETE', path, response);
