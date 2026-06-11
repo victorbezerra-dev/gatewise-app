@@ -1,3 +1,4 @@
+import '../../domain/entities/organization_entity.dart';
 import '../../domain/entities/organization_invite_entity.dart';
 import '../../domain/value_objects/organization_member_role_vo.dart';
 
@@ -6,7 +7,7 @@ class OrganizationInviteDto {
       OrganizationInvite(
         id: (json['id'] as num?)?.toInt() ?? 0,
         code: json['code']?.toString() ?? '',
-        role: OrganizationMemberRole.fromJson(json['role']?.toString()),
+        role: OrganizationMemberRole.fromJson(json['role']),
         isActive: json['isActive'] as bool? ?? true,
         maxUses: (json['maxUses'] as num?)?.toInt(),
         usesCount: (json['usesCount'] as num?)?.toInt() ?? 0,
@@ -16,8 +17,14 @@ class OrganizationInviteDto {
             DateTime.tryParse(json['memberStartsAt']?.toString() ?? ''),
         memberExpiresAt:
             DateTime.tryParse(json['memberExpiresAt']?.toString() ?? ''),
-        spaceIds: (json['spaceIds'] as List<dynamic>?)
-                ?.map((e) => (e as num).toInt())
+        spaces: (json['spaces'] as List<dynamic>?)
+                ?.map((e) {
+                  final m = (e as Map).cast<String, dynamic>();
+                  return ManagedSpace(
+                    spaceId: (m['spaceId'] as num?)?.toInt() ?? 0,
+                    name: m['name']?.toString() ?? '',
+                  );
+                })
                 .toList() ??
             const [],
       );

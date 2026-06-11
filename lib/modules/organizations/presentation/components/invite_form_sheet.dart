@@ -4,12 +4,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/gatewise_theme.dart';
 import '../../../spaces/domain/entities/space_entity.dart';
 import '../../../spaces/presentation/space_providers.dart';
+import '../../domain/entities/organization_entity.dart';
 import '../../domain/value_objects/organization_member_role_vo.dart';
 import '../../infra/dtos/create_invite_dto.dart';
 import 'sheet_scaffold.dart';
 
 class InviteFormSheet extends ConsumerStatefulWidget {
-  const InviteFormSheet({super.key});
+  const InviteFormSheet({super.key, this.viewerMembership});
+
+  final OrganizationMembership? viewerMembership;
 
   @override
   ConsumerState<InviteFormSheet> createState() => _InviteFormSheetState();
@@ -23,6 +26,13 @@ class _InviteFormSheetState extends ConsumerState<InviteFormSheet> {
   DateTime? _memberExpiresAt;
   final Set<int> _selectedSpaceIds = {};
 
+  bool get _viewerIsManager =>
+      widget.viewerMembership?.role == OrganizationMemberRole.manager;
+
+  Set<int> get _managedSpaceIds =>
+      widget.viewerMembership?.managedSpaces.map((s) => s.spaceId).toSet() ??
+      {};
+
   @override
   void dispose() {
     _expiresController.dispose();
@@ -32,32 +42,54 @@ class _InviteFormSheetState extends ConsumerState<InviteFormSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final isManager = _role == OrganizationMemberRole.manager;
-    final spacesAsync = ref.watch(spaceControllerProvider).spaces;
+    final effectiveRole =
+        _viewerIsManager ? OrganizationMemberRole.member : _role;
+    final isInvitingManager =
+        !_viewerIsManager && _role == OrganizationMemberRole.manager;
+
+    final allSpacesAsync = ref.watch(spaceControllerProvider).spaces;
+    final spacesAsync = _viewerIsManager
+        ? allSpacesAsync.whenData(
+            (spaces) =>
+                spaces.where((s) => _managedSpaceIds.contains(s.id)).toList(),
+          )
+        : allSpacesAsync;
 
     return SheetScaffold(
       title: 'Criar convite',
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          DropdownButtonFormField<OrganizationMemberRole>(
-            initialValue: _role,
-            dropdownColor: GateWiseColors.surface,
-            decoration: const InputDecoration(
-              labelText: 'Role',
-              prefixIcon: Icon(Icons.shield_rounded),
+          if (_viewerIsManager)
+            InputDecorator(
+              decoration: const InputDecoration(
+                labelText: 'Role',
+                prefixIcon: Icon(Icons.shield_rounded),
+              ),
+              child: Text(
+                OrganizationMemberRole.member.label,
+                style: const TextStyle(color: Colors.white),
+              ),
+            )
+          else
+            DropdownButtonFormField<OrganizationMemberRole>(
+              initialValue: _role,
+              dropdownColor: GateWiseColors.surface,
+              decoration: const InputDecoration(
+                labelText: 'Role',
+                prefixIcon: Icon(Icons.shield_rounded),
+              ),
+              items: OrganizationMemberRole.values
+                  .map(
+                    (role) =>
+                        DropdownMenuItem(value: role, child: Text(role.label)),
+                  )
+                  .toList(),
+              onChanged: (value) => setState(() {
+                _role = value ?? OrganizationMemberRole.member;
+                _selectedSpaceIds.clear();
+              }),
             ),
-            items: OrganizationMemberRole.values
-                .map(
-                  (role) =>
-                      DropdownMenuItem(value: role, child: Text(role.label)),
-                )
-                .toList(),
-            onChanged: (value) => setState(() {
-              _role = value ?? OrganizationMemberRole.member;
-              _selectedSpaceIds.clear();
-            }),
-          ),
           const SizedBox(height: 12),
           TextField(
             controller: _expiresController,
@@ -92,20 +124,19 @@ class _InviteFormSheetState extends ConsumerState<InviteFormSheet> {
             value: _memberExpiresAt,
             onChanged: (date) => setState(() => _memberExpiresAt = date),
           ),
-          if (isManager) ...[
-            const SizedBox(height: 16),
-            _SpaceSelector(
-              spacesAsync: spacesAsync,
-              selectedIds: _selectedSpaceIds,
-              onToggle: (id) => setState(() {
-                if (_selectedSpaceIds.contains(id)) {
-                  _selectedSpaceIds.remove(id);
-                } else {
-                  _selectedSpaceIds.add(id);
-                }
-              }),
-            ),
-          ],
+          const SizedBox(height: 16),
+          _SpaceSelector(
+            spacesAsync: spacesAsync,
+            selectedIds: _selectedSpaceIds,
+            label: isInvitingManager ? 'Espaços do Manager *' : 'Espaços *',
+            onToggle: (id) => setState(() {
+              if (_selectedSpaceIds.contains(id)) {
+                _selectedSpaceIds.remove(id);
+              } else {
+                _selectedSpaceIds.add(id);
+              }
+            }),
+          ),
           const SizedBox(height: 16),
           NeonGradientButton(
             label: 'Gerar convite',
@@ -114,27 +145,26 @@ class _InviteFormSheetState extends ConsumerState<InviteFormSheet> {
               GateWiseColors.electricBlue,
               GateWiseColors.electricBlue,
             ],
-            onPressed: (isManager && _selectedSpaceIds.isEmpty)
+            onPressed: _selectedSpaceIds.isEmpty
                 ? null
                 : () => Navigator.of(context).pop(
-                      CreateInvitePayload(
-                        role: _role,
-                        expiresInDays:
-                            _parseOptionalInt(_expiresController.text),
-                        maxUses: _parseOptionalInt(_usesController.text),
-                        memberStartsAt: _memberStartsAt,
-                        memberExpiresAt: _memberExpiresAt,
-                        spaceIds: isManager
-                            ? _selectedSpaceIds.toList()
-                            : null,
-                      ),
+                    CreateInvitePayload(
+                      role: effectiveRole,
+                      expiresInDays: _parseOptionalInt(_expiresController.text),
+                      maxUses: _parseOptionalInt(_usesController.text),
+                      memberStartsAt: _memberStartsAt,
+                      memberExpiresAt: _memberExpiresAt,
+                      spaceIds: _selectedSpaceIds.toList(),
                     ),
+                  ),
           ),
-          if (isManager && _selectedSpaceIds.isEmpty)
+          if (_selectedSpaceIds.isEmpty)
             Padding(
               padding: const EdgeInsets.only(top: 8),
               child: Text(
-                'Selecione ao menos um espaço para o Manager.',
+                isInvitingManager
+                    ? 'Selecione ao menos um espaço para o Manager.'
+                    : 'Selecione ao menos um espaço.',
                 style: TextStyle(
                   color: GateWiseColors.danger.withValues(alpha: 0.8),
                   fontSize: 12,
@@ -158,11 +188,13 @@ class _SpaceSelector extends StatelessWidget {
   const _SpaceSelector({
     required this.spacesAsync,
     required this.selectedIds,
+    required this.label,
     required this.onToggle,
   });
 
   final AsyncValue<List<Space>> spacesAsync;
   final Set<int> selectedIds;
+  final String label;
   final void Function(int) onToggle;
 
   @override
@@ -179,7 +211,7 @@ class _SpaceSelector extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             Text(
-              'Espaços do Manager *',
+              label,
               style: TextStyle(
                 color: Colors.white.withValues(alpha: 0.7),
                 fontSize: 13,
@@ -225,10 +257,12 @@ class _SpaceSelector extends StatelessWidget {
                     label: Text(space.name),
                     selected: selectedIds.contains(space.id),
                     onSelected: (_) => onToggle(space.id),
-                    backgroundColor:
-                        GateWiseColors.surfaceLight.withValues(alpha: 0.3),
-                    selectedColor:
-                        GateWiseColors.electricBlue.withValues(alpha: 0.22),
+                    backgroundColor: GateWiseColors.surfaceLight.withValues(
+                      alpha: 0.3,
+                    ),
+                    selectedColor: GateWiseColors.electricBlue.withValues(
+                      alpha: 0.22,
+                    ),
                     checkmarkColor: GateWiseColors.electricBlue,
                     side: BorderSide(
                       color: selectedIds.contains(space.id)
@@ -287,31 +321,31 @@ class _DatePickerField extends StatelessWidget {
 
     final pickedTime = await showTimePicker(
       context: context,
-      initialTime: _hasValue
-          ? TimeOfDay.fromDateTime(value!)
-          : TimeOfDay.now(),
+      initialTime: _hasValue ? TimeOfDay.fromDateTime(value!) : TimeOfDay.now(),
       builder: _pickerTheme,
     );
     if (!context.mounted) return;
 
-    onChanged(DateTime(
-      pickedDate.year,
-      pickedDate.month,
-      pickedDate.day,
-      pickedTime?.hour ?? 0,
-      pickedTime?.minute ?? 0,
-    ));
+    onChanged(
+      DateTime(
+        pickedDate.year,
+        pickedDate.month,
+        pickedDate.day,
+        pickedTime?.hour ?? 0,
+        pickedTime?.minute ?? 0,
+      ),
+    );
   }
 
   static Widget _pickerTheme(BuildContext context, Widget? child) => Theme(
-        data: Theme.of(context).copyWith(
-          colorScheme: Theme.of(context).colorScheme.copyWith(
-            primary: GateWiseColors.electricBlue,
-            surface: GateWiseColors.surface,
-          ),
-        ),
-        child: child!,
-      );
+    data: Theme.of(context).copyWith(
+      colorScheme: Theme.of(context).colorScheme.copyWith(
+        primary: GateWiseColors.electricBlue,
+        surface: GateWiseColors.surface,
+      ),
+    ),
+    child: child!,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -366,8 +400,9 @@ class _DatePickerField extends StatelessWidget {
                             ? GateWiseColors.textPrimary
                             : Colors.white.withValues(alpha: 0.3),
                         fontSize: 14,
-                        fontWeight:
-                            _hasValue ? FontWeight.w700 : FontWeight.w400,
+                        fontWeight: _hasValue
+                            ? FontWeight.w700
+                            : FontWeight.w400,
                       ),
                     ),
                   ],

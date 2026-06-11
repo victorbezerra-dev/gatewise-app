@@ -6,17 +6,37 @@ import '../../domain/entities/organization_invite_entity.dart';
 import 'org_ui_helpers.dart';
 import 'role_badge.dart';
 
-class InviteCard extends StatelessWidget {
-  const InviteCard({super.key, required this.invite, this.onRevoke});
+const _kMaxVisibleSpaces = 3;
+
+class InviteCard extends StatefulWidget {
+  const InviteCard({
+    super.key,
+    required this.invite,
+    this.onRevoke,
+    this.onRemoveSpace,
+  });
 
   final OrganizationInvite invite;
   final VoidCallback? onRevoke;
+  final void Function(int spaceId)? onRemoveSpace;
+
+  @override
+  State<InviteCard> createState() => _InviteCardState();
+}
+
+class _InviteCardState extends State<InviteCard> {
+  bool _spacesExpanded = false;
 
   @override
   Widget build(BuildContext context) {
-    final hasSpaces = invite.spaceIds.isNotEmpty;
+    final invite = widget.invite;
+    final hasSpaces = invite.spaces.isNotEmpty;
     final hasMemberWindow =
         invite.memberStartsAt != null || invite.memberExpiresAt != null;
+    final hasMore = invite.spaces.length > _kMaxVisibleSpaces;
+    final visibleSpaces = _spacesExpanded
+        ? invite.spaces
+        : invite.spaces.take(_kMaxVisibleSpaces).toList();
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
@@ -51,10 +71,10 @@ class InviteCard extends StatelessWidget {
                     color: GateWiseColors.electricBlue,
                   ),
                 ),
-                if (onRevoke != null)
+                if (widget.onRevoke != null)
                   IconButton(
                     tooltip: 'Revogar convite',
-                    onPressed: onRevoke,
+                    onPressed: widget.onRevoke,
                     icon: const Icon(
                       Icons.link_off_rounded,
                       color: GateWiseColors.danger,
@@ -82,12 +102,6 @@ class InviteCard extends StatelessWidget {
                   icon: Icons.group_add_rounded,
                   color: GateWiseColors.amber,
                 ),
-                if (hasSpaces)
-                  TechStatusPill(
-                    label: '${invite.spaceIds.length} ESPAÇO${invite.spaceIds.length == 1 ? '' : 'S'}',
-                    icon: Icons.sensor_door_rounded,
-                    color: GateWiseColors.electricBlue,
-                  ),
               ],
             ),
             const SizedBox(height: 8),
@@ -108,7 +122,137 @@ class InviteCard extends StatelessWidget {
                 ),
               ),
             ],
+            if (hasSpaces) ...[
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.sensor_door_rounded,
+                    size: 15,
+                    color: GateWiseColors.electricBlue,
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    'Espaços',
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.75),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.3,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: [
+                  for (final space in visibleSpaces)
+                    _SpaceChip(
+                      name: space.name,
+                      onRemove: widget.onRemoveSpace != null
+                          ? () => widget.onRemoveSpace!(space.spaceId)
+                          : null,
+                    ),
+                  if (hasMore)
+                    _ToggleChip(
+                      label: _spacesExpanded
+                          ? 'ver menos'
+                          : '+${invite.spaces.length - _kMaxVisibleSpaces} mais',
+                      onTap: () =>
+                          setState(() => _spacesExpanded = !_spacesExpanded),
+                    ),
+                ],
+              ),
+            ],
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SpaceChip extends StatelessWidget {
+  const _SpaceChip({required this.name, this.onRemove});
+
+  final String name;
+  final VoidCallback? onRemove;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(
+        left: 9,
+        right: onRemove != null ? 4 : 9,
+        top: 4,
+        bottom: 4,
+      ),
+      decoration: BoxDecoration(
+        color: GateWiseColors.electricBlue.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: GateWiseColors.electricBlue.withValues(alpha: 0.35),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.sensor_door_rounded,
+            size: 12,
+            color: GateWiseColors.electricBlue.withValues(alpha: 0.8),
+          ),
+          const SizedBox(width: 5),
+          Text(
+            name,
+            style: TextStyle(
+              color: GateWiseColors.electricBlue.withValues(alpha: 0.9),
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          if (onRemove != null) ...[
+            const SizedBox(width: 4),
+            GestureDetector(
+              onTap: onRemove,
+              child: Icon(
+                Icons.close_rounded,
+                size: 14,
+                color: Colors.white.withValues(alpha: 0.45),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _ToggleChip extends StatelessWidget {
+  const _ToggleChip({required this.label, required this.onTap});
+
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.06),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.15)),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: Colors.white.withValues(alpha: 0.55),
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
     );

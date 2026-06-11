@@ -1,3 +1,4 @@
+import 'organization_entity.dart';
 import '../value_objects/organization_member_role_vo.dart';
 
 class OrganizationInvite {
@@ -12,7 +13,7 @@ class OrganizationInvite {
     required this.createdAt,
     this.memberStartsAt,
     this.memberExpiresAt,
-    this.spaceIds = const [],
+    this.spaces = const [],
   });
 
   final int id;
@@ -25,5 +26,5 @@ class OrganizationInvite {
   final DateTime? createdAt;
   final DateTime? memberStartsAt;
   final DateTime? memberExpiresAt;
-  final List<int> spaceIds;
+  final List<ManagedSpace> spaces;
 }

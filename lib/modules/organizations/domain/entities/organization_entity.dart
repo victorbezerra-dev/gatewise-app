@@ -18,6 +18,13 @@ class Organization {
   final DateTime? updatedAt;
 }
 
+class ManagedSpace {
+  const ManagedSpace({required this.spaceId, required this.name});
+
+  final int spaceId;
+  final String name;
+}
+
 class OrganizationMembership {
   const OrganizationMembership({
     required this.organization,
@@ -25,6 +32,7 @@ class OrganizationMembership {
     required this.joinedAt,
     this.startsAt,
     this.expiresAt,
+    this.managedSpaces = const [],
   });
 
   final Organization organization;
@@ -32,4 +40,5 @@ class OrganizationMembership {
   final DateTime? joinedAt;
   final DateTime? startsAt;
   final DateTime? expiresAt;
+  final List<ManagedSpace> managedSpaces;
 }

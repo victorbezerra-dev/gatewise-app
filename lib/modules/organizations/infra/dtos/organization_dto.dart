@@ -22,5 +22,15 @@ class OrganizationMembershipDto {
         joinedAt: DateTime.tryParse(json['joinedAt']?.toString() ?? ''),
         startsAt: DateTime.tryParse(json['startsAt']?.toString() ?? ''),
         expiresAt: DateTime.tryParse(json['expiresAt']?.toString() ?? ''),
+        managedSpaces: (json['managedSpaces'] as List<dynamic>?)
+                ?.map((e) {
+                  final m = (e as Map).cast<String, dynamic>();
+                  return ManagedSpace(
+                    spaceId: (m['spaceId'] as num?)?.toInt() ?? 0,
+                    name: m['name']?.toString() ?? '',
+                  );
+                })
+                .toList() ??
+            const [],
       );
 }
