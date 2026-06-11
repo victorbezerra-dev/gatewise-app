@@ -11,7 +11,6 @@ class RoleBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = switch (role) {
-      OrganizationMemberRole.admin => GateWiseColors.neonCyan,
       OrganizationMemberRole.owner => GateWiseColors.mint,
       OrganizationMemberRole.manager => GateWiseColors.amber,
       OrganizationMemberRole.member => GateWiseColors.electricBlue,

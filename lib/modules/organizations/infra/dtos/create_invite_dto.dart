@@ -18,13 +18,13 @@ class CreateInvitePayload {
   final List<int>? spaceIds;
 
   Map<String, dynamic> toJson() => {
-    'role': role.apiValue,
+    'role': role.apiInt,
+    'spaceIds': spaceIds ?? [],
     if (expiresInDays != null) 'expiresInDays': expiresInDays,
     if (maxUses != null) 'maxUses': maxUses,
     if (memberStartsAt != null)
       'memberStartsAt': memberStartsAt!.toUtc().toIso8601String(),
     if (memberExpiresAt != null)
       'memberExpiresAt': memberExpiresAt!.toUtc().toIso8601String(),
-    if (spaceIds != null && spaceIds!.isNotEmpty) 'spaceIds': spaceIds,
   };
 }

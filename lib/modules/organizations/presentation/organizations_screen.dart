@@ -124,7 +124,7 @@ class _OrganizationsScreenState extends ConsumerState<OrganizationsScreen> {
                       );
                     },
                   ),
-                  state.adminOrganizations.when(
+                  state.ownedOrganizations.when(
                     loading: () => const SizedBox.shrink(),
                     error: (_, _) => const SizedBox.shrink(),
                     data: (organizations) {
@@ -133,7 +133,7 @@ class _OrganizationsScreenState extends ConsumerState<OrganizationsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const SizedBox(height: 18),
-                          const SectionTitle('Todas as organizações (admin)'),
+                          const SectionTitle('Organizações'),
                           const SizedBox(height: 10),
                           ...organizations.map(
                             (organization) => OrganizationCard(
