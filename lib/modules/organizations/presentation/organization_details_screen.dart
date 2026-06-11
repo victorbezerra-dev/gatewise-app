@@ -407,8 +407,9 @@ class _OrganizationDetailsScreenState
     final confirmed = await confirm(
       context,
       title: 'Remover manager do espaço?',
-      message:
-          'Remover ${member.name} como manager de "${space.name}"?',
+      message: 'Remover ${member.name} como manager de "${space.name}"?\n\n'
+          'Se não houver outros acessos ou espaços gerenciados, '
+          'o usuário será removido da organização automaticamente.',
       confirmLabel: 'Remover',
       danger: true,
     );

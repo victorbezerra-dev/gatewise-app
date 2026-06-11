@@ -383,10 +383,23 @@ class _GrantsSection extends StatelessWidget {
     AccessGrant grant,
     SpaceController notifier,
   ) async {
+    final grants = state.grants.valueOrNull ?? [];
+    final hasOtherGrantsForUser = grants.any(
+      (g) =>
+          g.id != grant.id &&
+          g.authorizedUserId == grant.authorizedUserId &&
+          g.status == AccessGrantStatus.granted,
+    );
+    final message = hasOtherGrantsForUser
+        ? 'Remover o registro de acesso de ${grant.authorizedUserName}?'
+        : 'Remover o registro de acesso de ${grant.authorizedUserName}?\n\n'
+            'Este é o último acesso deste usuário neste espaço. Se não houver '
+            'outros vínculos na organização, ele será removido automaticamente.';
+
     final confirmed = await confirmSpace(
       context,
       title: 'Remover acesso?',
-      message: 'Remover o registro de acesso de ${grant.authorizedUserName}?',
+      message: message,
       confirmLabel: 'Remover',
       danger: true,
     );
