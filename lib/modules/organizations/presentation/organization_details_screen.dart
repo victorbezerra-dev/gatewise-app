@@ -35,7 +35,7 @@ class OrganizationDetailsScreen extends ConsumerStatefulWidget {
 class _OrganizationDetailsScreenState
     extends ConsumerState<OrganizationDetailsScreen>
     with TickerProviderStateMixin {
-  late final TabController _tabController;
+  late TabController _tabController;
 
   @override
   void initState() {
@@ -105,6 +105,24 @@ class _OrganizationDetailsScreenState
 
               final canManage =
                   state.viewerMembership?.role.canManageOrganization ?? false;
+              final canSeeInvites =
+                  state.viewerMembership?.role != OrganizationMemberRole.member;
+              final expectedTabCount = canSeeInvites ? 3 : 2;
+              if (_tabController.length != expectedTabCount) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (!mounted) return;
+                  setState(() {
+                    final clampedIndex =
+                        _tabController.index.clamp(0, expectedTabCount - 1);
+                    _tabController.dispose();
+                    _tabController = TabController(
+                      initialIndex: clampedIndex,
+                      length: expectedTabCount,
+                      vsync: this,
+                    );
+                  });
+                });
+              }
 
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -125,7 +143,10 @@ class _OrganizationDetailsScreenState
                   const SizedBox(height: 12),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 18),
-                    child: _OrganizationTabs(controller: _tabController),
+                    child: _OrganizationTabs(
+                      controller: _tabController,
+                      canSeeInvites: canSeeInvites,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Expanded(
@@ -157,32 +178,33 @@ class _OrganizationDetailsScreenState
                             notifier,
                           ),
                         ),
-                        _InvitesTab(
-                          state: state,
-                          organizationId: organization.id,
-                          notifier: notifier,
-                          viewerMembership: state.viewerMembership,
-                          onCreateInvite: () => _openInviteForm(
-                            context,
-                            organization.id,
-                            notifier,
-                            state.viewerMembership,
+                        if (canSeeInvites)
+                          _InvitesTab(
+                            state: state,
+                            organizationId: organization.id,
+                            notifier: notifier,
+                            viewerMembership: state.viewerMembership,
+                            onCreateInvite: () => _openInviteForm(
+                              context,
+                              organization.id,
+                              notifier,
+                              state.viewerMembership,
+                            ),
+                            onRevokeInvite: (invite) => _confirmRevokeInvite(
+                              context,
+                              organization.id,
+                              invite,
+                              notifier,
+                            ),
+                            onRemoveSpace: (invite, spaceId) =>
+                                _confirmRemoveSpaceFromInvite(
+                              context,
+                              organization.id,
+                              invite,
+                              spaceId,
+                              notifier,
+                            ),
                           ),
-                          onRevokeInvite: (invite) => _confirmRevokeInvite(
-                            context,
-                            organization.id,
-                            invite,
-                            notifier,
-                          ),
-                          onRemoveSpace: (invite, spaceId) =>
-                              _confirmRemoveSpaceFromInvite(
-                            context,
-                            organization.id,
-                            invite,
-                            spaceId,
-                            notifier,
-                          ),
-                        ),
                       ],
                     ),
                   ),
@@ -491,11 +513,15 @@ class _OrganizationDetailsScreenState
 }
 
 class _OrganizationTabs extends StatelessWidget {
-  const _OrganizationTabs({required this.controller});
+  const _OrganizationTabs({
+    required this.controller,
+    required this.canSeeInvites,
+  });
 
   final TabController controller;
+  final bool canSeeInvites;
 
-  static const _tabs = [
+  static const _allTabs = [
     _OrganizationTabItem(
       label: 'Espaços',
       icon: Icons.maps_home_work_rounded,
@@ -515,6 +541,8 @@ class _OrganizationTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tabs = canSeeInvites ? _allTabs : _allTabs.sublist(0, 2);
+
     return Container(
       padding: const EdgeInsets.all(5),
       decoration: BoxDecoration(
@@ -541,8 +569,8 @@ class _OrganizationTabs extends StatelessWidget {
               controller.animation?.value ?? controller.index.toDouble();
 
           return Row(
-            children: List.generate(_tabs.length, (index) {
-              final tab = _tabs[index];
+            children: List.generate(tabs.length, (index) {
+              final tab = tabs[index];
               final selectedAmount = (1 - (animationValue - index).abs()).clamp(
                 0.0,
                 1.0,
