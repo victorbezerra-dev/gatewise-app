@@ -117,7 +117,11 @@ class _HostScreenState extends ConsumerState<HostScreen> {
               ],
             ),
           ),
-          bottomNavigationBar: AnimatedNotchBottomBar(
+          bottomNavigationBar: SafeArea(
+            top: false,
+            left: false,
+            right: false,
+            child: AnimatedNotchBottomBar(
             notchBottomBarController: _controller,
             color: GateWiseColors.surface,
             showLabel: true,
@@ -186,6 +190,7 @@ class _HostScreenState extends ConsumerState<HostScreen> {
                 itemLabel: 'Perfil',
               ),
             ],
+          ),
           ),
         ),
         const DialogHost(),
