@@ -27,12 +27,11 @@ class SpaceRepository {
   static const _spacesPath = '/api/spaces';
   static const _grantsPath = '/api/accessgrants';
 
-  // ── Spaces ────────────────────────────────────────────────────────────────
-
-  Future<List<Space>> listSpaces() async {
-    _logRequest('GET', _spacesPath);
-    final response = await httpClient.get(_spacesPath);
-    _logResponse('GET', _spacesPath, response);
+  Future<List<Space>> listSpaces(int organizationId) async {
+    final path = '/api/organizations/$organizationId/spaces';
+    _logRequest('GET', path);
+    final response = await httpClient.get(path);
+    _logResponse('GET', path, response);
     _ensureSuccess(response.statusCode, response.data, expected: const [200]);
     return _decodeList(response.data, SpaceDto.fromJson);
   }
@@ -46,11 +45,12 @@ class SpaceRepository {
     return SpaceDto.fromJson(response.data as Map<String, dynamic>);
   }
 
-  Future<Space> createSpace(SpacePayload payload) async {
+  Future<Space> createSpace(int organizationId, SpacePayload payload) async {
+    final path = '/api/organizations/$organizationId/spaces';
     final body = jsonEncode(payload.toJson());
-    _logRequest('POST', _spacesPath, body: body);
-    final response = await httpClient.post(_spacesPath, body: body);
-    _logResponse('POST', _spacesPath, response);
+    _logRequest('POST', path, body: body);
+    final response = await httpClient.post(path, body: body);
+    _logResponse('POST', path, response);
     _ensureSuccess(
       response.statusCode,
       response.data,
@@ -107,9 +107,11 @@ class SpaceRepository {
     final raw = data is String
         ? data.toLowerCase()
         : data is Map
-            ? jsonEncode(data).toLowerCase()
-            : '';
-    if (raw.contains('not started') || raw.contains('not_started') || raw.contains('nao iniciado')) {
+        ? jsonEncode(data).toLowerCase()
+        : '';
+    if (raw.contains('not started') ||
+        raw.contains('not_started') ||
+        raw.contains('nao iniciado')) {
       return 'Seu acesso a este espaço ainda não começou.';
     }
     if (raw.contains('expired') || raw.contains('expirado')) {
@@ -117,8 +119,6 @@ class SpaceRepository {
     }
     return 'Você não tem permissão para abrir este espaço.';
   }
-
-  // ── Access Grants ─────────────────────────────────────────────────────────
 
   Future<void> requestAccess(RequestAccessPayload payload) async {
     const path = '$_grantsPath/request-access';
@@ -184,8 +184,6 @@ class SpaceRepository {
     );
   }
 
-  // ── Helpers ───────────────────────────────────────────────────────────────
-
   void _logRequest(String method, String path, {String? body}) {
     log(
       '[Spaces API] $method $path${body == null ? '' : ' body=$body'}',
@@ -219,8 +217,8 @@ class SpaceRepository {
     final body = data == null
         ? ''
         : data is String
-            ? data
-            : jsonEncode(data);
+        ? data
+        : jsonEncode(data);
     throw SpaceApiException(
       _messageForStatus(statusCode ?? 0, body),
       statusCode: statusCode,

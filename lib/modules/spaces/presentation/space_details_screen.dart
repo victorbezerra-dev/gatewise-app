@@ -177,7 +177,14 @@ class _SpaceDetailsScreenState extends ConsumerState<SpaceDetailsScreen> {
     );
     if (payload == null) return;
 
-    final ok = await notifier.updateSpace(space.id, payload);
+    final orgId = ref
+        .read(organizationControllerProvider)
+        .selectedOrganization
+        .valueOrNull
+        ?.id;
+    if (orgId == null) return;
+
+    final ok = await notifier.updateSpace(orgId, space.id, payload);
     if (!context.mounted) return;
     if (!ok) {
       showSpaceActionError(context, ref);
@@ -200,7 +207,14 @@ class _SpaceDetailsScreenState extends ConsumerState<SpaceDetailsScreen> {
     );
     if (!confirmed) return;
 
-    final ok = await notifier.deleteSpace(space.id);
+    final orgId = ref
+        .read(organizationControllerProvider)
+        .selectedOrganization
+        .valueOrNull
+        ?.id;
+    if (orgId == null) return;
+
+    final ok = await notifier.deleteSpace(orgId, space.id);
     if (!context.mounted) return;
     if (!ok) {
       showSpaceActionError(context, ref);

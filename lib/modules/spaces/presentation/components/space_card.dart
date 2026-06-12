@@ -131,11 +131,6 @@ class SpaceCard extends StatelessWidget {
                               icon: Icons.tag_rounded,
                               label: 'ID ${space.id}',
                             ),
-                            if (space.organizationId != null)
-                              _SpaceInfoChip(
-                                icon: Icons.business_rounded,
-                                label: 'Org ${space.organizationId}',
-                              ),
                             if (space.updatedAt != null)
                               _SpaceInfoChip(
                                 icon: Icons.update_rounded,

@@ -60,10 +60,10 @@ class SpaceController extends StateNotifier<SpaceState> {
 
   final SpaceRepository _repository;
 
-  Future<void> loadSpaces() async {
+  Future<void> loadSpaces(int organizationId) async {
     state = state.copyWith(spaces: const AsyncLoading());
     try {
-      final data = await _repository.listSpaces();
+      final data = await _repository.listSpaces(organizationId);
       state = state.copyWith(spaces: AsyncData(data));
     } on SpaceApiException catch (e, st) {
       if (e.statusCode == 403) {
@@ -119,28 +119,28 @@ class SpaceController extends StateNotifier<SpaceState> {
     }
   }
 
-  Future<Space?> createSpace(SpacePayload payload) async {
+  Future<Space?> createSpace(int organizationId, SpacePayload payload) async {
     return _runAction(() async {
-      final space = await _repository.createSpace(payload);
-      await loadSpaces();
+      final space = await _repository.createSpace(organizationId, payload);
+      await loadSpaces(organizationId);
       return space;
     });
   }
 
-  Future<bool> updateSpace(int id, SpacePayload payload) async {
+  Future<bool> updateSpace(int organizationId, int id, SpacePayload payload) async {
     final result = await _runAction(() async {
       await _repository.updateSpace(id, payload);
       await loadSpaceDetails(id);
-      await loadSpaces();
+      await loadSpaces(organizationId);
       return true;
     });
     return result ?? false;
   }
 
-  Future<bool> deleteSpace(int id) async {
+  Future<bool> deleteSpace(int organizationId, int id) async {
     final result = await _runAction(() async {
       await _repository.deleteSpace(id);
-      await loadSpaces();
+      await loadSpaces(organizationId);
       return true;
     });
     return result ?? false;

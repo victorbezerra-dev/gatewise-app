@@ -9,7 +9,9 @@ import 'components/space_card.dart';
 import 'components/space_form_sheet.dart';
 import 'components/space_ui_helpers.dart';
 import 'space_providers.dart';
+import '../../../modules/organizations/domain/value_objects/organization_member_role_vo.dart';
 import '../../../modules/organizations/presentation/components/status_panels.dart';
+import '../../../modules/organizations/presentation/organization_providers.dart';
 
 class SpacesScreen extends ConsumerStatefulWidget {
   const SpacesScreen({super.key});
@@ -22,9 +24,16 @@ class _SpacesScreenState extends ConsumerState<SpacesScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(
-      () => ref.read(spaceControllerProvider.notifier).loadSpaces(),
-    );
+    Future.microtask(() {
+      final orgId = ref
+          .read(organizationControllerProvider)
+          .selectedOrganization
+          .valueOrNull
+          ?.id;
+      if (orgId != null) {
+        ref.read(spaceControllerProvider.notifier).loadSpaces(orgId);
+      }
+    });
   }
 
   @override
@@ -35,6 +44,11 @@ class _SpacesScreenState extends ConsumerState<SpacesScreen> {
       data: (spaces) => spaces,
       orElse: () => const <Space>[],
     );
+    final role = ref
+        .watch(organizationControllerProvider)
+        .viewerMembership
+        ?.role;
+    final canCreate = role == null || role == OrganizationMemberRole.owner;
 
     return Scaffold(
       backgroundColor: GateWiseColors.background,
@@ -52,7 +66,15 @@ class _SpacesScreenState extends ConsumerState<SpacesScreen> {
           child: RefreshIndicator(
             color: GateWiseColors.electricBlue,
             backgroundColor: GateWiseColors.surface,
-            onRefresh: notifier.loadSpaces,
+            onRefresh: () {
+              final orgId = ref
+                  .read(organizationControllerProvider)
+                  .selectedOrganization
+                  .valueOrNull
+                  ?.id;
+              if (orgId != null) return notifier.loadSpaces(orgId);
+              return Future<void>.value();
+            },
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
               padding: const EdgeInsets.fromLTRB(18, 10, 18, 24),
@@ -62,6 +84,7 @@ class _SpacesScreenState extends ConsumerState<SpacesScreen> {
                   const SizedBox(height: 14),
                   _SpacesHero(
                     spaces: spacesSnapshot,
+                    canCreate: canCreate,
                     onCreate: () => _openSpaceForm(context, notifier),
                   ),
                   const SizedBox(height: 22),
@@ -81,7 +104,14 @@ class _SpacesScreenState extends ConsumerState<SpacesScreen> {
                       title: 'Erro ao carregar espaços',
                       message: error.toString(),
                       actionLabel: 'Tentar novamente',
-                      onAction: notifier.loadSpaces,
+                      onAction: () {
+                        final orgId = ref
+                            .read(organizationControllerProvider)
+                            .selectedOrganization
+                            .valueOrNull
+                            ?.id;
+                        if (orgId != null) notifier.loadSpaces(orgId);
+                      },
                     ),
                     data: (spaces) {
                       if (spaces.isEmpty) {
@@ -118,6 +148,13 @@ class _SpacesScreenState extends ConsumerState<SpacesScreen> {
     BuildContext context,
     SpaceController notifier,
   ) async {
+    final orgId = ref
+        .read(organizationControllerProvider)
+        .selectedOrganization
+        .valueOrNull
+        ?.id;
+    if (orgId == null) return;
+
     final payload = await showModalBottomSheet<SpacePayload>(
       context: context,
       isScrollControlled: true,
@@ -126,7 +163,7 @@ class _SpacesScreenState extends ConsumerState<SpacesScreen> {
     );
     if (payload == null) return;
 
-    final space = await notifier.createSpace(payload);
+    final space = await notifier.createSpace(orgId, payload);
     if (!context.mounted) return;
     if (space == null) {
       showSpaceActionError(context, ref);
@@ -138,9 +175,14 @@ class _SpacesScreenState extends ConsumerState<SpacesScreen> {
 }
 
 class _SpacesHero extends StatelessWidget {
-  const _SpacesHero({required this.spaces, required this.onCreate});
+  const _SpacesHero({
+    required this.spaces,
+    required this.canCreate,
+    required this.onCreate,
+  });
 
   final List<Space> spaces;
+  final bool canCreate;
   final VoidCallback onCreate;
 
   @override
@@ -183,7 +225,7 @@ class _SpacesHero extends StatelessWidget {
                   ),
                   const SizedBox(height: 14),
                   const Text(
-                    'Controle seus espaços inteligentes',
+                    'Controle seus espaços',
                     style: TextStyle(
                       color: GateWiseColors.textPrimary,
                       fontSize: 27,
@@ -194,7 +236,9 @@ class _SpacesHero extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Monitore portas, cadastre ambientes e gerencie acessos em uma interface segura e conectada.',
+                    canCreate
+                        ? 'Monitore portas, cadastre ambientes e gerencie acessos em uma interface segura e conectada.'
+                        : 'Visualize e acesse os espaços disponíveis na sua organização.',
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.64),
                       fontSize: 13,
@@ -232,20 +276,22 @@ class _SpacesHero extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 18),
-                  SizedBox(
-                    height: 44,
-                    width: double.infinity,
-                    child: FilledButton.icon(
-                      onPressed: onCreate,
-                      style: FilledButton.styleFrom(
-                        backgroundColor: GateWiseColors.electricBlue,
-                        foregroundColor: Colors.white,
+                  if (canCreate) ...[
+                    const SizedBox(height: 18),
+                    SizedBox(
+                      height: 44,
+                      width: double.infinity,
+                      child: FilledButton.icon(
+                        onPressed: onCreate,
+                        style: FilledButton.styleFrom(
+                          backgroundColor: GateWiseColors.electricBlue,
+                          foregroundColor: Colors.white,
+                        ),
+                        icon: const Icon(Icons.add_rounded, size: 18),
+                        label: const Text('Novo espaço'),
                       ),
-                      icon: const Icon(Icons.add_rounded, size: 18),
-                      label: const Text('Novo espaço'),
                     ),
-                  ),
+                  ],
                 ],
               ),
             ),

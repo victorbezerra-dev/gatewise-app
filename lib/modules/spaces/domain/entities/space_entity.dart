@@ -4,7 +4,6 @@ class Space {
     required this.name,
     required this.description,
     required this.isActive,
-    required this.organizationId,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -13,7 +12,6 @@ class Space {
   final String name;
   final String? description;
   final bool isActive;
-  final int? organizationId;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 }

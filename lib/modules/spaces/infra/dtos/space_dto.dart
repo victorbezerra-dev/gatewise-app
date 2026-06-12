@@ -6,7 +6,6 @@ class SpaceDto {
     name: json['name']?.toString() ?? '',
     description: json['description']?.toString(),
     isActive: json['isActive'] as bool? ?? true,
-    organizationId: (json['organizationId'] as num?)?.toInt(),
     createdAt: DateTime.tryParse(json['createdAt']?.toString() ?? ''),
     updatedAt: DateTime.tryParse(json['updatedAt']?.toString() ?? ''),
   );
