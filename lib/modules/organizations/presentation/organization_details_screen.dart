@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/providers/user_profile_provider.dart';
 import '../../../core/theme/gatewise_theme.dart';
 import '../../spaces/domain/entities/space_entity.dart';
 import '../../spaces/presentation/components/space_card.dart';
@@ -45,7 +46,7 @@ class _OrganizationDetailsScreenState
       ref
           .read(organizationControllerProvider.notifier)
           .loadOrganizationDetails(widget.organizationId);
-      ref.read(spaceControllerProvider.notifier).loadSpaces();
+      ref.read(spaceControllerProvider.notifier).loadSpaces(widget.organizationId);
     });
   }
 
@@ -318,49 +319,25 @@ class _OrganizationDetailsScreenState
     OrganizationMember member,
     OrganizationController notifier,
   ) async {
-    final newRole = await showDialog<OrganizationMemberRole>(
+    final availableSpaces =
+        ref.read(spaceControllerProvider).spaces.valueOrNull ?? [];
+
+    final result = await showDialog<(OrganizationMemberRole, List<int>)>(
       context: context,
-      builder: (ctx) => SimpleDialog(
-        backgroundColor: GateWiseColors.surface,
-        title: Text(
-          'Alterar role de ${member.name}',
-          style: const TextStyle(color: Colors.white, fontSize: 16),
-        ),
-        children: OrganizationMemberRole.values
-            .where((r) => r != member.role)
-            .map(
-              (role) => SimpleDialogOption(
-                onPressed: () => Navigator.of(ctx).pop(role),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.shield_rounded,
-                      size: 16,
-                      color: switch (role) {
-                        OrganizationMemberRole.owner => GateWiseColors.mint,
-                        OrganizationMemberRole.manager => GateWiseColors.amber,
-                        OrganizationMemberRole.member =>
-                          GateWiseColors.electricBlue,
-                      },
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      role.label,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            )
-            .toList(),
+      builder: (_) => _ChangeRoleDialog(
+        member: member,
+        availableSpaces: availableSpaces,
       ),
     );
-    if (newRole == null || !context.mounted) return;
+    if (result == null || !context.mounted) return;
 
-    final ok = await notifier.updateMemberRole(organizationId, member.id, newRole);
+    final (newRole, spaceIds) = result;
+    final ok = await notifier.updateMemberRole(
+      organizationId,
+      member.id,
+      newRole,
+      spaceIds: spaceIds,
+    );
     if (!context.mounted) return;
     if (!ok) {
       showActionError(context, ref);
@@ -375,9 +352,7 @@ class _OrganizationDetailsScreenState
     OrganizationMember member,
     OrganizationController notifier,
   ) async {
-    final allSpaces = ref.read(spaceControllerProvider).spaces.valueOrNull ?? [];
-    final orgSpaces =
-        allSpaces.where((s) => s.organizationId == organizationId).toList();
+    final orgSpaces = ref.read(spaceControllerProvider).spaces.valueOrNull ?? [];
 
     if (orgSpaces.isEmpty) {
       showSnack(
@@ -729,7 +704,7 @@ class _OrganizationTabButton extends StatelessWidget {
   }
 }
 
-class _MembersTab extends StatelessWidget {
+class _MembersTab extends ConsumerWidget {
   const _MembersTab({
     required this.state,
     required this.organizationId,
@@ -749,7 +724,9 @@ class _MembersTab extends StatelessWidget {
   final void Function(OrganizationMember) onRemoveFromSpace;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentUserId = ref.watch(userProfileProvider).valueOrNull?.id;
+
     return RefreshIndicator(
       color: GateWiseColors.electricBlue,
       backgroundColor: GateWiseColors.surface,
@@ -768,26 +745,37 @@ class _MembersTab extends StatelessWidget {
             data: (members) => members.isEmpty
                 ? const MessagePanel(
                     icon: Icons.people_outline_rounded,
-                    title: 'Nenhum membro listado',
-                    message:
-                        'A listagem de membros aparece para Admin, Owner ou Manager.',
+                    title: 'Nenhum membro encontrado',
+                    message: 'Ainda não há membros nesta organização.',
                   )
                 : Column(
-                    children: members
+                    children: ([...members]
+                          ..sort((a, b) {
+                            if (a.userId == currentUserId) return -1;
+                            if (b.userId == currentUserId) return 1;
+                            return 0;
+                          }))
                         .map(
-                          (member) => MemberCard(
-                            member: member,
-                            onRemove: canManage
-                                ? () => onRemoveMember(member)
-                                : null,
-                            onChangeRole: canManage
-                                ? () => onChangeRole(member)
-                                : null,
-                            onRemoveFromSpace: (canManage &&
-                                    member.role != OrganizationMemberRole.owner)
-                                ? () => onRemoveFromSpace(member)
-                                : null,
-                          ),
+                          (member) {
+                            final isMe = currentUserId != null &&
+                                member.userId == currentUserId;
+                            return MemberCard(
+                              member: member,
+                              isCurrentUser: isMe,
+                              onRemove: (canManage && !isMe)
+                                  ? () => onRemoveMember(member)
+                                  : null,
+                              onChangeRole: (canManage && !isMe)
+                                  ? () => onChangeRole(member)
+                                  : null,
+                              onRemoveFromSpace: (canManage &&
+                                      !isMe &&
+                                      member.role !=
+                                          OrganizationMemberRole.owner)
+                                  ? () => onRemoveFromSpace(member)
+                                  : null,
+                            );
+                          },
                         )
                         .toList(),
                   ),
@@ -891,7 +879,7 @@ class _SpacesTab extends ConsumerWidget {
     return RefreshIndicator(
       color: GateWiseColors.electricBlue,
       backgroundColor: GateWiseColors.surface,
-      onRefresh: spaceNotifier.loadSpaces,
+      onRefresh: () => spaceNotifier.loadSpaces(organizationId),
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.fromLTRB(18, 14, 18, 24),
@@ -917,9 +905,7 @@ class _SpacesTab extends ConsumerWidget {
                 message: 'Não foi possível carregar os espaços.',
               ),
               data: (spaces) {
-                final organizationSpaces = spaces
-                    .where((space) => space.organizationId == organizationId)
-                    .toList();
+                final organizationSpaces = spaces;
 
                 return organizationSpaces.isEmpty
                     ? const MessagePanel(
@@ -942,6 +928,196 @@ class _SpacesTab extends ConsumerWidget {
                       );
               },
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ChangeRoleDialog extends StatefulWidget {
+  const _ChangeRoleDialog({
+    required this.member,
+    required this.availableSpaces,
+  });
+
+  final OrganizationMember member;
+  final List<Space> availableSpaces;
+
+  @override
+  State<_ChangeRoleDialog> createState() => _ChangeRoleDialogState();
+}
+
+class _ChangeRoleDialogState extends State<_ChangeRoleDialog> {
+  OrganizationMemberRole? _selectedRole;
+  final Set<int> _selectedSpaceIds = {};
+
+  bool get _canConfirm =>
+      _selectedRole != null &&
+      (_selectedRole != OrganizationMemberRole.manager ||
+          _selectedSpaceIds.isNotEmpty);
+
+  @override
+  Widget build(BuildContext context) {
+    final roles = OrganizationMemberRole.values
+        .where((r) => r != widget.member.role)
+        .toList();
+
+    return Dialog(
+      backgroundColor: GateWiseColors.surface,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 400, maxHeight: 520),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                'Alterar role de ${widget.member.name}',
+                style: const TextStyle(
+                  color: GateWiseColors.textPrimary,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 16),
+              ...roles.map(
+                (role) => _RoleOption(
+                  role: role,
+                  selected: _selectedRole == role,
+                  onTap: () => setState(() {
+                    _selectedRole = role;
+                    if (role != OrganizationMemberRole.manager) {
+                      _selectedSpaceIds.clear();
+                    }
+                  }),
+                ),
+              ),
+              if (_selectedRole == OrganizationMemberRole.manager) ...[
+                const SizedBox(height: 12),
+                const Divider(color: Colors.white12),
+                const SizedBox(height: 8),
+                Text(
+                  'Selecione ao menos um espaço',
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.6),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Flexible(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: widget.availableSpaces.map((space) {
+                        final checked = _selectedSpaceIds.contains(space.id);
+                        return CheckboxListTile(
+                          value: checked,
+                          dense: true,
+                          contentPadding: EdgeInsets.zero,
+                          activeColor: GateWiseColors.electricBlue,
+                          checkColor: Colors.white,
+                          title: Text(
+                            space.name,
+                            style: const TextStyle(
+                              color: GateWiseColors.textPrimary,
+                              fontSize: 14,
+                            ),
+                          ),
+                          onChanged: (_) => setState(() {
+                            if (checked) {
+                              _selectedSpaceIds.remove(space.id);
+                            } else {
+                              _selectedSpaceIds.add(space.id);
+                            }
+                          }),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ],
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('Cancelar'),
+                  ),
+                  const SizedBox(width: 8),
+                  FilledButton(
+                    onPressed: _canConfirm
+                        ? () => Navigator.of(context).pop(
+                              (_selectedRole!, _selectedSpaceIds.toList()),
+                            )
+                        : null,
+                    style: FilledButton.styleFrom(
+                      backgroundColor: GateWiseColors.electricBlue,
+                    ),
+                    child: const Text('Confirmar'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _RoleOption extends StatelessWidget {
+  const _RoleOption({
+    required this.role,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final OrganizationMemberRole role;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = switch (role) {
+      OrganizationMemberRole.owner => GateWiseColors.mint,
+      OrganizationMemberRole.manager => GateWiseColors.amber,
+      OrganizationMemberRole.member => GateWiseColors.electricBlue,
+    };
+
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          color: selected
+              ? color.withValues(alpha: 0.12)
+              : Colors.white.withValues(alpha: 0.04),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: selected ? color.withValues(alpha: 0.6) : Colors.white12,
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(Icons.shield_rounded, size: 16, color: color),
+            const SizedBox(width: 10),
+            Text(
+              role.label,
+              style: TextStyle(
+                color: selected ? color : GateWiseColors.textPrimary,
+                fontWeight: FontWeight.w600,
+                fontSize: 14,
+              ),
+            ),
+            const Spacer(),
+            if (selected)
+              Icon(Icons.check_circle_rounded, size: 16, color: color),
           ],
         ),
       ),

@@ -9,54 +9,111 @@ class MemberCard extends StatelessWidget {
   const MemberCard({
     super.key,
     required this.member,
+    this.isCurrentUser = false,
     this.onRemove,
     this.onChangeRole,
     this.onRemoveFromSpace,
   });
 
   final OrganizationMember member;
+  final bool isCurrentUser;
   final VoidCallback? onRemove;
   final VoidCallback? onChangeRole;
   final VoidCallback? onRemoveFromSpace;
 
   @override
   Widget build(BuildContext context) {
-    final hasActions = onRemove != null || onChangeRole != null || onRemoveFromSpace != null;
+    final hasActions = !isCurrentUser &&
+        (onRemove != null || onChangeRole != null || onRemoveFromSpace != null);
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: GlassPanel(
         padding: const EdgeInsets.all(14),
         borderRadius: 18,
-        opacity: 0.56,
+        opacity: isCurrentUser ? 0.72 : 0.56,
         child: Row(
           children: [
-            CircleAvatar(
-              backgroundColor: GateWiseColors.surfaceLight,
-              child: Text(
-                member.name.trim().isEmpty
-                    ? '?'
-                    : member.name.trim()[0].toUpperCase(),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w800,
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                CircleAvatar(
+                  backgroundColor: isCurrentUser
+                      ? GateWiseColors.electricBlue
+                      : GateWiseColors.surfaceLight,
+                  child: Text(
+                    member.name.trim().isEmpty
+                        ? '?'
+                        : member.name.trim()[0].toUpperCase(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
                 ),
-              ),
+                if (isCurrentUser)
+                  Positioned(
+                    bottom: -2,
+                    right: -2,
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: const BoxDecoration(
+                        color: GateWiseColors.electricBlue,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.person_rounded,
+                        size: 10,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+              ],
             ),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    member.name.isEmpty ? 'Usuário sem nome' : member.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w800,
-                    ),
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          member.name.isEmpty ? 'Usuário sem nome' : member.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ),
+                      if (isCurrentUser) ...[
+                        const SizedBox(width: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: GateWiseColors.electricBlue.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(
+                              color: GateWiseColors.electricBlue.withValues(alpha: 0.5),
+                            ),
+                          ),
+                          child: const Text(
+                            'Você',
+                            style: TextStyle(
+                              color: GateWiseColors.electricBlue,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                   const SizedBox(height: 4),
                   Text(

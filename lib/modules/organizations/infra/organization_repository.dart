@@ -162,10 +162,14 @@ class OrganizationRepository {
   Future<void> updateMemberRole(
     int organizationId,
     int memberId,
-    OrganizationMemberRole role,
-  ) async {
+    OrganizationMemberRole role, {
+    List<int> spaceIds = const [],
+  }) async {
     final path = '$_basePath/$organizationId/members/$memberId/role';
-    final body = jsonEncode({'role': role.apiInt});
+    final body = jsonEncode({
+      'role': role.apiValue,
+      if (role == OrganizationMemberRole.manager) 'spaceIds': spaceIds,
+    });
     _logRequest('PUT', path, body: body);
     final response = await httpClient.put(path, body: body);
     _logResponse('PUT', path, response);

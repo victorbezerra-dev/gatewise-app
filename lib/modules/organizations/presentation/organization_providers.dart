@@ -137,12 +137,6 @@ class OrganizationController extends StateNotifier<OrganizationState> {
     try {
       final members = await _repository.listMembers(organizationId);
       state = state.copyWith(members: AsyncData(members));
-    } on OrganizationApiException catch (e, st) {
-      if (e.statusCode == 403) {
-        state = state.copyWith(members: const AsyncData([]));
-        return;
-      }
-      state = state.copyWith(members: AsyncError(e, st));
     } catch (e, st) {
       state = state.copyWith(members: AsyncError(e, st));
     }
@@ -244,10 +238,16 @@ class OrganizationController extends StateNotifier<OrganizationState> {
   Future<bool> updateMemberRole(
     int organizationId,
     int memberId,
-    OrganizationMemberRole role,
-  ) async {
+    OrganizationMemberRole role, {
+    List<int> spaceIds = const [],
+  }) async {
     final result = await _runAction(() async {
-      await _repository.updateMemberRole(organizationId, memberId, role);
+      await _repository.updateMemberRole(
+        organizationId,
+        memberId,
+        role,
+        spaceIds: spaceIds,
+      );
       await loadMembers(organizationId);
       return true;
     });
