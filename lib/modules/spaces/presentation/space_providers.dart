@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/domain/entities/user_entity.dart';
+import '../../../core/infra/secure_storage.dart';
 import '../../../core/providers/custom_http_client_provider.dart';
 import '../domain/entities/access_grant_entity.dart';
 import '../domain/entities/space_entity.dart';
@@ -80,8 +84,25 @@ class SpaceController extends StateNotifier<SpaceState> {
     state = state.copyWith(
       selectedSpace: const AsyncLoading(),
       grants: const AsyncLoading(),
+      myGrants: const AsyncLoading(),
     );
-    await Future.wait([loadSpace(id), loadGrants(id)]);
+    await Future.wait([loadSpace(id), loadGrants(id), loadMyGrantsForCurrentUser(id)]);
+  }
+
+  Future<void> loadMyGrantsForCurrentUser(int spaceId) async {
+    try {
+      final userJson = await SecureStore.getUserJson();
+      if (userJson == null) {
+        state = state.copyWith(myGrants: const AsyncData([]));
+        return;
+      }
+      final user = User.fromJson(jsonDecode(userJson) as Map<String, dynamic>);
+      final data = await _repository.listMyGrants(user.id);
+      final filtered = data.where((g) => g.spaceId == spaceId).toList();
+      state = state.copyWith(myGrants: AsyncData(filtered));
+    } catch (_) {
+      state = state.copyWith(myGrants: const AsyncData([]));
+    }
   }
 
   Future<void> loadSpace(int id) async {
@@ -170,11 +191,11 @@ class SpaceController extends StateNotifier<SpaceState> {
     return result ?? false;
   }
 
-  Future<bool> approveGrant(int grantId, int spaceId) async {
+  Future<bool> approveGrant(int grantId, int spaceId, {String? reason}) async {
     final result = await _runAction(() async {
       await _repository.reviewGrant(
         grantId,
-        const AccessGrantReviewPayload(approved: true),
+        AccessGrantReviewPayload(status: AccessGrantReviewStatus.approved, reason: reason),
       );
       await loadGrants(spaceId);
       return true;
@@ -182,11 +203,11 @@ class SpaceController extends StateNotifier<SpaceState> {
     return result ?? false;
   }
 
-  Future<bool> rejectGrant(int grantId, int spaceId) async {
+  Future<bool> rejectGrant(int grantId, int spaceId, {String? reason}) async {
     final result = await _runAction(() async {
       await _repository.reviewGrant(
         grantId,
-        const AccessGrantReviewPayload(approved: false),
+        AccessGrantReviewPayload(status: AccessGrantReviewStatus.rejected, reason: reason),
       );
       await loadGrants(spaceId);
       return true;

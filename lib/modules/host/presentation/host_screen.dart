@@ -6,7 +6,6 @@ import 'package:signalr_netcore/hub_connection.dart';
 
 import '../../../core/theme/gatewise_theme.dart';
 import '../../access_history/presentation/access_history_screen.dart';
-import '../../home/presentation/home_screen.dart';
 import '../../organizations/presentation/organizations_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
 import 'dialog_notifier.dart';
@@ -107,7 +106,6 @@ class _HostScreenState extends ConsumerState<HostScreen> {
                     controller: _pageController,
                     physics: const NeverScrollableScrollPhysics(),
                     children: const [
-                      HomeScreen(),
                       OrganizationsScreen(),
                       AccessHistoryScreen(),
                       ProfileScreen(),
@@ -145,17 +143,6 @@ class _HostScreenState extends ConsumerState<HostScreen> {
               _pageController.jumpToPage(index);
             },
             bottomBarItems: [
-              BottomBarItem(
-                inActiveItem: const Icon(
-                  Icons.home_filled,
-                  color: GateWiseColors.textMuted,
-                ),
-                activeItem: const Icon(
-                  Icons.home_filled,
-                  color: GateWiseColors.background,
-                ),
-                itemLabel: 'Início',
-              ),
               BottomBarItem(
                 inActiveItem: const Icon(
                   Icons.business_rounded,

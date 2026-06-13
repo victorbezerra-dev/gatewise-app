@@ -46,10 +46,23 @@ class RequestAccessPayload {
   Map<String, dynamic> toJson() => {'spaceId': spaceId, 'reason': reason};
 }
 
+enum AccessGrantReviewStatus {
+  approved(1),
+  rejected(2);
+
+  const AccessGrantReviewStatus(this.value);
+  final int value;
+}
+
 class AccessGrantReviewPayload {
-  const AccessGrantReviewPayload({required this.approved});
+  const AccessGrantReviewPayload({required this.status, this.reason});
 
-  final bool approved;
+  final AccessGrantReviewStatus status;
+  final String? reason;
 
-  Map<String, dynamic> toJson() => {'approved': approved};
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{'status': status.value};
+    if (reason != null && reason!.isNotEmpty) map['reason'] = reason;
+    return map;
+  }
 }
