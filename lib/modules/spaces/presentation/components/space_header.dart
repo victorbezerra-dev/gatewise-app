@@ -142,7 +142,7 @@ class SpaceHeader extends StatelessWidget {
                   const SizedBox(height: 16),
                   NeonGradientButton(
                     label: isOpening ? 'Abrindo porta...' : 'Abrir porta',
-                    icon: Icons.lock_open_rounded,
+                    icon: Icons.lock_rounded,
                     height: 50,
                     gradient: GateWiseColors.successGradient,
                     isLoading: isOpening,

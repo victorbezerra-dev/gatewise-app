@@ -11,6 +11,7 @@ import '../domain/value_objects/access_grant_status_vo.dart';
 import '../infra/dtos/access_grant_dto.dart';
 import '../infra/dtos/space_payload_dto.dart';
 import 'components/access_grant_card.dart';
+import 'components/key_export_sheet.dart';
 import 'components/request_access_sheet.dart';
 import 'components/space_form_sheet.dart';
 import 'components/space_header.dart';
@@ -123,6 +124,14 @@ class _SpaceDetailsScreenState extends ConsumerState<SpaceDetailsScreen> {
                         onDelete: () => _confirmDelete(context, space, notifier),
                       ),
                       const SizedBox(height: 18),
+                      _DeviceSection(
+                        space: space,
+                        notifier: notifier,
+                        onProvision: () => _provisionDevice(context, space),
+                        onDownloadKey: () =>
+                            _downloadBackendKey(context, notifier),
+                      ),
+                      const SizedBox(height: 18),
                       _GrantsSection(
                         state: state,
                         space: space,
@@ -147,6 +156,7 @@ class _SpaceDetailsScreenState extends ConsumerState<SpaceDetailsScreen> {
     SpaceController notifier,
   ) async {
     setState(() => _isOpening = true);
+    ref.read(dialogProvider.notifier).showLoading();
     try {
       final signingService = ref.read(signingServiceProvider);
       final timestamp = DateTime.now().millisecondsSinceEpoch;
@@ -156,11 +166,15 @@ class _SpaceDetailsScreenState extends ConsumerState<SpaceDetailsScreen> {
         timestamp: timestamp,
         signature: signature,
       );
-      if (!context.mounted) return;
-      if (!ok) {
-        showSpaceActionError(context, ref);
-      } else {
-        showSpaceSnack(context, 'Comando enviado. Aguarde...');
+      if (!ok && context.mounted) {
+        ref.read(dialogProvider.notifier).showError(
+          ref.read(spaceControllerProvider).actionErrorMessage ??
+              'Não foi possível enviar o comando.',
+        );
+      }
+    } catch (_) {
+      if (context.mounted) {
+        ref.read(dialogProvider.notifier).showError('Erro ao abrir o espaço.');
       }
     } finally {
       if (mounted) setState(() => _isOpening = false);
@@ -225,6 +239,53 @@ class _SpaceDetailsScreenState extends ConsumerState<SpaceDetailsScreen> {
     }
     showSpaceSnack(context, 'Espaço deletado.');
     context.pop();
+  }
+
+  Future<void> _provisionDevice(
+    BuildContext context,
+    Space space,
+  ) async {
+    final confirmed = await confirmSpace(
+      context,
+      title: 'Reprovisionar dispositivo?',
+      message:
+          'Isso irá gerar novas chaves RSA para o ESP32 de "${space.name}". '
+          'Se já existe um dispositivo configurado, ele será desconectado.',
+      confirmLabel: 'Continuar',
+    );
+    if (!confirmed || !context.mounted) return;
+    context.push('/spaces/${space.id}/provision');
+  }
+
+  Future<void> _downloadBackendKey(
+    BuildContext context,
+    SpaceController notifier,
+  ) async {
+    final action = await showModalBottomSheet<KeyExportAction>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (_) => const KeyExportSheet(title: 'Chave pública do backend'),
+    );
+    if (action == null || !context.mounted) return;
+
+    final pem = await notifier.fetchBackendPublicKey();
+    if (!context.mounted) return;
+    if (pem == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Não foi possível obter a chave pública do backend.'),
+          backgroundColor: GateWiseColors.danger,
+        ),
+      );
+      return;
+    }
+
+    await executeKeyAction(
+      context: context,
+      action: action,
+      filename: 'backend_public_key.pem',
+      content: pem,
+    );
   }
 }
 
@@ -573,7 +634,7 @@ class _GrantedAccessView extends StatelessWidget {
         const SizedBox(height: 18),
         NeonGradientButton(
           label: isOpening ? 'Abrindo porta...' : 'Entrar no espaço',
-          icon: Icons.lock_open_rounded,
+          icon: Icons.lock_rounded,
           isLoading: isOpening,
           gradient: GateWiseColors.successGradient,
           onPressed: isOpening ? null : onOpen,
@@ -791,3 +852,91 @@ class _GrantsSection extends StatelessWidget {
     showSpaceSnack(context, 'Registro removido.');
   }
 }
+
+class _DeviceSection extends StatelessWidget {
+  const _DeviceSection({
+    required this.space,
+    required this.notifier,
+    required this.onProvision,
+    required this.onDownloadKey,
+  });
+
+  final Space space;
+  final SpaceController notifier;
+  final VoidCallback onProvision;
+  final VoidCallback onDownloadKey;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const SectionTitle('Dispositivo'),
+        const SizedBox(height: 10),
+        GlassPanel(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: GateWiseColors.electricBlue.withValues(alpha: 0.14),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(
+                      Icons.memory_rounded,
+                      color: GateWiseColors.electricBlue,
+                      size: 20,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Hardware ESP32',
+                          style: TextStyle(
+                            color: GateWiseColors.textPrimary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          'Gere as chaves RSA para flashar no dispositivo.',
+                          style: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.48),
+                            fontSize: 12,
+                            height: 1.35,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 14),
+              OutlinedButton.icon(
+                onPressed: onProvision,
+                icon: const Icon(Icons.settings_input_component_rounded, size: 17),
+                label: const Text('Provisionar dispositivo'),
+              ),
+              const SizedBox(height: 10),
+              OutlinedButton.icon(
+                onPressed: onDownloadKey,
+                icon: const Icon(Icons.ios_share_rounded, size: 17),
+                label: const Text('Chave pública do backend'),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+

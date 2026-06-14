@@ -59,6 +59,16 @@ class SpaceState {
   }
 }
 
+class DeviceProvisionResult {
+  const DeviceProvisionResult({
+    required this.devicePrivateKeyPem,
+    required this.backendPublicKeyPem,
+  });
+
+  final String devicePrivateKeyPem;
+  final String backendPublicKeyPem;
+}
+
 class SpaceController extends StateNotifier<SpaceState> {
   SpaceController(this._repository) : super(const SpaceState());
 
@@ -181,6 +191,23 @@ class SpaceController extends StateNotifier<SpaceState> {
       return true;
     });
     return result ?? false;
+  }
+
+  Future<String?> fetchBackendPublicKey() async {
+    return _runAction(() => _repository.getBackendPublicKey());
+  }
+
+  Future<DeviceProvisionResult?> provisionDevice(int spaceId) async {
+    return _runAction(() async {
+      final results = await Future.wait([
+        _repository.generateDeviceKeys(spaceId),
+        _repository.getBackendPublicKey(),
+      ]);
+      return DeviceProvisionResult(
+        devicePrivateKeyPem: results[0],
+        backendPublicKeyPem: results[1],
+      );
+    });
   }
 
   Future<bool> requestAccess(RequestAccessPayload payload) async {

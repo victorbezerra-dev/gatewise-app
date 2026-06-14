@@ -94,6 +94,13 @@ class SpaceRepository {
     _logRequest('POST', path, body: body);
     final response = await httpClient.post(path, body: body);
     _logResponse('POST', path, response);
+    if (response.statusCode == 400) {
+      throw SpaceApiException(
+        _messageFromBody(response.data) ??
+            'Dispositivo não configurado. Provisione o hardware primeiro.',
+        statusCode: 400,
+      );
+    }
     if (response.statusCode == 403) {
       throw SpaceApiException(
         _messageForOpenSpace403(response.data),
@@ -101,6 +108,37 @@ class SpaceRepository {
       );
     }
     _ensureSuccess(response.statusCode, response.data, expected: const [200]);
+  }
+
+  Future<String> generateDeviceKeys(int spaceId) async {
+    final path = '$_spacesPath/$spaceId/generate-device-keys';
+    _logRequest('POST', path);
+    final response = await httpClient.post(path, body: '{}');
+    _logResponse('POST', path, response);
+    _ensureSuccess(response.statusCode, response.data, expected: const [200]);
+    final data = response.data as Map<String, dynamic>;
+    return data['devicePrivateKeyPem'] as String;
+  }
+
+  Future<String> getBackendPublicKey() async {
+    const path = '/api/system/backend-public-key';
+    _logRequest('GET', path);
+    final response = await httpClient.get(path);
+    _logResponse('GET', path, response);
+    _ensureSuccess(response.statusCode, response.data, expected: const [200]);
+    final data = response.data as Map<String, dynamic>;
+    return data['publicKeyPem'] as String;
+  }
+
+  String? _messageFromBody(dynamic data) {
+    if (data is Map) return data['message']?.toString();
+    if (data is String) {
+      try {
+        final decoded = jsonDecode(data);
+        if (decoded is Map) return decoded['message']?.toString();
+      } catch (_) {}
+    }
+    return null;
   }
 
   String _messageForOpenSpace403(dynamic data) {

@@ -169,8 +169,7 @@ class _SpacesScreenState extends ConsumerState<SpacesScreen> {
       showSpaceActionError(context, ref);
       return;
     }
-    showSpaceSnack(context, 'Espaço criado com sucesso.');
-    context.push('/spaces/${space.id}');
+    context.push('/spaces/${space.id}/provision');
   }
 }
 
