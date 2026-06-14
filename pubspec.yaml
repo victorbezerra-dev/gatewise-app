@@ -47,7 +47,9 @@ dependencies:
   crypto: ^3.0.6
   signalr_netcore: ^1.4.3
   share_plus: ^10.1.4
+  path_provider: ^2.1.5
   simple_icons: ^16.23.0
+  flutter_native_splash: ^2.4.3
 
 dev_dependencies:
   flutter_test:
@@ -59,6 +61,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.14.3
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -100,3 +103,19 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/images/gatewise-icon.png"
+  min_sdk_android: 21
+
+flutter_native_splash:
+  color: "#050B22"
+  image: assets/images/gatewise-splash-icon.png
+  android: true
+  ios: false
+  android_12:
+    color: "#050B22"
+    image: assets/images/gatewise-splash-icon.png
+
