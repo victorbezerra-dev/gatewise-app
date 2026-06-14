@@ -241,8 +241,14 @@ class OrganizationRepository {
       case 409:
         return 'Você já é membro desta organization.';
       default:
-        if (body.trim().isNotEmpty) return 'Erro $statusCode: $body';
-        return 'Erro inesperado ($statusCode).';
+        try {
+          final decoded = jsonDecode(body);
+          if (decoded is Map) {
+            final msg = decoded['message']?.toString();
+            if (msg != null && msg.isNotEmpty) return msg;
+          }
+        } catch (_) {}
+        return 'Erro inesperado. Tente novamente.';
     }
   }
 }
