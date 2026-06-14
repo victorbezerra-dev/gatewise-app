@@ -12,6 +12,7 @@ import 'space_providers.dart';
 import '../../../modules/organizations/domain/value_objects/organization_member_role_vo.dart';
 import '../../../modules/organizations/presentation/components/status_panels.dart';
 import '../../../modules/organizations/presentation/organization_providers.dart';
+import '../../../core/l10n/l10n.dart';
 
 class SpacesScreen extends ConsumerStatefulWidget {
   const SpacesScreen({super.key});
@@ -53,7 +54,7 @@ class _SpacesScreenState extends ConsumerState<SpacesScreen> {
     return Scaffold(
       backgroundColor: GateWiseColors.background,
       appBar: AppBar(
-        title: const Text('Espaços'),
+        title: Text(context.l.spacesTitle),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () => context.pop(),
@@ -90,8 +91,8 @@ class _SpacesScreenState extends ConsumerState<SpacesScreen> {
                   const SizedBox(height: 22),
                   Row(
                     children: [
-                      const Expanded(
-                        child: SectionTitle('Espaços da organização'),
+                      Expanded(
+                        child: SectionTitle(context.l.spacesOrgSection),
                       ),
                       _CountPill(count: spacesSnapshot.length),
                     ],
@@ -101,9 +102,9 @@ class _SpacesScreenState extends ConsumerState<SpacesScreen> {
                     loading: () => const LoadingPanel(),
                     error: (error, _) => MessagePanel(
                       icon: Icons.error_outline_rounded,
-                      title: 'Erro ao carregar espaços',
+                      title: context.l.spacesErrorLoad,
                       message: error.toString(),
-                      actionLabel: 'Tentar novamente',
+                      actionLabel: context.l.actionRetry,
                       onAction: () {
                         final orgId = ref
                             .read(organizationControllerProvider)
@@ -115,11 +116,10 @@ class _SpacesScreenState extends ConsumerState<SpacesScreen> {
                     ),
                     data: (spaces) {
                       if (spaces.isEmpty) {
-                        return const MessagePanel(
+                        return MessagePanel(
                           icon: Icons.sensor_door_rounded,
-                          title: 'Nenhum espaço encontrado',
-                          message:
-                              'Crie o primeiro espaço para controlar o acesso às portas.',
+                          title: context.l.spacesNone,
+                          message: context.l.spacesNoneMessage,
                         );
                       }
                       return Column(
@@ -217,15 +217,15 @@ class _SpacesHero extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const TechStatusPill(
-                    label: 'ESPAÇOS',
+                  TechStatusPill(
+                    label: context.l.spacesHeroPill,
                     icon: Icons.hub_rounded,
                     color: GateWiseColors.neonCyan,
                   ),
                   const SizedBox(height: 14),
-                  const Text(
-                    'Controle seus espaços',
-                    style: TextStyle(
+                  Text(
+                    context.l.spacesHeroTitle,
+                    style: const TextStyle(
                       color: GateWiseColors.textPrimary,
                       fontSize: 27,
                       height: 1.02,
@@ -236,8 +236,8 @@ class _SpacesHero extends StatelessWidget {
                   const SizedBox(height: 8),
                   Text(
                     canCreate
-                        ? 'Monitore portas, cadastre ambientes e gerencie acessos em uma interface segura e conectada.'
-                        : 'Visualize e acesse os espaços disponíveis na sua organização.',
+                        ? context.l.spacesHeroDescOwner
+                        : context.l.spacesHeroDescMember,
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.64),
                       fontSize: 13,
@@ -249,7 +249,7 @@ class _SpacesHero extends StatelessWidget {
                     children: [
                       Expanded(
                         child: _HeroMetric(
-                          label: 'Total',
+                          label: context.l.spacesMetricTotal,
                           value: spaces.length.toString(),
                           icon: Icons.grid_view_rounded,
                           color: GateWiseColors.neonCyan,
@@ -258,7 +258,7 @@ class _SpacesHero extends StatelessWidget {
                       const SizedBox(width: 10),
                       Expanded(
                         child: _HeroMetric(
-                          label: 'Ativos',
+                          label: context.l.spacesMetricActive,
                           value: activeSpaces.toString(),
                           icon: Icons.check_circle_rounded,
                           color: GateWiseColors.mint,
@@ -267,7 +267,7 @@ class _SpacesHero extends StatelessWidget {
                       const SizedBox(width: 10),
                       Expanded(
                         child: _HeroMetric(
-                          label: 'Pausados',
+                          label: context.l.spacesMetricPaused,
                           value: inactiveSpaces.toString(),
                           icon: Icons.pause_circle_outline_rounded,
                           color: GateWiseColors.amber,
@@ -287,7 +287,7 @@ class _SpacesHero extends StatelessWidget {
                           foregroundColor: Colors.white,
                         ),
                         icon: const Icon(Icons.add_rounded, size: 18),
-                        label: const Text('Novo espaço'),
+                        label: Text(context.l.spacesNewButton),
                       ),
                     ),
                   ],
@@ -371,7 +371,7 @@ class _CountPill extends StatelessWidget {
         ),
       ),
       child: Text(
-        '$count cadastrados',
+        context.l.spacesCountPill(count),
         style: TextStyle(
           color: Colors.white.withValues(alpha: 0.66),
           fontSize: 11,

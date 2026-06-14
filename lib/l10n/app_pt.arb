@@ -1,0 +1,392 @@
+{
+  "@@locale": "pt",
+
+  "authIotPill": "Plataforma de automação IoT",
+  "authTagline": "A porta de entrada para ambientes inteligentes.",
+  "authSubtitle": "Conecte, automatize e proteja qualquer ambiente, em qualquer escala, de forma inteligente.",
+  "authLoginButton": "Entrar com GateWise",
+  "authNoAccount": "Ainda não tem cadastro?",
+  "authSignUp": "Cadastre-se",
+  "authLoginFailed": "Falha no login: {error}",
+  "@authLoginFailed": {
+    "placeholders": { "error": { "type": "Object" } }
+  },
+
+  "splashTaglinePart1": "Conectar, automatizar e proteger.",
+  "splashTaglinePart2": "Em qualquer escala",
+  "splashConnecting": "Conectando com segurança",
+  "splashLoadingText": "carregando",
+
+  "navOrgs": "Orgs",
+  "navHistory": "Histórico",
+  "navProfile": "Perfil",
+
+  "wsAccessOpened": "Acesso autorizado, Laboratório Aberto!",
+  "wsAccessFailed": "Ocorreu um erro ao tentar abrir a fechadura, tente novamente ou fale com o suporte!",
+  "wsConnectionError": "Erro de conexão com o servidor.",
+
+  "profileTitle": "Meu Perfil",
+  "profileSectionAccount": "Dados da conta",
+  "profileLabelName": "Nome",
+  "profileLabelEmail": "E-mail",
+  "profileLabelRegistration": "Matrícula",
+  "profileSectionDevice": "Dispositivo",
+  "profileLabelModel": "Modelo",
+  "profileLabelManufacturer": "Fabricante",
+  "profileLabelSystem": "Sistema",
+  "profileGuestName": "Usuário GateWise",
+  "profileNoEmail": "E-mail não informado",
+  "profileLogout": "Sair da conta",
+  "profileErrorLoad": "Erro ao carregar perfil",
+  "profileRetry": "Tentar novamente",
+  "profileNotFound": "Usuário não encontrado",
+  "profileNotFoundMessage": "Faça login novamente para atualizar seus dados.",
+  "profileSectionLanguage": "Idioma",
+  "profileLanguageDialogTitle": "Selecionar idioma",
+
+  "langPt": "Português (Brasil)",
+  "langEn": "English (US)",
+  "langEs": "Español (España)",
+  "langFr": "Français (France)",
+  "langDe": "Deutsch (Deutschland)",
+
+  "orgsTitle": "Organizações",
+  "orgsSubtitle": "Gerencie membros, convites e acessos.",
+  "orgsNewButton": "Nova organização",
+  "orgsJoinButton": "Código",
+  "orgsMineSection": "Minhas organizações",
+  "orgsSection": "Organizações",
+  "orgsActiveStatus": "Organização ativa",
+  "orgsInactiveStatus": "Organização inativa",
+  "orgsMemberSince": "Membro desde {date}",
+  "@orgsMemberSince": {
+    "placeholders": { "date": { "type": "String" } }
+  },
+  "orgsNoneFound": "Nenhuma organização encontrada",
+  "orgsNoneFoundMessage": "Crie uma organização ou entre usando um código de convite.",
+  "orgsErrorLoad": "Erro ao carregar organizações",
+  "orgsCreatedSuccess": "Organização criada com sucesso.",
+  "orgsJoinedSuccess": "Você entrou em {name}.",
+  "@orgsJoinedSuccess": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+
+  "orgDetailsTitle": "Organização",
+  "orgDetailsErrorLoad": "Erro ao abrir organização",
+  "orgDetailsNotFound": "Organização não encontrada",
+  "orgDetailsNotFoundMessage": "Não foi possível localizar os dados solicitados.",
+  "orgTabSpaces": "Espaços",
+  "orgTabMembers": "Membros",
+  "orgTabInvites": "Convites",
+  "orgManageButton": "Gerenciar",
+  "orgSpacesSection": "Espaços da organização",
+  "orgSpacesUnavailable": "Espaços indisponíveis",
+  "orgSpacesUnavailableMessage": "Não foi possível carregar os espaços.",
+  "orgSpacesNone": "Nenhum espaço cadastrado",
+  "orgSpacesNoneMessage": "Adicione espaços para controlar o acesso às portas.",
+  "orgMembersUnavailable": "Membros indisponíveis",
+  "orgMembersNone": "Nenhum membro encontrado",
+  "orgMembersNoneMessage": "Ainda não há membros nesta organização.",
+  "orgInvitesSection": "Convites ativos",
+  "orgInvitesNewButton": "Novo",
+  "orgInvitesNone": "Nenhum convite ativo",
+  "orgInvitesNoneMessage": "Crie convites para permitir a entrada de novos membros.",
+  "orgInvitesUnavailable": "Convites indisponíveis",
+  "orgUpdated": "Organização atualizada.",
+  "orgDeleteTitle": "Deletar organização?",
+  "orgDeleteMessage": "Esta ação removerá {name}.",
+  "@orgDeleteMessage": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "orgDeleteConfirm": "Deletar",
+  "orgDeleteSuccess": "Organização deletada.",
+  "orgRemoveMemberTitle": "Remover membro?",
+  "orgRemoveMemberMessage": "Remover {name} da organização?",
+  "@orgRemoveMemberMessage": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "orgRemoveMemberConfirm": "Remover",
+  "orgRemoveMemberSuccess": "Membro removido.",
+  "orgChangeRoleTitle": "Alterar role de {name}",
+  "@orgChangeRoleTitle": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "orgChangeRoleSelectSpace": "Selecione ao menos um espaço",
+  "orgChangeRoleSuccess": "Role de {name} atualizado para {role}.",
+  "@orgChangeRoleSuccess": {
+    "placeholders": {
+      "name": { "type": "String" },
+      "role": { "type": "String" }
+    }
+  },
+  "orgNoSpacesError": "Nenhum espaço encontrado nesta organização.",
+  "orgSelectSpaceDialog": "Remover {name} de qual espaço?",
+  "@orgSelectSpaceDialog": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "orgRemoveFromSpaceTitle": "Remover manager do espaço?",
+  "orgRemoveFromSpaceMessage": "Remover {name} como manager de \"{space}\"?\n\nSe não houver outros acessos ou espaços gerenciados, o usuário será removido da organização automaticamente.",
+  "@orgRemoveFromSpaceMessage": {
+    "placeholders": {
+      "name": { "type": "String" },
+      "space": { "type": "String" }
+    }
+  },
+  "orgRemoveFromSpaceConfirm": "Remover",
+  "orgRemoveFromSpaceSuccess": "{name} removido de \"{space}\".",
+  "@orgRemoveFromSpaceSuccess": {
+    "placeholders": {
+      "name": { "type": "String" },
+      "space": { "type": "String" }
+    }
+  },
+  "orgRevokeInviteTitle": "Revogar convite?",
+  "orgRevokeInviteMessage": "O código {code} deixará de funcionar.",
+  "@orgRevokeInviteMessage": {
+    "placeholders": { "code": { "type": "String" } }
+  },
+  "orgRevokeInviteConfirm": "Revogar",
+  "orgRevokeInviteSuccess": "Convite revogado.",
+  "orgRemoveSpaceTitle": "Remover espaço?",
+  "orgRemoveSpaceMessageLast": "Remover \"{space}\" desativará o convite {code}.",
+  "@orgRemoveSpaceMessageLast": {
+    "placeholders": {
+      "space": { "type": "String" },
+      "code": { "type": "String" }
+    }
+  },
+  "orgRemoveSpaceMessage": "Remover \"{space}\" do convite {code}?",
+  "@orgRemoveSpaceMessage": {
+    "placeholders": {
+      "space": { "type": "String" },
+      "code": { "type": "String" }
+    }
+  },
+  "orgRemoveSpaceConfirm": "Remover",
+  "orgRemoveSpaceSuccessDeactivated": "Espaço removido. Convite desativado.",
+  "orgRemoveSpaceSuccess": "Espaço removido.",
+  "orgInviteCreated": "Convite {code} criado e copiado.",
+  "@orgInviteCreated": {
+    "placeholders": { "code": { "type": "String" } }
+  },
+  "thisSpace": "este espaço",
+
+  "orgFormNewTitle": "Nova organização",
+  "orgFormEditTitle": "Editar organização",
+  "orgFormNewSubtitle": "Configure uma nova organização para gerenciar membros e convites.",
+  "orgFormEditSubtitle": "Atualize os dados e status da sua organização.",
+  "orgFormNameLabel": "Nome",
+  "orgFormNameHint": "Ex: Laboratório GateWise",
+  "orgFormDescLabel": "Descrição",
+  "orgFormDescHint": "Detalhes sobre a organização",
+  "orgFormStatusLabel": "Status da organização",
+  "orgFormStatusActive": "Ativa e disponível para membros.",
+  "orgFormStatusInactive": "Inativa temporariamente.",
+  "orgFormSaveButton": "Salvar organização",
+
+  "joinTitle": "Entrar por convite",
+  "joinCodeLabel": "Código do convite",
+  "joinCodeHint": "ABC12345",
+  "joinButton": "Entrar na organização",
+
+  "inviteFormTitle": "Criar convite",
+  "inviteFormRoleLabel": "Role",
+  "inviteFormExpiresLabel": "Expira em dias",
+  "inviteFormExpiresHint": "Vazio = sem expiração",
+  "inviteFormMaxUsesLabel": "Máximo de usos",
+  "inviteFormMaxUsesHint": "Vazio = ilimitado",
+  "inviteFormStartsAtLabel": "Início do acesso do membro",
+  "inviteFormExpiresAtLabel": "Expiração do acesso do membro",
+  "inviteFormSpacesManagerLabel": "Espaços do Manager *",
+  "inviteFormSpacesLabel": "Espaços *",
+  "inviteFormGenerateButton": "Gerar convite",
+  "inviteFormSelectSpaceManager": "Selecione ao menos um espaço para o Manager.",
+  "inviteFormSelectSpace": "Selecione ao menos um espaço.",
+  "inviteFormSpacesLoadError": "Não foi possível carregar os espaços.",
+  "inviteFormNoSpaces": "Nenhum espaço cadastrado.",
+  "inviteFormDateNotSet": "Não definido",
+
+  "spacesTitle": "Espaços",
+  "spacesHeroPill": "ESPAÇOS",
+  "spacesHeroTitle": "Controle seus espaços",
+  "spacesHeroDescOwner": "Monitore portas, cadastre ambientes e gerencie acessos em uma interface segura e conectada.",
+  "spacesHeroDescMember": "Visualize e acesse os espaços disponíveis na sua organização.",
+  "spacesMetricTotal": "Total",
+  "spacesMetricActive": "Ativos",
+  "spacesMetricPaused": "Pausados",
+  "spacesNewButton": "Novo espaço",
+  "spacesOrgSection": "Espaços da organização",
+  "spacesCountPill": "{count} cadastrados",
+  "@spacesCountPill": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "spacesErrorLoad": "Erro ao carregar espaços",
+  "spacesNone": "Nenhum espaço encontrado",
+  "spacesNoneMessage": "Crie o primeiro espaço para controlar o acesso às portas.",
+
+  "spaceDetailsTitle": "Espaço",
+  "spaceDetailsErrorLoad": "Erro ao abrir espaço",
+  "spaceDetailsNotFound": "Espaço não encontrado",
+  "spaceDetailsNotFoundMessage": "Não foi possível localizar os dados solicitados.",
+  "spaceDeviceSection": "Dispositivo",
+  "spaceDeviceHardware": "Hardware ESP32",
+  "spaceDeviceDesc": "Gere as chaves RSA para flashar no dispositivo.",
+  "spaceDeviceProvisionButton": "Provisionar dispositivo",
+  "spaceDeviceBackendKeyButton": "Chave pública do backend",
+  "spaceGrantsSection": "Solicitações de acesso",
+  "spaceGrantsRequestButton": "Solicitar",
+  "spaceGrantsUnavailable": "Solicitações indisponíveis",
+  "spaceGrantsNone": "Nenhuma solicitação",
+  "spaceGrantsNoneMessage": "Solicitações de acesso aparecerão aqui para aprovação.",
+  "spaceGrantsApproveTitle": "Aprovar acesso?",
+  "spaceGrantsApproveMessage": "Autorizar {name} a acessar este espaço?",
+  "@spaceGrantsApproveMessage": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "spaceGrantsApproveConfirm": "Aprovar",
+  "spaceGrantsApproveSuccess": "Acesso aprovado.",
+  "spaceGrantsCannotApprove": "Não foi possível aprovar.",
+  "spaceGrantsRejectTitle": "Rejeitar acesso?",
+  "spaceGrantsRejectMessage": "Rejeitar a solicitação de {name}?",
+  "@spaceGrantsRejectMessage": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "spaceGrantsRejectConfirm": "Rejeitar",
+  "spaceGrantsRejectSuccess": "Acesso rejeitado.",
+  "spaceGrantsCannotReject": "Não foi possível rejeitar.",
+  "spaceGrantsDeleteTitle": "Remover acesso?",
+  "spaceGrantsDeleteMessage": "Remover o registro de acesso de {name}?",
+  "@spaceGrantsDeleteMessage": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "spaceGrantsDeleteMessageLast": "Remover o registro de acesso de {name}?\n\nEste é o último acesso deste usuário neste espaço. Se não houver outros vínculos na organização, ele será removido automaticamente.",
+  "@spaceGrantsDeleteMessageLast": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "spaceGrantsDeleteConfirm": "Remover",
+  "spaceGrantsDeleteSuccess": "Registro removido.",
+  "spaceGrantsCannotRemove": "Não foi possível remover.",
+  "spaceGrantsCannotSend": "Não foi possível enviar a solicitação.",
+  "spaceGrantsSentSuccess": "Solicitação enviada com sucesso.",
+  "spaceDeleteTitle": "Deletar espaço?",
+  "spaceDeleteMessage": "Esta ação removerá \"{name}\" permanentemente.",
+  "@spaceDeleteMessage": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "spaceDeleteConfirm": "Deletar",
+  "spaceDeleteSuccess": "Espaço deletado.",
+  "spaceUpdated": "Espaço atualizado.",
+  "spaceProvisionTitle": "Reprovisionar dispositivo?",
+  "spaceProvisionMessage": "Isso irá gerar novas chaves RSA para o ESP32 de \"{name}\". Se já existe um dispositivo configurado, ele será desconectado.",
+  "@spaceProvisionMessage": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "spaceProvisionConfirm": "Continuar",
+  "spaceBackendKeySheetTitle": "Chave pública do backend",
+  "spaceBackendKeyError": "Não foi possível obter a chave pública do backend.",
+  "spacePendingMessage": "Sua solicitação está aguardando aprovação.",
+  "spacePendingChip": "AGUARDANDO",
+  "spacePendingButton": "Aguardando aprovação",
+  "spaceRejectedMessage": "Sua solicitação de acesso foi rejeitada.",
+  "spaceRejectedChip": "REJEITADO",
+  "spaceRejectedButton": "Solicitar novamente",
+  "spaceNoAccessMessage": "Você não tem acesso a este espaço.",
+  "spaceRequestAccessButton": "Solicitar Acesso",
+  "spaceMyAccess": "Meu acesso",
+  "spaceAuthorizedChip": "AUTORIZADO",
+  "spaceAccessInfo": "Módulo conectado ao controle de acesso. Acione a fechadura apenas quando estiver próximo ao ambiente autorizado.",
+  "spaceEnterButton": "Entrar no espaço",
+  "spaceOpeningButton": "Abrindo porta...",
+  "spaceCommandError": "Não foi possível enviar o comando.",
+  "spaceOpenError": "Erro ao abrir o espaço.",
+  "spaceLoadAccessError": "Erro ao carregar acesso",
+
+  "spaceFormNewTitle": "Novo espaço",
+  "spaceFormEditTitle": "Editar espaço",
+  "spaceFormNewSubtitle": "Configure um novo espaço para controlar o acesso à porta.",
+  "spaceFormEditSubtitle": "Atualize os dados e status do espaço.",
+  "spaceFormNameLabel": "Nome",
+  "spaceFormNameHint": "Ex: Laboratório 66",
+  "spaceFormDescLabel": "Descrição",
+  "spaceFormDescHint": "Detalhes sobre o espaço",
+  "spaceFormStatusLabel": "Status do espaço",
+  "spaceFormStatusActive": "Ativo e disponível.",
+  "spaceFormStatusInactive": "Inativo temporariamente.",
+  "spaceFormSaveButton": "Salvar espaço",
+
+  "requestAccessTitle": "Solicitar acesso",
+  "requestAccessSubtitle": "Informe o motivo para acessar \"{name}\".",
+  "@requestAccessSubtitle": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "requestAccessReasonLabel": "Motivo",
+  "requestAccessReasonHint": "Ex: Preciso acessar para o projeto X",
+  "requestAccessButton": "Enviar solicitação",
+
+  "provisionTitle": "Provisionar dispositivo",
+  "provisionLoading": "Gerando chaves RSA...",
+  "provisionErrorTitle": "Erro ao provisionar",
+  "provisionSuccessTitle": "Dispositivo provisionado",
+  "provisionSuccessSubtitle": "Baixe as chaves e grave no ESP32.",
+  "provisionWarningTitle": "Atenção: salve a chave privada agora",
+  "provisionWarningMessage": "A chave privada do ESP32 não é armazenada em nossos servidores. Se você fechar esta tela sem salvá-la, precisará gerar um novo par de chaves e reconfigurar o hardware.",
+  "provisionBackendKeyTitle": "Chave Pública do Backend",
+  "provisionBackendKeyDesc": "O ESP32 usa esta chave para verificar se os comandos MQTT vêm do servidor GateWise. É a mesma para todos os espaços.",
+  "provisionBackendKeyBadge": "PODE BAIXAR NOVAMENTE",
+  "provisionBackendKeyNote": "Esta chave é pública e pode ser obtida novamente a qualquer momento nas configurações do espaço.",
+  "provisionDeviceKeyTitle": "Chave Privada do ESP32",
+  "provisionDeviceKeyDesc": "Identifica este dispositivo no sistema. O ESP32 a usa para assinar os eventos enviados ao servidor.",
+  "provisionDeviceKeyBadge": "NÃO FICA SALVA CONOSCO",
+  "provisionViewMore": "Ver mais",
+  "provisionViewLess": "Ver menos",
+  "provisionCopyButton": "Copiar",
+  "provisionCopiedButton": "Copiado!",
+  "provisionGoToSpaceButton": "Ir para o espaço",
+  "provisionErrorGenKeys": "Erro ao gerar chaves do dispositivo.",
+
+  "keyExportSaveTitle": "Salvar no dispositivo",
+  "keyExportSaveDesc": "Salva o arquivo .pem no armazenamento local",
+  "keyExportShareTitle": "Compartilhar",
+  "keyExportShareDesc": "Abre o compartilhamento do sistema",
+  "keyExportSaved": "Salvo em: {path}",
+  "@keyExportSaved": {
+    "placeholders": { "path": { "type": "String" } }
+  },
+  "keyExportError": "Erro: {error}",
+  "@keyExportError": {
+    "placeholders": { "error": { "type": "Object" } }
+  },
+
+  "historyTitle": "Histórico",
+  "historyNone": "Nenhum acesso registrado",
+  "historyNoneMessage": "Quando você acessar um ambiente, o registro aparecerá aqui.",
+
+  "memberYou": "Você",
+  "memberUnnamed": "Usuário sem nome",
+  "memberActionChangeRole": "Alterar role",
+  "memberActionRemoveFromSpace": "Remover de espaço",
+  "memberActionRemove": "Remover membro",
+
+  "grantUnnamed": "Usuário sem nome",
+  "grantApprove": "Aprovar",
+  "grantReject": "Rejeitar",
+  "grantRemove": "Remover",
+
+  "userTypeProfessor": "Professor",
+  "userTypeStudent": "Aluno",
+  "userTypeAdmin": "Administrador",
+  "userTypeVisitor": "Visitante",
+  "userTypeUnknown": "Não informado",
+
+  "roleOwner": "Owner",
+  "roleManager": "Manager",
+  "roleMember": "Member",
+
+  "actionCancel": "Cancelar",
+  "actionConfirm": "Confirmar",
+  "actionRetry": "Tentar novamente",
+  "actionGenericError": "Não foi possível concluir a ação. Tente novamente.",
+  "noDate": "sem data",
+  "formValidationName": "Informe o nome.",
+  "formValidationReason": "Informe o motivo."
+}

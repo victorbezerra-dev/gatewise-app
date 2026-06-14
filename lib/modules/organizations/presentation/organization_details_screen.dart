@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/l10n/l10n.dart';
+
 import '../../../core/providers/user_profile_provider.dart';
 import '../../../core/theme/gatewise_theme.dart';
 import '../../spaces/domain/entities/space_entity.dart';
@@ -64,7 +66,7 @@ class _OrganizationDetailsScreenState
     return Scaffold(
       backgroundColor: GateWiseColors.background,
       appBar: AppBar(
-        title: const Text('Organização'),
+        title: Text(context.l.orgDetailsTitle),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () => context.pop(),
@@ -85,21 +87,21 @@ class _OrganizationDetailsScreenState
               padding: const EdgeInsets.all(18),
               child: MessagePanel(
                 icon: Icons.error_outline_rounded,
-                title: 'Erro ao abrir organização',
+                title: context.l.orgDetailsErrorLoad,
                 message: error.toString(),
-                actionLabel: 'Tentar novamente',
+                actionLabel: context.l.actionRetry,
                 onAction: () =>
                     notifier.loadOrganizationDetails(widget.organizationId),
               ),
             ),
             data: (organization) {
               if (organization == null) {
-                return const Padding(
-                  padding: EdgeInsets.all(18),
+                return Padding(
+                  padding: const EdgeInsets.all(18),
                   child: MessagePanel(
                     icon: Icons.business_rounded,
-                    title: 'Organização não encontrada',
-                    message: 'Não foi possível localizar os dados solicitados.',
+                    title: context.l.orgDetailsNotFound,
+                    message: context.l.orgDetailsNotFoundMessage,
                   ),
                 );
               }
@@ -237,7 +239,7 @@ class _OrganizationDetailsScreenState
       showActionError(context, ref);
       return;
     }
-    showSnack(context, 'Organização atualizada.');
+    showSnack(context, context.l.orgUpdated);
   }
 
   Future<void> _openInviteForm(
@@ -262,7 +264,7 @@ class _OrganizationDetailsScreenState
     }
     await Clipboard.setData(ClipboardData(text: invite.code));
     if (!context.mounted) return;
-    showSnack(context, 'Convite ${invite.code} criado e copiado.');
+    showSnack(context, context.l.orgInviteCreated(invite.code));
   }
 
   Future<void> _confirmDelete(
@@ -272,9 +274,9 @@ class _OrganizationDetailsScreenState
   ) async {
     final confirmed = await confirm(
       context,
-      title: 'Deletar organização?',
-      message: 'Esta ação removerá ${organization.name}.',
-      confirmLabel: 'Deletar',
+      title: context.l.orgDeleteTitle,
+      message: context.l.orgDeleteMessage(organization.name),
+      confirmLabel: context.l.orgDeleteConfirm,
       danger: true,
     );
     if (!confirmed) return;
@@ -285,7 +287,7 @@ class _OrganizationDetailsScreenState
       showActionError(context, ref);
       return;
     }
-    showSnack(context, 'Organização deletada.');
+    showSnack(context, context.l.orgDeleteSuccess);
     context.pop();
   }
 
@@ -297,9 +299,9 @@ class _OrganizationDetailsScreenState
   ) async {
     final confirmed = await confirm(
       context,
-      title: 'Remover membro?',
-      message: 'Remover ${member.name} da organização?',
-      confirmLabel: 'Remover',
+      title: context.l.orgRemoveMemberTitle,
+      message: context.l.orgRemoveMemberMessage(member.name),
+      confirmLabel: context.l.orgRemoveMemberConfirm,
       danger: true,
     );
     if (!confirmed) return;
@@ -310,7 +312,7 @@ class _OrganizationDetailsScreenState
       showActionError(context, ref);
       return;
     }
-    showSnack(context, 'Membro removido.');
+    showSnack(context, context.l.orgRemoveMemberSuccess);
   }
 
   Future<void> _changeRole(
@@ -343,7 +345,12 @@ class _OrganizationDetailsScreenState
       showActionError(context, ref);
       return;
     }
-    showSnack(context, 'Role de ${member.name} atualizado para ${newRole.label}.');
+    final roleLabel = switch (newRole) {
+      OrganizationMemberRole.owner => context.l.roleOwner,
+      OrganizationMemberRole.manager => context.l.roleManager,
+      OrganizationMemberRole.member => context.l.roleMember,
+    };
+    showSnack(context, context.l.orgChangeRoleSuccess(member.name, roleLabel));
   }
 
   Future<void> _confirmRemoveFromSpace(
@@ -357,7 +364,7 @@ class _OrganizationDetailsScreenState
     if (orgSpaces.isEmpty) {
       showSnack(
         context,
-        'Nenhum espaço encontrado nesta organização.',
+        context.l.orgNoSpacesError,
         isError: true,
       );
       return;
@@ -368,7 +375,7 @@ class _OrganizationDetailsScreenState
       builder: (ctx) => SimpleDialog(
         backgroundColor: GateWiseColors.surface,
         title: Text(
-          'Remover ${member.name} de qual espaço?',
+          context.l.orgSelectSpaceDialog(member.name),
           style: const TextStyle(color: Colors.white, fontSize: 16),
         ),
         children: orgSpaces
@@ -403,11 +410,9 @@ class _OrganizationDetailsScreenState
 
     final confirmed = await confirm(
       context,
-      title: 'Remover manager do espaço?',
-      message: 'Remover ${member.name} como manager de "${space.name}"?\n\n'
-          'Se não houver outros acessos ou espaços gerenciados, '
-          'o usuário será removido da organização automaticamente.',
-      confirmLabel: 'Remover',
+      title: context.l.orgRemoveFromSpaceTitle,
+      message: context.l.orgRemoveFromSpaceMessage(member.name, space.name),
+      confirmLabel: context.l.orgRemoveFromSpaceConfirm,
       danger: true,
     );
     if (!confirmed || !context.mounted) return;
@@ -422,7 +427,7 @@ class _OrganizationDetailsScreenState
       showActionError(context, ref);
       return;
     }
-    showSnack(context, '${member.name} removido de "${space.name}".');
+    showSnack(context, context.l.orgRemoveFromSpaceSuccess(member.name, space.name));
   }
 
   Future<void> _confirmRevokeInvite(
@@ -433,9 +438,9 @@ class _OrganizationDetailsScreenState
   ) async {
     final confirmed = await confirm(
       context,
-      title: 'Revogar convite?',
-      message: 'O código ${invite.code} deixará de funcionar.',
-      confirmLabel: 'Revogar',
+      title: context.l.orgRevokeInviteTitle,
+      message: context.l.orgRevokeInviteMessage(invite.code),
+      confirmLabel: context.l.orgRevokeInviteConfirm,
       danger: true,
     );
     if (!confirmed) return;
@@ -446,7 +451,7 @@ class _OrganizationDetailsScreenState
       showActionError(context, ref);
       return;
     }
-    showSnack(context, 'Convite revogado.');
+    showSnack(context, context.l.orgRevokeInviteSuccess);
   }
 
   Future<void> _confirmRemoveSpaceFromInvite(
@@ -458,17 +463,17 @@ class _OrganizationDetailsScreenState
   ) async {
     final space = invite.spaces.firstWhere(
       (s) => s.spaceId == spaceId,
-      orElse: () => ManagedSpace(spaceId: spaceId, name: 'este espaço'),
+      orElse: () => ManagedSpace(spaceId: spaceId, name: context.l.thisSpace),
     );
     final isLast = invite.spaces.length == 1;
 
     final confirmed = await confirm(
       context,
-      title: 'Remover espaço?',
+      title: context.l.orgRemoveSpaceTitle,
       message: isLast
-          ? 'Remover "${space.name}" desativará o convite ${invite.code}.'
-          : 'Remover "${space.name}" do convite ${invite.code}?',
-      confirmLabel: 'Remover',
+          ? context.l.orgRemoveSpaceMessageLast(space.name, invite.code)
+          : context.l.orgRemoveSpaceMessage(space.name, invite.code),
+      confirmLabel: context.l.orgRemoveSpaceConfirm,
       danger: true,
     );
     if (!confirmed) return;
@@ -483,7 +488,7 @@ class _OrganizationDetailsScreenState
       showActionError(context, ref);
       return;
     }
-    showSnack(context, isLast ? 'Espaço removido. Convite desativado.' : 'Espaço removido.');
+    showSnack(context, isLast ? context.l.orgRemoveSpaceSuccessDeactivated : context.l.orgRemoveSpaceSuccess);
   }
 }
 
@@ -496,27 +501,26 @@ class _OrganizationTabs extends StatelessWidget {
   final TabController controller;
   final bool canSeeInvites;
 
-  static const _allTabs = [
-    _OrganizationTabItem(
-      label: 'Espaços',
-      icon: Icons.maps_home_work_rounded,
-      color: GateWiseColors.mint,
-    ),
-    _OrganizationTabItem(
-      label: 'Membros',
-      icon: Icons.groups_rounded,
-      color: GateWiseColors.neonCyan,
-    ),
-    _OrganizationTabItem(
-      label: 'Convites',
-      icon: Icons.mark_email_unread_rounded,
-      color: GateWiseColors.amber,
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
-    final tabs = canSeeInvites ? _allTabs : _allTabs.sublist(0, 2);
+    final allTabs = [
+      _OrganizationTabItem(
+        label: context.l.orgTabSpaces,
+        icon: Icons.maps_home_work_rounded,
+        color: GateWiseColors.mint,
+      ),
+      _OrganizationTabItem(
+        label: context.l.orgTabMembers,
+        icon: Icons.groups_rounded,
+        color: GateWiseColors.neonCyan,
+      ),
+      _OrganizationTabItem(
+        label: context.l.orgTabInvites,
+        icon: Icons.mark_email_unread_rounded,
+        color: GateWiseColors.amber,
+      ),
+    ];
+    final tabs = canSeeInvites ? allTabs : allTabs.sublist(0, 2);
 
     return Container(
       padding: const EdgeInsets.all(5),
@@ -739,14 +743,14 @@ class _MembersTab extends ConsumerWidget {
             loading: () => const LoadingPanel(),
             error: (error, _) => MessagePanel(
               icon: Icons.lock_outline_rounded,
-              title: 'Membros indisponíveis',
+              title: context.l.orgMembersUnavailable,
               message: error.toString(),
             ),
             data: (members) => members.isEmpty
-                ? const MessagePanel(
+                ? MessagePanel(
                     icon: Icons.people_outline_rounded,
-                    title: 'Nenhum membro encontrado',
-                    message: 'Ainda não há membros nesta organização.',
+                    title: context.l.orgMembersNone,
+                    message: context.l.orgMembersNoneMessage,
                   )
                 : Column(
                     children: ([...members]
@@ -821,11 +825,11 @@ class _InvitesTab extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Expanded(child: SectionTitle('Convites ativos')),
+              Expanded(child: SectionTitle(context.l.orgInvitesSection)),
               TextButton.icon(
                 onPressed: onCreateInvite,
                 icon: const Icon(Icons.add_link_rounded, size: 17),
-                label: const Text('Novo'),
+                label: Text(context.l.orgInvitesNewButton),
               ),
             ],
           ),
@@ -834,15 +838,14 @@ class _InvitesTab extends StatelessWidget {
             loading: () => const LoadingPanel(),
             error: (error, _) => MessagePanel(
               icon: Icons.lock_outline_rounded,
-              title: 'Convites indisponíveis',
+              title: context.l.orgInvitesUnavailable,
               message: error.toString(),
             ),
             data: (invites) => invites.isEmpty
-                ? const MessagePanel(
+                ? MessagePanel(
                     icon: Icons.mail_outline_rounded,
-                    title: 'Nenhum convite ativo',
-                    message:
-                        'Crie convites para permitir a entrada de novos membros.',
+                    title: context.l.orgInvitesNone,
+                    message: context.l.orgInvitesNoneMessage,
                   )
                 : Column(
                     children: invites
@@ -888,31 +891,30 @@ class _SpacesTab extends ConsumerWidget {
           children: [
             Row(
               children: [
-                const Expanded(child: SectionTitle('Espaços da organização')),
+                Expanded(child: SectionTitle(context.l.orgSpacesSection)),
                 TextButton.icon(
                   onPressed: () => context.push('/spaces'),
                   icon: const Icon(Icons.open_in_new_rounded, size: 17),
-                  label: const Text('Gerenciar'),
+                  label: Text(context.l.orgManageButton),
                 ),
               ],
             ),
             const SizedBox(height: 10),
             spacesState.spaces.when(
               loading: () => const LoadingPanel(),
-              error: (_, __) => const MessagePanel(
+              error: (_, __) => MessagePanel(
                 icon: Icons.sensor_door_rounded,
-                title: 'Espaços indisponíveis',
-                message: 'Não foi possível carregar os espaços.',
+                title: context.l.orgSpacesUnavailable,
+                message: context.l.orgSpacesUnavailableMessage,
               ),
               data: (spaces) {
                 final organizationSpaces = spaces;
 
                 return organizationSpaces.isEmpty
-                    ? const MessagePanel(
+                    ? MessagePanel(
                         icon: Icons.sensor_door_rounded,
-                        title: 'Nenhum espaço cadastrado',
-                        message:
-                            'Adicione espaços para controlar o acesso às portas.',
+                        title: context.l.orgSpacesNone,
+                        message: context.l.orgSpacesNoneMessage,
                       )
                     : Column(
                         children: organizationSpaces
@@ -975,7 +977,7 @@ class _ChangeRoleDialogState extends State<_ChangeRoleDialog> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'Alterar role de ${widget.member.name}',
+                context.l.orgChangeRoleTitle(widget.member.name),
                 style: const TextStyle(
                   color: GateWiseColors.textPrimary,
                   fontSize: 16,
@@ -1000,7 +1002,7 @@ class _ChangeRoleDialogState extends State<_ChangeRoleDialog> {
                 const Divider(color: Colors.white12),
                 const SizedBox(height: 8),
                 Text(
-                  'Selecione ao menos um espaço',
+                  context.l.orgChangeRoleSelectSpace,
                   style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.6),
                     fontSize: 12,
@@ -1045,7 +1047,7 @@ class _ChangeRoleDialogState extends State<_ChangeRoleDialog> {
                 children: [
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('Cancelar'),
+                    child: Text(context.l.actionCancel),
                   ),
                   const SizedBox(width: 8),
                   FilledButton(
@@ -1057,7 +1059,7 @@ class _ChangeRoleDialogState extends State<_ChangeRoleDialog> {
                     style: FilledButton.styleFrom(
                       backgroundColor: GateWiseColors.electricBlue,
                     ),
-                    child: const Text('Confirmar'),
+                    child: Text(context.l.actionConfirm),
                   ),
                 ],
               ),
@@ -1108,7 +1110,11 @@ class _RoleOption extends StatelessWidget {
             Icon(Icons.shield_rounded, size: 16, color: color),
             const SizedBox(width: 10),
             Text(
-              role.label,
+              switch (role) {
+                OrganizationMemberRole.owner => context.l.roleOwner,
+                OrganizationMemberRole.manager => context.l.roleManager,
+                OrganizationMemberRole.member => context.l.roleMember,
+              },
               style: TextStyle(
                 color: selected ? color : GateWiseColors.textPrimary,
                 fontWeight: FontWeight.w600,

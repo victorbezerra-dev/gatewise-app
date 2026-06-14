@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/l10n/l10n.dart';
 import '../../../../core/theme/gatewise_theme.dart';
 import '../../domain/entities/organization_member_entity.dart';
 import '../../domain/value_objects/organization_member_role_vo.dart';
@@ -79,7 +80,7 @@ class MemberCard extends StatelessWidget {
                     children: [
                       Flexible(
                         child: Text(
-                          member.name.isEmpty ? 'Usuário sem nome' : member.name,
+                          member.name.isEmpty ? context.l.memberUnnamed : member.name,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
@@ -103,8 +104,8 @@ class MemberCard extends StatelessWidget {
                               color: GateWiseColors.electricBlue.withValues(alpha: 0.5),
                             ),
                           ),
-                          child: const Text(
-                            'Você',
+                          child: Text(
+                            context.l.memberYou,
                             style: TextStyle(
                               color: GateWiseColors.electricBlue,
                               fontSize: 10,
@@ -145,31 +146,31 @@ class MemberCard extends StatelessWidget {
                       onRemove?.call();
                   }
                 },
-                itemBuilder: (_) => [
+                itemBuilder: (ctx) => [
                   if (onChangeRole != null)
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: _MemberAction.changeRole,
                       child: _MenuRow(
                         icon: Icons.manage_accounts_rounded,
-                        label: 'Alterar role',
+                        label: ctx.l.memberActionChangeRole,
                         color: GateWiseColors.electricBlue,
                       ),
                     ),
                   if (onRemoveFromSpace != null)
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: _MemberAction.removeFromSpace,
                       child: _MenuRow(
                         icon: Icons.door_back_door_rounded,
-                        label: 'Remover de espaço',
+                        label: ctx.l.memberActionRemoveFromSpace,
                         color: GateWiseColors.amber,
                       ),
                     ),
                   if (onRemove != null && member.role != OrganizationMemberRole.owner)
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: _MemberAction.remove,
                       child: _MenuRow(
                         icon: Icons.person_remove_alt_1_rounded,
-                        label: 'Remover membro',
+                        label: ctx.l.memberActionRemove,
                         color: GateWiseColors.danger,
                       ),
                     ),

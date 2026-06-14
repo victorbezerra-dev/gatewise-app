@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/l10n/l10n.dart';
 import '../../../../core/theme/gatewise_theme.dart';
 import '../../../spaces/domain/entities/space_entity.dart';
 import '../../../spaces/presentation/space_providers.dart';
@@ -56,15 +57,15 @@ class _InviteFormSheetState extends ConsumerState<InviteFormSheet> {
         : allSpacesAsync;
 
     return SheetScaffold(
-      title: 'Criar convite',
+      title: context.l.inviteFormTitle,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           if (_viewerIsManager)
             InputDecorator(
-              decoration: const InputDecoration(
-                labelText: 'Role',
-                prefixIcon: Icon(Icons.shield_rounded),
+              decoration: InputDecoration(
+                labelText: context.l.inviteFormRoleLabel,
+                prefixIcon: const Icon(Icons.shield_rounded),
               ),
               child: Text(
                 OrganizationMemberRole.member.label,
@@ -75,9 +76,9 @@ class _InviteFormSheetState extends ConsumerState<InviteFormSheet> {
             DropdownButtonFormField<OrganizationMemberRole>(
               initialValue: _role,
               dropdownColor: GateWiseColors.surface,
-              decoration: const InputDecoration(
-                labelText: 'Role',
-                prefixIcon: Icon(Icons.shield_rounded),
+              decoration: InputDecoration(
+                labelText: context.l.inviteFormRoleLabel,
+                prefixIcon: const Icon(Icons.shield_rounded),
               ),
               items: OrganizationMemberRole.values
                   .map(
@@ -94,32 +95,32 @@ class _InviteFormSheetState extends ConsumerState<InviteFormSheet> {
           TextField(
             controller: _expiresController,
             keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
-              labelText: 'Expira em dias',
-              hintText: 'Vazio = sem expiração',
-              prefixIcon: Icon(Icons.event_rounded),
+            decoration: InputDecoration(
+              labelText: context.l.inviteFormExpiresLabel,
+              hintText: context.l.inviteFormExpiresHint,
+              prefixIcon: const Icon(Icons.event_rounded),
             ),
           ),
           const SizedBox(height: 12),
           TextField(
             controller: _usesController,
             keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
-              labelText: 'Máximo de usos',
-              hintText: 'Vazio = ilimitado',
-              prefixIcon: Icon(Icons.group_add_rounded),
+            decoration: InputDecoration(
+              labelText: context.l.inviteFormMaxUsesLabel,
+              hintText: context.l.inviteFormMaxUsesHint,
+              prefixIcon: const Icon(Icons.group_add_rounded),
             ),
           ),
           const SizedBox(height: 12),
           _DatePickerField(
-            label: 'Início do acesso do membro',
+            label: context.l.inviteFormStartsAtLabel,
             icon: Icons.play_circle_outline_rounded,
             value: _memberStartsAt,
             onChanged: (date) => setState(() => _memberStartsAt = date),
           ),
           const SizedBox(height: 12),
           _DatePickerField(
-            label: 'Expiração do acesso do membro',
+            label: context.l.inviteFormExpiresAtLabel,
             icon: Icons.stop_circle_outlined,
             value: _memberExpiresAt,
             onChanged: (date) => setState(() => _memberExpiresAt = date),
@@ -128,7 +129,7 @@ class _InviteFormSheetState extends ConsumerState<InviteFormSheet> {
           _SpaceSelector(
             spacesAsync: spacesAsync,
             selectedIds: _selectedSpaceIds,
-            label: isInvitingManager ? 'Espaços do Manager *' : 'Espaços *',
+            label: isInvitingManager ? context.l.inviteFormSpacesManagerLabel : context.l.inviteFormSpacesLabel,
             onToggle: (id) => setState(() {
               if (_selectedSpaceIds.contains(id)) {
                 _selectedSpaceIds.remove(id);
@@ -139,7 +140,7 @@ class _InviteFormSheetState extends ConsumerState<InviteFormSheet> {
           ),
           const SizedBox(height: 16),
           NeonGradientButton(
-            label: 'Gerar convite',
+            label: context.l.inviteFormGenerateButton,
             icon: Icons.add_link_rounded,
             gradient: const [
               GateWiseColors.electricBlue,
@@ -163,8 +164,8 @@ class _InviteFormSheetState extends ConsumerState<InviteFormSheet> {
               padding: const EdgeInsets.only(top: 8),
               child: Text(
                 isInvitingManager
-                    ? 'Selecione ao menos um espaço para o Manager.'
-                    : 'Selecione ao menos um espaço.',
+                    ? context.l.inviteFormSelectSpaceManager
+                    : context.l.inviteFormSelectSpace,
                 style: TextStyle(
                   color: GateWiseColors.danger.withValues(alpha: 0.8),
                   fontSize: 12,
@@ -232,7 +233,7 @@ class _SpaceSelector extends StatelessWidget {
             ),
           ),
           error: (_, __) => Text(
-            'Não foi possível carregar os espaços.',
+            context.l.inviteFormSpacesLoadError,
             style: TextStyle(
               color: GateWiseColors.danger.withValues(alpha: 0.8),
               fontSize: 12,
@@ -241,7 +242,7 @@ class _SpaceSelector extends StatelessWidget {
           data: (spaces) {
             if (spaces.isEmpty) {
               return Text(
-                'Nenhum espaço cadastrado.',
+                context.l.inviteFormNoSpaces,
                 style: TextStyle(
                   color: Colors.white.withValues(alpha: 0.5),
                   fontSize: 12,
@@ -394,7 +395,7 @@ class _DatePickerField extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      _hasValue ? _formattedDate : 'Não definido',
+                      _hasValue ? _formattedDate : context.l.inviteFormDateNotSet,
                       style: TextStyle(
                         color: _hasValue
                             ? GateWiseColors.textPrimary

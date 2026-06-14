@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/l10n/l10n.dart';
 import '../../../../core/theme/gatewise_theme.dart';
 import '../organization_providers.dart';
 
@@ -23,7 +24,7 @@ Future<bool> confirm(
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(false),
-          child: const Text('Cancelar'),
+          child: Text(context.l.actionCancel),
         ),
         FilledButton(
           onPressed: () => Navigator.of(context).pop(true),
@@ -59,13 +60,13 @@ void showActionError(BuildContext context, WidgetRef ref) {
     context,
     message?.trim().isNotEmpty == true
         ? message!.trim()
-        : 'Não foi possível concluir a ação. Tente novamente.',
+        : context.l.actionGenericError,
     isError: true,
   );
 }
 
-String formatDate(DateTime? date) {
-  if (date == null) return 'sem data';
+String formatDate(DateTime? date, {BuildContext? context}) {
+  if (date == null) return context?.l.noDate ?? 'sem data';
   final local = date.toLocal();
   String two(int value) => value.toString().padLeft(2, '0');
   return '${two(local.day)}/${two(local.month)}/${local.year}';

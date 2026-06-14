@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/auth/auth_notifier.dart';
 import '../../../core/auth/auth_state.dart';
+import '../../../core/l10n/l10n.dart';
 import '../../../core/providers/user_profile_provider.dart';
 import '../../../core/theme/gatewise_theme.dart';
 import 'auth_flow_notifier.dart';
@@ -14,6 +15,7 @@ class AuthLoginScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = context.l;
     final loginState = ref.watch(authFlowNotifierProvider);
     final loginNotifier = ref.read(authFlowNotifierProvider.notifier);
     final screenSize = MediaQuery.sizeOf(context);
@@ -47,7 +49,7 @@ class AuthLoginScreen extends ConsumerWidget {
           log("Login flow failed: $err");
           ScaffoldMessenger.of(
             context,
-          ).showSnackBar(SnackBar(content: Text("Login failed: $err")));
+          ).showSnackBar(SnackBar(content: Text(l.authLoginFailed(err.toString()))));
         },
       );
     });
@@ -79,8 +81,8 @@ class AuthLoginScreen extends ConsumerWidget {
                 alignment: Alignment.topCenter,
                 child: Padding(
                   padding: const EdgeInsets.only(top: 24),
-                  child: const TechStatusPill(
-                    label: 'Plataforma de automação IoT',
+                  child: TechStatusPill(
+                    label: l.authIotPill,
                     icon: Icons.lock_outline_rounded,
                   ),
                 ),
@@ -131,9 +133,9 @@ class AuthLoginScreen extends ConsumerWidget {
                         GlassPanel(
                           child: Column(
                             children: [
-                              const Text(
-                                'A porta de entrada para ambientes inteligentes.',
-                                style: TextStyle(
+                              Text(
+                                l.authTagline,
+                                style: const TextStyle(
                                   color: GateWiseColors.textPrimary,
                                   fontSize: 22,
                                   height: 1.15,
@@ -144,7 +146,7 @@ class AuthLoginScreen extends ConsumerWidget {
                               ),
                               const SizedBox(height: 10),
                               Text(
-                                'Conecte, automatize e proteja qualquer ambiente, em qualquer escala, de forma inteligente.',
+                                l.authSubtitle,
                                 style: TextStyle(
                                   color: Colors.white.withValues(alpha: 0.62),
                                   fontSize: 14,
@@ -154,7 +156,7 @@ class AuthLoginScreen extends ConsumerWidget {
                               ),
                               const SizedBox(height: 26),
                               NeonGradientButton(
-                                label: 'Entrar com GateWise',
+                                label: l.authLoginButton,
                                 icon: Icons.login_rounded,
                                 isLoading: isLoading,
                                 gradient: const [
@@ -171,7 +173,7 @@ class AuthLoginScreen extends ConsumerWidget {
                                 crossAxisAlignment: WrapCrossAlignment.center,
                                 children: [
                                   Text(
-                                    'Ainda não tem cadastro?',
+                                    l.authNoAccount,
                                     style: TextStyle(
                                       color: Colors.white.withValues(
                                         alpha: 0.62,
@@ -188,9 +190,9 @@ class AuthLoginScreen extends ConsumerWidget {
                                         horizontal: 4,
                                       ),
                                     ),
-                                    child: const Text(
-                                      'Cadastre-se',
-                                      style: TextStyle(
+                                    child: Text(
+                                      l.authSignUp,
+                                      style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w800,
                                       ),

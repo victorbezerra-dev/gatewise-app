@@ -20,6 +20,7 @@ import 'space_providers.dart';
 import '../../../modules/organizations/domain/value_objects/organization_member_role_vo.dart';
 import '../../../modules/organizations/presentation/components/status_panels.dart';
 import '../../../modules/organizations/presentation/organization_providers.dart';
+import '../../../core/l10n/l10n.dart';
 
 enum _MemberAccess { noRequest, pending, rejected, granted }
 
@@ -63,7 +64,7 @@ class _SpaceDetailsScreenState extends ConsumerState<SpaceDetailsScreen> {
     return Scaffold(
       backgroundColor: GateWiseColors.background,
       appBar: AppBar(
-        title: const Text('Espaço'),
+        title: Text(context.l.spaceDetailsTitle),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () => context.pop(),
@@ -84,20 +85,20 @@ class _SpaceDetailsScreenState extends ConsumerState<SpaceDetailsScreen> {
               padding: const EdgeInsets.all(18),
               child: MessagePanel(
                 icon: Icons.error_outline_rounded,
-                title: 'Erro ao abrir espaço',
+                title: context.l.spaceDetailsErrorLoad,
                 message: error.toString(),
-                actionLabel: 'Tentar novamente',
+                actionLabel: context.l.actionRetry,
                 onAction: () => notifier.loadSpaceDetails(widget.spaceId),
               ),
             ),
             data: (space) {
               if (space == null) {
-                return const Padding(
-                  padding: EdgeInsets.all(18),
+                return Padding(
+                  padding: const EdgeInsets.all(18),
                   child: MessagePanel(
                     icon: Icons.sensor_door_rounded,
-                    title: 'Espaço não encontrado',
-                    message: 'Não foi possível localizar os dados solicitados.',
+                    title: context.l.spaceDetailsNotFound,
+                    message: context.l.spaceDetailsNotFoundMessage,
                   ),
                 );
               }
@@ -169,12 +170,12 @@ class _SpaceDetailsScreenState extends ConsumerState<SpaceDetailsScreen> {
       if (!ok && context.mounted) {
         ref.read(dialogProvider.notifier).showError(
           ref.read(spaceControllerProvider).actionErrorMessage ??
-              'Não foi possível enviar o comando.',
+              context.l.spaceCommandError,
         );
       }
     } catch (_) {
       if (context.mounted) {
-        ref.read(dialogProvider.notifier).showError('Erro ao abrir o espaço.');
+        ref.read(dialogProvider.notifier).showError(context.l.spaceOpenError);
       }
     } finally {
       if (mounted) setState(() => _isOpening = false);
@@ -207,7 +208,7 @@ class _SpaceDetailsScreenState extends ConsumerState<SpaceDetailsScreen> {
       showSpaceActionError(context, ref);
       return;
     }
-    showSpaceSnack(context, 'Espaço atualizado.');
+    showSpaceSnack(context, context.l.spaceUpdated);
   }
 
   Future<void> _confirmDelete(
@@ -217,9 +218,9 @@ class _SpaceDetailsScreenState extends ConsumerState<SpaceDetailsScreen> {
   ) async {
     final confirmed = await confirmSpace(
       context,
-      title: 'Deletar espaço?',
-      message: 'Esta ação removerá "${space.name}" permanentemente.',
-      confirmLabel: 'Deletar',
+      title: context.l.spaceDeleteTitle,
+      message: context.l.spaceDeleteMessage(space.name),
+      confirmLabel: context.l.spaceDeleteConfirm,
       danger: true,
     );
     if (!confirmed) return;
@@ -237,7 +238,7 @@ class _SpaceDetailsScreenState extends ConsumerState<SpaceDetailsScreen> {
       showSpaceActionError(context, ref);
       return;
     }
-    showSpaceSnack(context, 'Espaço deletado.');
+    showSpaceSnack(context, context.l.spaceDeleteSuccess);
     context.pop();
   }
 
@@ -247,11 +248,9 @@ class _SpaceDetailsScreenState extends ConsumerState<SpaceDetailsScreen> {
   ) async {
     final confirmed = await confirmSpace(
       context,
-      title: 'Reprovisionar dispositivo?',
-      message:
-          'Isso irá gerar novas chaves RSA para o ESP32 de "${space.name}". '
-          'Se já existe um dispositivo configurado, ele será desconectado.',
-      confirmLabel: 'Continuar',
+      title: context.l.spaceProvisionTitle,
+      message: context.l.spaceProvisionMessage(space.name),
+      confirmLabel: context.l.spaceProvisionConfirm,
     );
     if (!confirmed || !context.mounted) return;
     context.push('/spaces/${space.id}/provision');
@@ -264,7 +263,7 @@ class _SpaceDetailsScreenState extends ConsumerState<SpaceDetailsScreen> {
     final action = await showModalBottomSheet<KeyExportAction>(
       context: context,
       backgroundColor: Colors.transparent,
-      builder: (_) => const KeyExportSheet(title: 'Chave pública do backend'),
+      builder: (_) => KeyExportSheet(title: context.l.spaceBackendKeySheetTitle),
     );
     if (action == null || !context.mounted) return;
 
@@ -272,8 +271,8 @@ class _SpaceDetailsScreenState extends ConsumerState<SpaceDetailsScreen> {
     if (!context.mounted) return;
     if (pem == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Não foi possível obter a chave pública do backend.'),
+        SnackBar(
+          content: Text(context.l.spaceBackendKeyError),
           backgroundColor: GateWiseColors.danger,
         ),
       );
@@ -338,9 +337,9 @@ class _MemberSpaceBodyState extends ConsumerState<_MemberSpaceBody> {
           ),
           error: (e, _) => MessagePanel(
             icon: Icons.error_outline_rounded,
-            title: 'Erro ao carregar acesso',
+            title: context.l.spaceLoadAccessError,
             message: e.toString(),
-            actionLabel: 'Tentar novamente',
+            actionLabel: context.l.actionRetry,
             onAction: () => notifier.loadMyGrantsForCurrentUser(widget.space.id),
           ),
           data: (grants) {
@@ -382,14 +381,14 @@ class _MemberSpaceBodyState extends ConsumerState<_MemberSpaceBody> {
       if (!ok && context.mounted) {
         ref.read(dialogProvider.notifier).showError(
           ref.read(spaceControllerProvider).actionErrorMessage ??
-              'Não foi possível enviar o comando.',
+              context.l.spaceCommandError,
         );
       }
     } catch (_) {
       if (context.mounted) {
         ref
             .read(dialogProvider.notifier)
-            .showError('Erro ao abrir o espaço.');
+            .showError(context.l.spaceOpenError);
       }
     } finally {
       if (mounted) setState(() => _isOpening = false);
@@ -415,7 +414,7 @@ class _MemberSpaceBodyState extends ConsumerState<_MemberSpaceBody> {
       showSpaceSnack(
         context,
         ref.read(spaceControllerProvider).actionErrorMessage ??
-            'Não foi possível enviar a solicitação.',
+            context.l.spaceGrantsCannotSend,
         isError: true,
       );
       return;
@@ -423,7 +422,7 @@ class _MemberSpaceBodyState extends ConsumerState<_MemberSpaceBody> {
 
     await notifier.loadMyGrantsForCurrentUser(widget.space.id);
     if (context.mounted) {
-      showSpaceSnack(context, 'Solicitação enviada com sucesso.');
+      showSpaceSnack(context, context.l.spaceGrantsSentSuccess);
     }
   }
 }
@@ -444,25 +443,25 @@ class _LockScreen extends StatelessWidget {
     final (message, chipLabel, chipIcon, chipColor, buttonLabel) =
         switch (access) {
       _MemberAccess.pending => (
-        'Sua solicitação está aguardando aprovação.',
-        'AGUARDANDO',
+        context.l.spacePendingMessage,
+        context.l.spacePendingChip,
         Icons.schedule_rounded,
         GateWiseColors.amber,
-        'Aguardando aprovação',
+        context.l.spacePendingButton,
       ),
       _MemberAccess.rejected => (
-        'Sua solicitação de acesso foi rejeitada.',
-        'REJEITADO',
+        context.l.spaceRejectedMessage,
+        context.l.spaceRejectedChip,
         Icons.gpp_bad_rounded,
         GateWiseColors.danger,
-        'Solicitar novamente',
+        context.l.spaceRejectedButton,
       ),
       _ => (
-        'Você não tem acesso a este espaço.',
+        context.l.spaceNoAccessMessage,
         null,
         Icons.lock_rounded,
         GateWiseColors.electricBlue,
-        'Solicitar Acesso',
+        context.l.spaceRequestAccessButton,
       ),
     };
 
@@ -549,9 +548,9 @@ class _GrantedAccessView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Meu acesso',
-          style: TextStyle(
+        Text(
+          context.l.spaceMyAccess,
+          style: const TextStyle(
             fontSize: 25,
             height: 1.05,
             fontWeight: FontWeight.w900,
@@ -609,8 +608,8 @@ class _GrantedAccessView extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 7),
-                        const TechStatusPill(
-                          label: 'AUTORIZADO',
+                        TechStatusPill(
+                          label: context.l.spaceAuthorizedChip,
                           icon: Icons.verified_user_rounded,
                           color: GateWiseColors.mint,
                         ),
@@ -621,7 +620,7 @@ class _GrantedAccessView extends StatelessWidget {
               ),
               const SizedBox(height: 18),
               Text(
-                'Módulo conectado ao controle de acesso. Acione a fechadura apenas quando estiver próximo ao ambiente autorizado.',
+                context.l.spaceAccessInfo,
                 style: TextStyle(
                   color: Colors.white.withValues(alpha: 0.58),
                   fontSize: 13,
@@ -633,7 +632,7 @@ class _GrantedAccessView extends StatelessWidget {
         ),
         const SizedBox(height: 18),
         NeonGradientButton(
-          label: isOpening ? 'Abrindo porta...' : 'Entrar no espaço',
+          label: isOpening ? context.l.spaceOpeningButton : context.l.spaceEnterButton,
           icon: Icons.lock_rounded,
           isLoading: isOpening,
           gradient: GateWiseColors.successGradient,
@@ -673,13 +672,13 @@ class _GrantsSection extends StatelessWidget {
       children: [
         Row(
           children: [
-            const Expanded(child: SectionTitle('Solicitações de acesso')),
+            Expanded(child: SectionTitle(context.l.spaceGrantsSection)),
             if (canRequestAccess)
               TextButton.icon(
                 onPressed: () =>
                     _openRequestAccess(parentContext, space, notifier),
                 icon: const Icon(Icons.add_rounded, size: 17),
-                label: const Text('Solicitar'),
+                label: Text(context.l.spaceGrantsRequestButton),
               ),
           ],
         ),
@@ -688,16 +687,15 @@ class _GrantsSection extends StatelessWidget {
           loading: () => const LoadingPanel(),
           error: (error, _) => MessagePanel(
             icon: Icons.lock_outline_rounded,
-            title: 'Solicitações indisponíveis',
+            title: context.l.spaceGrantsUnavailable,
             message: error.toString(),
           ),
           data: (grants) {
             if (grants.isEmpty) {
-              return const MessagePanel(
+              return MessagePanel(
                 icon: Icons.how_to_reg_rounded,
-                title: 'Nenhuma solicitação',
-                message:
-                    'Solicitações de acesso aparecerão aqui para aprovação.',
+                title: context.l.spaceGrantsNone,
+                message: context.l.spaceGrantsNoneMessage,
               );
             }
             return Column(
@@ -748,12 +746,12 @@ class _GrantsSection extends StatelessWidget {
       showSpaceSnack(
         context,
         parentRef.read(spaceControllerProvider).actionErrorMessage ??
-            'Não foi possível enviar a solicitação.',
+            context.l.spaceGrantsCannotSend,
         isError: true,
       );
       return;
     }
-    showSpaceSnack(context, 'Solicitação enviada com sucesso.');
+    showSpaceSnack(context, context.l.spaceGrantsSentSuccess);
   }
 
   Future<void> _confirmApprove(
@@ -763,9 +761,9 @@ class _GrantsSection extends StatelessWidget {
   ) async {
     final confirmed = await confirmSpace(
       context,
-      title: 'Aprovar acesso?',
-      message: 'Autorizar ${grant.authorizedUserName} a acessar este space?',
-      confirmLabel: 'Aprovar',
+      title: context.l.spaceGrantsApproveTitle,
+      message: context.l.spaceGrantsApproveMessage(grant.authorizedUserName),
+      confirmLabel: context.l.spaceGrantsApproveConfirm,
     );
     if (!confirmed) return;
 
@@ -775,12 +773,12 @@ class _GrantsSection extends StatelessWidget {
       showSpaceSnack(
         context,
         parentRef.read(spaceControllerProvider).actionErrorMessage ??
-            'Não foi possível aprovar.',
+            context.l.spaceGrantsCannotApprove,
         isError: true,
       );
       return;
     }
-    showSpaceSnack(context, 'Acesso aprovado.');
+    showSpaceSnack(context, context.l.spaceGrantsApproveSuccess);
   }
 
   Future<void> _confirmReject(
@@ -790,9 +788,9 @@ class _GrantsSection extends StatelessWidget {
   ) async {
     final confirmed = await confirmSpace(
       context,
-      title: 'Rejeitar acesso?',
-      message: 'Rejeitar a solicitação de ${grant.authorizedUserName}?',
-      confirmLabel: 'Rejeitar',
+      title: context.l.spaceGrantsRejectTitle,
+      message: context.l.spaceGrantsRejectMessage(grant.authorizedUserName),
+      confirmLabel: context.l.spaceGrantsRejectConfirm,
       danger: true,
     );
     if (!confirmed) return;
@@ -803,12 +801,12 @@ class _GrantsSection extends StatelessWidget {
       showSpaceSnack(
         context,
         parentRef.read(spaceControllerProvider).actionErrorMessage ??
-            'Não foi possível rejeitar.',
+            context.l.spaceGrantsCannotReject,
         isError: true,
       );
       return;
     }
-    showSpaceSnack(context, 'Acesso rejeitado.');
+    showSpaceSnack(context, context.l.spaceGrantsRejectSuccess);
   }
 
   Future<void> _confirmDeleteGrant(
@@ -824,16 +822,14 @@ class _GrantsSection extends StatelessWidget {
           g.status == AccessGrantStatus.granted,
     );
     final message = hasOtherGrantsForUser
-        ? 'Remover o registro de acesso de ${grant.authorizedUserName}?'
-        : 'Remover o registro de acesso de ${grant.authorizedUserName}?\n\n'
-            'Este é o último acesso deste usuário neste espaço. Se não houver '
-            'outros vínculos na organização, ele será removido automaticamente.';
+        ? context.l.spaceGrantsDeleteMessage(grant.authorizedUserName)
+        : context.l.spaceGrantsDeleteMessageLast(grant.authorizedUserName);
 
     final confirmed = await confirmSpace(
       context,
-      title: 'Remover acesso?',
+      title: context.l.spaceGrantsDeleteTitle,
       message: message,
-      confirmLabel: 'Remover',
+      confirmLabel: context.l.spaceGrantsDeleteConfirm,
       danger: true,
     );
     if (!confirmed) return;
@@ -844,12 +840,12 @@ class _GrantsSection extends StatelessWidget {
       showSpaceSnack(
         context,
         parentRef.read(spaceControllerProvider).actionErrorMessage ??
-            'Não foi possível remover.',
+            context.l.spaceGrantsCannotRemove,
         isError: true,
       );
       return;
     }
-    showSpaceSnack(context, 'Registro removido.');
+    showSpaceSnack(context, context.l.spaceGrantsDeleteSuccess);
   }
 }
 
@@ -871,7 +867,7 @@ class _DeviceSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SectionTitle('Dispositivo'),
+        SectionTitle(context.l.spaceDeviceSection),
         const SizedBox(height: 10),
         GlassPanel(
           padding: const EdgeInsets.all(16),
@@ -898,9 +894,9 @@ class _DeviceSection extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Hardware ESP32',
-                          style: TextStyle(
+                        Text(
+                          context.l.spaceDeviceHardware,
+                          style: const TextStyle(
                             color: GateWiseColors.textPrimary,
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
@@ -908,7 +904,7 @@ class _DeviceSection extends StatelessWidget {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          'Gere as chaves RSA para flashar no dispositivo.',
+                          context.l.spaceDeviceDesc,
                           style: TextStyle(
                             color: Colors.white.withValues(alpha: 0.48),
                             fontSize: 12,
@@ -924,13 +920,13 @@ class _DeviceSection extends StatelessWidget {
               OutlinedButton.icon(
                 onPressed: onProvision,
                 icon: const Icon(Icons.settings_input_component_rounded, size: 17),
-                label: const Text('Provisionar dispositivo'),
+                label: Text(context.l.spaceDeviceProvisionButton),
               ),
               const SizedBox(height: 10),
               OutlinedButton.icon(
                 onPressed: onDownloadKey,
                 icon: const Icon(Icons.ios_share_rounded, size: 17),
-                label: const Text('Chave pública do backend'),
+                label: Text(context.l.spaceDeviceBackendKeyButton),
               ),
             ],
           ),

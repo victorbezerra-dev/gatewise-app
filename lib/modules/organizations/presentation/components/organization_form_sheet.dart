@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/l10n/l10n.dart';
 import '../../../../core/theme/gatewise_theme.dart';
 import '../../domain/entities/organization_entity.dart';
 import '../../infra/dtos/organization_payload_dto.dart';
@@ -43,10 +44,10 @@ class _OrganizationFormSheetState extends State<OrganizationFormSheet> {
     final isEditing = widget.organization != null;
 
     return SheetScaffold(
-      title: isEditing ? 'Editar organização' : 'Nova organização',
+      title: isEditing ? context.l.orgFormEditTitle : context.l.orgFormNewTitle,
       subtitle: isEditing
-          ? 'Atualize os dados e status da sua organização.'
-          : 'Configure uma nova organização para gerenciar membros e convites.',
+          ? context.l.orgFormEditSubtitle
+          : context.l.orgFormNewSubtitle,
       child: Form(
         key: _formKey,
         child: Column(
@@ -54,22 +55,22 @@ class _OrganizationFormSheetState extends State<OrganizationFormSheet> {
           children: [
             TextFormField(
               controller: _nameController,
-              decoration: const InputDecoration(
-                labelText: 'Nome',
-                hintText: 'Ex: Laboratório GateWise',
-                prefixIcon: Icon(Icons.business_rounded),
+              decoration: InputDecoration(
+                labelText: context.l.orgFormNameLabel,
+                hintText: context.l.orgFormNameHint,
+                prefixIcon: const Icon(Icons.business_rounded),
               ),
               validator: (value) => value == null || value.trim().isEmpty
-                  ? 'Informe o nome.'
+                  ? context.l.formValidationName
                   : null,
             ),
             const SizedBox(height: 14),
             TextFormField(
               controller: _descriptionController,
-              decoration: const InputDecoration(
-                labelText: 'Descrição',
-                hintText: 'Detalhes sobre a organização',
-                prefixIcon: Icon(Icons.notes_rounded),
+              decoration: InputDecoration(
+                labelText: context.l.orgFormDescLabel,
+                hintText: context.l.orgFormDescHint,
+                prefixIcon: const Icon(Icons.notes_rounded),
               ),
               minLines: 2,
               maxLines: 4,
@@ -81,7 +82,7 @@ class _OrganizationFormSheetState extends State<OrganizationFormSheet> {
             ),
             const SizedBox(height: 18),
             NeonGradientButton(
-              label: 'Salvar organização',
+              label: context.l.orgFormSaveButton,
               icon: Icons.save_rounded,
               gradient: const [
                 GateWiseColors.electricBlue,
@@ -154,9 +155,9 @@ class _OrganizationActiveToggle extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Status da organização',
-                      style: TextStyle(
+                    Text(
+                      context.l.orgFormStatusLabel,
+                      style: const TextStyle(
                         color: GateWiseColors.textPrimary,
                         fontSize: 14,
                         fontWeight: FontWeight.w800,
@@ -165,8 +166,8 @@ class _OrganizationActiveToggle extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       value
-                          ? 'Ativa e disponível para membros.'
-                          : 'Inativa temporariamente.',
+                          ? context.l.orgFormStatusActive
+                          : context.l.orgFormStatusInactive,
                       style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.56),
                         fontSize: 12,

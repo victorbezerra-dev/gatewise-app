@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/gatewise_theme.dart';
 import '../../domain/entities/access_grant_entity.dart';
 import '../../domain/value_objects/access_grant_status_vo.dart';
+import '../../../../core/l10n/l10n.dart';
 
 class AccessGrantCard extends StatelessWidget {
   const AccessGrantCard({
@@ -53,7 +54,7 @@ class AccessGrantCard extends StatelessWidget {
                     children: [
                       Text(
                         grant.authorizedUserName.isEmpty
-                            ? 'Usuário sem nome'
+                            ? context.l.grantUnnamed
                             : grant.authorizedUserName,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -133,7 +134,7 @@ class AccessGrantCard extends StatelessWidget {
                           foregroundColor: GateWiseColors.background,
                         ),
                         icon: const Icon(Icons.check_rounded, size: 16),
-                        label: const Text('Aprovar'),
+                        label: Text(context.l.grantApprove),
                       ),
                     ),
                   if (onApprove != null && onReject != null)
@@ -149,7 +150,7 @@ class AccessGrantCard extends StatelessWidget {
                           ),
                         ),
                         icon: const Icon(Icons.close_rounded, size: 16),
-                        label: const Text('Rejeitar'),
+                        label: Text(context.l.grantReject),
                       ),
                     ),
                 ],
@@ -166,7 +167,7 @@ class AccessGrantCard extends StatelessWidget {
                     foregroundColor: GateWiseColors.danger,
                   ),
                   icon: const Icon(Icons.delete_outline_rounded, size: 16),
-                  label: const Text('Remover'),
+                  label: Text(context.l.grantRemove),
                 ),
               ),
             ],

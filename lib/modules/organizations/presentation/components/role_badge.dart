@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/l10n/l10n.dart';
 import '../../../../core/theme/gatewise_theme.dart';
 import '../../domain/value_objects/organization_member_role_vo.dart';
 
@@ -15,8 +16,13 @@ class RoleBadge extends StatelessWidget {
       OrganizationMemberRole.manager => GateWiseColors.amber,
       OrganizationMemberRole.member => GateWiseColors.electricBlue,
     };
+    final label = switch (role) {
+      OrganizationMemberRole.owner => context.l.roleOwner,
+      OrganizationMemberRole.manager => context.l.roleManager,
+      OrganizationMemberRole.member => context.l.roleMember,
+    };
     return TechStatusPill(
-      label: role.label.toUpperCase(),
+      label: label.toUpperCase(),
       icon: Icons.shield_rounded,
       color: color,
     );

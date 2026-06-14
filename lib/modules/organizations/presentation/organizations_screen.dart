@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/l10n/l10n.dart';
 import '../../../core/theme/gatewise_theme.dart';
 import '../infra/dtos/organization_payload_dto.dart';
 import 'components/organization_card.dart';
@@ -39,10 +40,10 @@ class _OrganizationsScreenState extends ConsumerState<OrganizationsScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const SizedBox(height: 18),
-          const PageTitle('Organizações'),
+          PageTitle(context.l.orgsTitle),
           const SizedBox(height: 4),
           Text(
-            'Gerencie membros, convites e acessos.',
+            context.l.orgsSubtitle,
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.46),
               fontSize: 13,
@@ -61,7 +62,7 @@ class _OrganizationsScreenState extends ConsumerState<OrganizationsScreen> {
                       foregroundColor: Colors.white,
                     ),
                     icon: const Icon(Icons.add_business_rounded, size: 18),
-                    label: const Text('Nova organização'),
+                    label: Text(context.l.orgsNewButton),
                   ),
                 ),
               ),
@@ -71,7 +72,7 @@ class _OrganizationsScreenState extends ConsumerState<OrganizationsScreen> {
                 child: OutlinedButton.icon(
                   onPressed: () => _openJoinSheet(context, notifier),
                   icon: const Icon(Icons.key_rounded, size: 18),
-                  label: const Text('Código'),
+                  label: Text(context.l.orgsJoinButton),
                 ),
               ),
             ],
@@ -86,24 +87,23 @@ class _OrganizationsScreenState extends ConsumerState<OrganizationsScreen> {
                 physics: const AlwaysScrollableScrollPhysics(),
                 padding: const EdgeInsets.only(bottom: 122),
                 children: [
-                  const SectionTitle('Minhas organizações'),
+                  SectionTitle(context.l.orgsMineSection),
                   const SizedBox(height: 10),
                   state.memberships.when(
                     loading: () => const LoadingPanel(),
                     error: (error, _) => MessagePanel(
                       icon: Icons.error_outline_rounded,
-                      title: 'Erro ao carregar organizações',
+                      title: context.l.orgsErrorLoad,
                       message: error.toString(),
-                      actionLabel: 'Tentar novamente',
+                      actionLabel: context.l.actionRetry,
                       onAction: notifier.loadMemberships,
                     ),
                     data: (memberships) {
                       if (memberships.isEmpty) {
-                        return const MessagePanel(
+                        return MessagePanel(
                           icon: Icons.business_rounded,
-                          title: 'Nenhuma organização encontrada',
-                          message:
-                              'Crie uma organização ou entre usando um código de convite.',
+                          title: context.l.orgsNoneFound,
+                          message: context.l.orgsNoneFoundMessage,
                         );
                       }
 
@@ -114,7 +114,7 @@ class _OrganizationsScreenState extends ConsumerState<OrganizationsScreen> {
                                 organization: membership.organization,
                                 role: membership.role,
                                 subtitle:
-                                    'Membro desde ${formatDate(membership.joinedAt)}',
+                                    context.l.orgsMemberSince(formatDate(membership.joinedAt, context: context)),
                                 onTap: () => context.push(
                                   '/organizations/${membership.organization.id}',
                                 ),
@@ -133,14 +133,14 @@ class _OrganizationsScreenState extends ConsumerState<OrganizationsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const SizedBox(height: 18),
-                          const SectionTitle('Organizações'),
+                          SectionTitle(context.l.orgsSection),
                           const SizedBox(height: 10),
                           ...organizations.map(
                             (organization) => OrganizationCard(
                               organization: organization,
                               subtitle: organization.isActive
-                                  ? 'Organização ativa'
-                                  : 'Organização inativa',
+                                  ? context.l.orgsActiveStatus
+                                  : context.l.orgsInactiveStatus,
                               onTap: () => context.push(
                                 '/organizations/${organization.id}',
                               ),
@@ -177,7 +177,7 @@ class _OrganizationsScreenState extends ConsumerState<OrganizationsScreen> {
       showActionError(context, ref);
       return;
     }
-    showSnack(context, 'Organização criada com sucesso.');
+    showSnack(context, context.l.orgsCreatedSuccess);
     context.push('/organizations/${organization.id}');
   }
 
@@ -199,7 +199,7 @@ class _OrganizationsScreenState extends ConsumerState<OrganizationsScreen> {
       showActionError(context, ref);
       return;
     }
-    showSnack(context, 'Você entrou em ${organization.name}.');
+    showSnack(context, context.l.orgsJoinedSuccess(organization.name));
     context.push('/organizations/${organization.id}');
   }
 }

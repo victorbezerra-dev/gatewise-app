@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/l10n/l10n.dart';
 import '../../../core/theme/gatewise_theme.dart';
 
 class AccessHistoryScreen extends StatelessWidget {
@@ -7,15 +8,16 @@ class AccessHistoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = context.l;
     return Padding(
       padding: const EdgeInsets.fromLTRB(18, 10, 18, 122),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 18),
-          const Text(
-            'Histórico',
-            style: TextStyle(
+          Text(
+            l.historyTitle,
+            style: const TextStyle(
               color: GateWiseColors.textPrimary,
               fontSize: 25,
               height: 1.05,
@@ -50,9 +52,9 @@ class AccessHistoryScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Nenhum acesso registrado',
-                        style: TextStyle(
+                      Text(
+                        l.historyNone,
+                        style: const TextStyle(
                           color: GateWiseColors.textPrimary,
                           fontSize: 16,
                           fontWeight: FontWeight.w800,
@@ -60,7 +62,7 @@ class AccessHistoryScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        'Quando você acessar um ambiente, o registro aparecerá aqui.',
+                        l.historyNoneMessage,
                         style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.58),
                           fontSize: 13,

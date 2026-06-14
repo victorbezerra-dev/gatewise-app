@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../../../core/theme/gatewise_theme.dart';
+import '../../../../core/l10n/l10n.dart';
 
 enum KeyExportAction { save, share }
 
@@ -42,7 +43,7 @@ Future<void> executeKeyAction({
     if (!context.mounted) return;
     if (action == KeyExportAction.save) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Salvo em: ${file.path}')),
+        SnackBar(content: Text(context.l.keyExportSaved(file.path))),
       );
     } else {
       await Share.shareXFiles(
@@ -54,7 +55,7 @@ Future<void> executeKeyAction({
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Erro: $e'),
+          content: Text(context.l.keyExportError(e.toString())),
           backgroundColor: GateWiseColors.danger,
         ),
       );
@@ -122,12 +123,12 @@ class KeyExportSheet extends StatelessWidget {
               Icons.download_rounded,
               color: GateWiseColors.electricBlue,
             ),
-            title: const Text(
-              'Salvar no dispositivo',
-              style: TextStyle(color: GateWiseColors.textPrimary),
+            title: Text(
+              context.l.keyExportSaveTitle,
+              style: const TextStyle(color: GateWiseColors.textPrimary),
             ),
             subtitle: Text(
-              'Salva o arquivo .pem no armazenamento local',
+              context.l.keyExportSaveDesc,
               style: TextStyle(
                 color: Colors.white.withValues(alpha: 0.45),
                 fontSize: 12,
@@ -140,12 +141,12 @@ class KeyExportSheet extends StatelessWidget {
               Icons.share_rounded,
               color: GateWiseColors.electricBlue,
             ),
-            title: const Text(
-              'Compartilhar',
-              style: TextStyle(color: GateWiseColors.textPrimary),
+            title: Text(
+              context.l.keyExportShareTitle,
+              style: const TextStyle(color: GateWiseColors.textPrimary),
             ),
             subtitle: Text(
-              'Abre o compartilhamento do sistema',
+              context.l.keyExportShareDesc,
               style: TextStyle(
                 color: Colors.white.withValues(alpha: 0.45),
                 fontSize: 12,

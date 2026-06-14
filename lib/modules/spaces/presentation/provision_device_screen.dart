@@ -6,6 +6,7 @@ import '../../../core/theme/gatewise_theme.dart';
 import '../../../modules/organizations/presentation/components/status_panels.dart';
 import 'components/key_export_sheet.dart';
 import 'space_providers.dart';
+import '../../../core/l10n/l10n.dart';
 
 class ProvisionDeviceScreen extends ConsumerStatefulWidget {
   const ProvisionDeviceScreen({super.key, required this.spaceId});
@@ -34,7 +35,7 @@ class _ProvisionDeviceScreenState extends ConsumerState<ProvisionDeviceScreen> {
           .provisionDevice(widget.spaceId);
       if (result == null) {
         final errorMsg = ref.read(spaceControllerProvider).actionErrorMessage ??
-            'Erro ao gerar chaves do dispositivo.';
+            context.l.provisionErrorGenKeys;
         setState(() => _result = AsyncError(errorMsg, StackTrace.empty));
       } else {
         setState(() => _result = AsyncData(result));
@@ -49,7 +50,7 @@ class _ProvisionDeviceScreenState extends ConsumerState<ProvisionDeviceScreen> {
     return Scaffold(
       backgroundColor: GateWiseColors.background,
       appBar: AppBar(
-        title: const Text('Provisionar dispositivo'),
+        title: Text(context.l.provisionTitle),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () => context.pop(),
@@ -81,18 +82,18 @@ class _LoadingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          CircularProgressIndicator(
+          const CircularProgressIndicator(
             color: GateWiseColors.electricBlue,
             strokeWidth: 2.5,
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Text(
-            'Gerando chaves RSA...',
-            style: TextStyle(
+            context.l.provisionLoading,
+            style: const TextStyle(
               color: GateWiseColors.textSecondary,
               fontSize: 14,
             ),
@@ -115,9 +116,9 @@ class _ErrorView extends StatelessWidget {
       padding: const EdgeInsets.all(24),
       child: MessagePanel(
         icon: Icons.error_outline_rounded,
-        title: 'Erro ao provisionar',
+        title: context.l.provisionErrorTitle,
         message: message,
-        actionLabel: 'Tentar novamente',
+        actionLabel: context.l.actionRetry,
         onAction: onRetry,
       ),
     );
@@ -142,24 +143,21 @@ class _KeysView extends StatelessWidget {
           _PrivateKeyWarning(),
           const SizedBox(height: 20),
           _KeyCard(
-            title: 'Chave Pública do Backend',
-            subtitle: 'O ESP32 usa esta chave para verificar se os comandos '
-                'MQTT vêm do servidor GateWise. É a mesma para todos os espaços.',
-            badge: 'PODE BAIXAR NOVAMENTE',
+            title: context.l.provisionBackendKeyTitle,
+            subtitle: context.l.provisionBackendKeyDesc,
+            badge: context.l.provisionBackendKeyBadge,
             badgeColor: GateWiseColors.mint,
             icon: Icons.cloud_done_rounded,
             iconColor: GateWiseColors.electricBlue,
             pem: keys.backendPublicKeyPem,
             filename: 'backend_public_key.pem',
-            downloadNote:
-                'Esta chave é pública e pode ser obtida novamente a qualquer momento nas configurações do espaço.',
+            downloadNote: context.l.provisionBackendKeyNote,
           ),
           const SizedBox(height: 14),
           _KeyCard(
-            title: 'Chave Privada do ESP32',
-            subtitle: 'Identifica este dispositivo no sistema. '
-                'O ESP32 a usa para assinar os eventos enviados ao servidor.',
-            badge: 'NÃO FICA SALVA CONOSCO',
+            title: context.l.provisionDeviceKeyTitle,
+            subtitle: context.l.provisionDeviceKeyDesc,
+            badge: context.l.provisionDeviceKeyBadge,
             badgeColor: GateWiseColors.danger,
             icon: Icons.lock_rounded,
             iconColor: GateWiseColors.amber,
@@ -169,7 +167,7 @@ class _KeysView extends StatelessWidget {
           ),
           const SizedBox(height: 28),
           NeonGradientButton(
-            label: 'Ir para o espaço',
+            label: context.l.provisionGoToSpaceButton,
             icon: Icons.arrow_forward_rounded,
             gradient: GateWiseColors.successGradient,
             onPressed: () => context.pop(),
@@ -199,23 +197,23 @@ class _SuccessHeader extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 14),
-        const Expanded(
+        Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Dispositivo provisionado',
-                style: TextStyle(
+                context.l.provisionSuccessTitle,
+                style: const TextStyle(
                   color: GateWiseColors.textPrimary,
                   fontSize: 20,
                   fontWeight: FontWeight.w900,
                   letterSpacing: -0.5,
                 ),
               ),
-              SizedBox(height: 3),
+              const SizedBox(height: 3),
               Text(
-                'Baixe as chaves e grave no ESP32.',
-                style: TextStyle(
+                context.l.provisionSuccessSubtitle,
+                style: const TextStyle(
                   color: GateWiseColors.textSecondary,
                   fontSize: 13,
                 ),
@@ -253,9 +251,9 @@ class _PrivateKeyWarning extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Atenção: salve a chave privada agora',
-                  style: TextStyle(
+                Text(
+                  context.l.provisionWarningTitle,
+                  style: const TextStyle(
                     color: GateWiseColors.danger,
                     fontWeight: FontWeight.w800,
                     fontSize: 13,
@@ -263,9 +261,7 @@ class _PrivateKeyWarning extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  'A chave privada do ESP32 não é armazenada em nossos '
-                  'servidores. Se você fechar esta tela sem salvá-la, '
-                  'precisará gerar um novo par de chaves e reconfigurar o hardware.',
+                  context.l.provisionWarningMessage,
                   style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.72),
                     fontSize: 12,
@@ -423,7 +419,7 @@ class _KeyCardState extends State<_KeyCard> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        _expanded ? 'Ver menos' : 'Ver mais',
+                        _expanded ? context.l.provisionViewLess : context.l.provisionViewMore,
                         style: TextStyle(
                           color: widget.iconColor,
                           fontSize: 11,
@@ -505,7 +501,7 @@ class _CopyButtonState extends State<_CopyButton> {
           ),
           const SizedBox(width: 4),
           Text(
-            _copied ? 'Copiado!' : 'Copiar',
+            _copied ? context.l.provisionCopiedButton : context.l.provisionCopyButton,
             style: TextStyle(
               color: _copied ? GateWiseColors.mint : widget.iconColor,
               fontSize: 12,

@@ -6,6 +6,8 @@ import '../../../core/auth/auth_notifier.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/domain/entities/user_entity.dart';
 import '../../../core/domain/value_objects/user_type_vo.dart';
+import '../../../core/l10n/l10n.dart';
+import '../../../core/providers/locale_provider.dart';
 import '../../../core/providers/user_profile_provider.dart';
 import '../../../core/theme/gatewise_theme.dart';
 
@@ -14,23 +16,25 @@ class ProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = context.l;
     final profileAsync = ref.watch(userProfileProvider);
+    final currentLocale = ref.watch(localeProvider);
 
     return profileAsync.when(
       loading: () => const _ProfileLoadingView(),
       error: (error, _) => _ProfileMessageView(
         icon: Icons.error_outline_rounded,
-        title: 'Erro ao carregar perfil',
+        title: l.profileErrorLoad,
         message: error.toString(),
-        actionLabel: 'Tentar novamente',
+        actionLabel: l.profileRetry,
         onAction: () => ref.invalidate(userProfileProvider),
       ),
       data: (user) {
         if (user == null) {
-          return const _ProfileMessageView(
+          return _ProfileMessageView(
             icon: Icons.person_off_outlined,
-            title: 'Usuário não encontrado',
-            message: 'Faça login novamente para atualizar seus dados.',
+            title: l.profileNotFound,
+            message: l.profileNotFoundMessage,
           );
         }
 
@@ -45,12 +49,12 @@ class ProfileScreen extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 18),
-                const Row(
+                Row(
                   children: [
                     Expanded(
                       child: Text(
-                        'Meu Perfil',
-                        style: TextStyle(
+                        l.profileTitle,
+                        style: const TextStyle(
                           color: GateWiseColors.textPrimary,
                           fontSize: 25,
                           height: 1.05,
@@ -59,28 +63,33 @@ class ProfileScreen extends ConsumerWidget {
                         ),
                       ),
                     ),
+                    _LanguageButton(
+                      code: currentLocale.languageCode.toUpperCase(),
+                      tooltip: l.profileLanguageDialogTitle,
+                      onTap: () => _showLanguageSheet(context, ref),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 18),
                 _ProfileHeader(user: user),
                 const SizedBox(height: 18),
-                const _SectionTitle(title: 'Dados da conta'),
+                _SectionTitle(title: l.profileSectionAccount),
                 const SizedBox(height: 8),
                 _InfoList(
                   children: [
                     _InfoRow(
                       icon: Icons.person_outline_rounded,
-                      label: 'Nome',
+                      label: l.profileLabelName,
                       value: user.name,
                     ),
                     _InfoRow(
                       icon: Icons.mail_outline_rounded,
-                      label: 'E-mail',
+                      label: l.profileLabelEmail,
                       value: user.email,
                     ),
                     _InfoRow(
                       icon: Icons.badge_outlined,
-                      label: 'Matrícula',
+                      label: l.profileLabelRegistration,
                       value: user.registrationNumber,
                       showDivider: false,
                     ),
@@ -88,23 +97,23 @@ class ProfileScreen extends ConsumerWidget {
                 ),
                 if (_hasDeviceInfo(user)) ...[
                   const SizedBox(height: 18),
-                  const _SectionTitle(title: 'Dispositivo'),
+                  _SectionTitle(title: l.profileSectionDevice),
                   const SizedBox(height: 8),
                   _InfoList(
                     children: [
                       _InfoRow(
                         icon: Icons.phone_android_rounded,
-                        label: 'Modelo',
+                        label: l.profileLabelModel,
                         value: user.deviceModel,
                       ),
                       _InfoRow(
                         icon: Icons.precision_manufacturing_outlined,
-                        label: 'Fabricante',
+                        label: l.profileLabelManufacturer,
                         value: user.deviceManufactureName,
                       ),
                       _InfoRow(
                         icon: Icons.memory_rounded,
-                        label: 'Sistema',
+                        label: l.profileLabelSystem,
                         value: _formatOperationalSystem(user),
                         showDivider: false,
                       ),
@@ -113,6 +122,7 @@ class ProfileScreen extends ConsumerWidget {
                 ],
                 const SizedBox(height: 22),
                 _LogoutButton(
+                  label: l.profileLogout,
                   onPressed: () async {
                     await ref.read(authProvider.notifier).logout();
                     ref.invalidate(userProfileProvider);
@@ -146,12 +156,157 @@ class ProfileScreen extends ConsumerWidget {
     return '$system $version';
   }
 
-  static String _safeUserTypeLabel(int value) {
-    if (value < 0 || value >= UserType.values.length) {
-      return 'Não informado';
-    }
+  static String safeUserTypeLabel(int value, AppLocalizations l) {
+    if (value < 0 || value >= UserType.values.length) return l.userTypeUnknown;
+    return switch (UserType.fromInt(value)) {
+      UserType.professor => l.userTypeProfessor,
+      UserType.student => l.userTypeStudent,
+      UserType.admin => l.userTypeAdmin,
+      UserType.visitor => l.userTypeVisitor,
+    };
+  }
 
-    return UserType.fromInt(value).label;
+  void _showLanguageSheet(BuildContext context, WidgetRef ref) {
+    final l = context.l;
+    final current = ref.read(localeProvider);
+
+    final languages = [
+      (code: 'pt', label: l.langPt, flag: '🇧🇷'),
+      (code: 'en', label: l.langEn, flag: '🇺🇸'),
+      (code: 'es', label: l.langEs, flag: '🇪🇸'),
+      (code: 'fr', label: l.langFr, flag: '🇫🇷'),
+      (code: 'de', label: l.langDe, flag: '🇩🇪'),
+    ];
+
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      barrierColor: Colors.black.withValues(alpha: 0.58),
+      builder: (sheetContext) => SafeArea(
+        child: Container(
+          margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+          decoration: BoxDecoration(
+            color: GateWiseColors.surface.withValues(alpha: 0.96),
+            borderRadius: BorderRadius.circular(28),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.45),
+                blurRadius: 28,
+                offset: const Offset(0, 16),
+              ),
+              BoxShadow(
+                color: GateWiseColors.electricBlue.withValues(alpha: 0.1),
+                blurRadius: 30,
+                offset: const Offset(0, -4),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Center(
+                child: Container(
+                  width: 38,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.18),
+                    borderRadius: BorderRadius.circular(99),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 18),
+              Row(
+                children: [
+                  Container(
+                    width: 42,
+                    height: 42,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          GateWiseColors.electricBlue.withValues(alpha: 0.95),
+                          GateWiseColors.neonCyan.withValues(alpha: 0.72),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: GateWiseColors.electricBlue.withValues(
+                            alpha: 0.22,
+                          ),
+                          blurRadius: 16,
+                          offset: const Offset(0, 8),
+                        ),
+                      ],
+                    ),
+                    child: const Icon(
+                      Icons.translate_rounded,
+                      color: Colors.white,
+                      size: 22,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l.profileLanguageDialogTitle,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 17,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: -0.2,
+                          ),
+                        ),
+                        const SizedBox(height: 3),
+                        Text(
+                          l.profileSectionLanguage,
+                          style: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.54),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  IconButton.filledTonal(
+                    onPressed: () => Navigator.of(sheetContext).pop(),
+                    style: IconButton.styleFrom(
+                      backgroundColor: Colors.white.withValues(alpha: 0.07),
+                      foregroundColor: Colors.white.withValues(alpha: 0.72),
+                    ),
+                    icon: const Icon(Icons.close_rounded, size: 18),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              for (final lang in languages) ...[
+                _LanguageOptionTile(
+                  flag: lang.flag,
+                  code: lang.code.toUpperCase(),
+                  label: lang.label,
+                  isSelected: lang.code == current.languageCode,
+                  onTap: () {
+                    if (lang.code != current.languageCode) {
+                      ref
+                          .read(localeProvider.notifier)
+                          .setLocale(Locale(lang.code));
+                    }
+                    Navigator.of(sheetContext).pop();
+                  },
+                ),
+                if (lang != languages.last) const SizedBox(height: 8),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -162,6 +317,7 @@ class _ProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = context.l;
     return GlassPanel(
       padding: const EdgeInsets.all(16),
       borderRadius: 22,
@@ -175,7 +331,7 @@ class _ProfileHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  user.name.isNotEmpty ? user.name : 'Usuário GateWise',
+                  user.name.isNotEmpty ? user.name : l.profileGuestName,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
@@ -187,7 +343,7 @@ class _ProfileHeader extends StatelessWidget {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  user.email.isNotEmpty ? user.email : 'E-mail não informado',
+                  user.email.isNotEmpty ? user.email : l.profileNoEmail,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -197,12 +353,204 @@ class _ProfileHeader extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 _CompactBadge(
-                  text: ProfileScreen._safeUserTypeLabel(user.userType),
+                  text: ProfileScreen.safeUserTypeLabel(user.userType, l),
                 ),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _LanguageButton extends StatelessWidget {
+  const _LanguageButton({
+    required this.code,
+    required this.tooltip,
+    required this.onTap,
+  });
+
+  final String code;
+  final String tooltip;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: tooltip,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(999),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+            decoration: BoxDecoration(
+              color: GateWiseColors.electricBlue.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(999),
+              border: Border.all(
+                color: GateWiseColors.electricBlue.withValues(alpha: 0.28),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: GateWiseColors.electricBlue.withValues(alpha: 0.08),
+                  blurRadius: 14,
+                  offset: const Offset(0, 7),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.language_rounded,
+                  color: GateWiseColors.neonCyan,
+                  size: 17,
+                ),
+                const SizedBox(width: 7),
+                Text(
+                  code,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 0.6,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Icon(
+                  Icons.keyboard_arrow_down_rounded,
+                  color: Colors.white.withValues(alpha: 0.58),
+                  size: 17,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _LanguageOptionTile extends StatelessWidget {
+  const _LanguageOptionTile({
+    required this.flag,
+    required this.code,
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  final String flag;
+  final String code;
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final accent = isSelected ? GateWiseColors.electricBlue : Colors.white;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(18),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          curve: Curves.easeOut,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? GateWiseColors.electricBlue.withValues(alpha: 0.14)
+                : Colors.white.withValues(alpha: 0.045),
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(
+              color: isSelected
+                  ? GateWiseColors.electricBlue.withValues(alpha: 0.45)
+                  : Colors.white.withValues(alpha: 0.07),
+            ),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 42,
+                height: 42,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.08),
+                  ),
+                ),
+                child: Text(flag, style: const TextStyle(fontSize: 21)),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: isSelected
+                            ? Colors.white
+                            : Colors.white.withValues(alpha: 0.86),
+                        fontSize: 14,
+                        fontWeight: isSelected
+                            ? FontWeight.w800
+                            : FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      code,
+                      style: TextStyle(
+                        color: accent.withValues(
+                          alpha: isSelected ? 0.82 : 0.42,
+                        ),
+                        fontSize: 11,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.8,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 180),
+                width: 28,
+                height: 28,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: isSelected
+                      ? GateWiseColors.electricBlue
+                      : Colors.white.withValues(alpha: 0.055),
+                  border: Border.all(
+                    color: isSelected
+                        ? GateWiseColors.neonCyan.withValues(alpha: 0.5)
+                        : Colors.white.withValues(alpha: 0.1),
+                  ),
+                ),
+                child: isSelected
+                    ? const Icon(
+                        Icons.check_rounded,
+                        color: Colors.white,
+                        size: 17,
+                      )
+                    : Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        color: Colors.white.withValues(alpha: 0.34),
+                        size: 12,
+                      ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -420,8 +768,9 @@ class _InfoRow extends StatelessWidget {
 }
 
 class _LogoutButton extends StatelessWidget {
-  const _LogoutButton({required this.onPressed});
+  const _LogoutButton({required this.label, required this.onPressed});
 
+  final String label;
   final VoidCallback onPressed;
 
   @override
@@ -440,9 +789,9 @@ class _LogoutButton extends StatelessWidget {
           ),
         ),
         icon: const Icon(Icons.logout_rounded, size: 18),
-        label: const Text(
-          'Sair da conta',
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+        label: Text(
+          label,
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
         ),
       ),
     );

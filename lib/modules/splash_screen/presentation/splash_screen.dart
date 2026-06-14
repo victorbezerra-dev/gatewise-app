@@ -4,6 +4,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 
+import '../../../core/l10n/l10n.dart';
 import '../../../core/theme/gatewise_theme.dart';
 
 class SplashPage extends StatefulWidget {
@@ -51,6 +52,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final l = context.l;
     return Scaffold(
       backgroundColor: GateWiseColors.background,
       body: TechBackground(
@@ -84,29 +86,29 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                           fit: BoxFit.contain,
                         ),
                         const SizedBox(height: 4),
-                        const Text.rich(
+                        Text.rich(
                           TextSpan(
-                            text: 'Conectar, automatizar e proteger. ',
-                            style: TextStyle(
+                            text: '${l.splashTaglinePart1} ',
+                            style: const TextStyle(
                               fontSize: 18,
                               color: GateWiseColors.textPrimary,
                             ),
                             children: [
                               TextSpan(
-                                text: 'Em qualquer escala',
-                                style: TextStyle(
+                                text: l.splashTaglinePart2,
+                                style: const TextStyle(
                                   color: GateWiseColors.neonCyan,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              TextSpan(text: '.'),
+                              const TextSpan(text: '.'),
                             ],
                           ),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 14),
-                        const TechStatusPill(
-                          label: 'Conectando com segurança',
+                        TechStatusPill(
+                          label: l.splashConnecting,
                           icon: Icons.lock_outline_rounded,
                         ),
                       ],
@@ -131,7 +133,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                   builder: (context, child) {
                     final dots = '.' * _dotAnimation.value;
                     return Text(
-                      'loading$dots',
+                      '${l.splashLoadingText}$dots',
                       style: const TextStyle(
                         color: GateWiseColors.textSecondary,
                         fontSize: 13,

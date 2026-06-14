@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/l10n/l10n.dart';
 import 'sheet_scaffold.dart';
 
 class JoinOrganizationSheet extends StatefulWidget {
@@ -21,7 +22,7 @@ class _JoinOrganizationSheetState extends State<JoinOrganizationSheet> {
   @override
   Widget build(BuildContext context) {
     return SheetScaffold(
-      title: 'Entrar por convite',
+      title: context.l.joinTitle,
       showGradientBackground: false,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -29,10 +30,10 @@ class _JoinOrganizationSheetState extends State<JoinOrganizationSheet> {
           TextField(
             controller: _controller,
             textCapitalization: TextCapitalization.characters,
-            decoration: const InputDecoration(
-              labelText: 'Código do convite',
-              hintText: 'ABC12345',
-              prefixIcon: Icon(Icons.key_rounded),
+            decoration: InputDecoration(
+              labelText: context.l.joinCodeLabel,
+              hintText: context.l.joinCodeHint,
+              prefixIcon: const Icon(Icons.key_rounded),
             ),
           ),
           const SizedBox(height: 16),
@@ -42,8 +43,8 @@ class _JoinOrganizationSheetState extends State<JoinOrganizationSheet> {
               onPressed: () =>
                   Navigator.of(context).pop(_controller.text.trim()),
               icon: const Icon(Icons.login_rounded, size: 19),
-              label: const Text(
-                'Entrar na organização',
+              label: Text(
+                context.l.joinButton,
                 style: TextStyle(
                   fontSize: 15.5,
                   fontWeight: FontWeight.w700,

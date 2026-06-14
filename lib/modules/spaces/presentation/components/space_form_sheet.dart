@@ -4,6 +4,7 @@ import '../../../../core/theme/gatewise_theme.dart';
 import '../../domain/entities/space_entity.dart';
 import '../../infra/dtos/space_payload_dto.dart';
 import '../../../organizations/presentation/components/sheet_scaffold.dart';
+import '../../../../core/l10n/l10n.dart';
 
 class SpaceFormSheet extends StatefulWidget {
   const SpaceFormSheet({super.key, this.space});
@@ -42,10 +43,10 @@ class _SpaceFormSheetState extends State<SpaceFormSheet> {
     final isEditing = widget.space != null;
 
     return SheetScaffold(
-      title: isEditing ? 'Editar espaço' : 'Novo espaço',
+      title: isEditing ? context.l.spaceFormEditTitle : context.l.spaceFormNewTitle,
       subtitle: isEditing
-          ? 'Atualize os dados e status do espaço.'
-          : 'Configure um novo espaço para controlar o acesso à porta.',
+          ? context.l.spaceFormEditSubtitle
+          : context.l.spaceFormNewSubtitle,
       child: Form(
         key: _formKey,
         child: Column(
@@ -53,10 +54,10 @@ class _SpaceFormSheetState extends State<SpaceFormSheet> {
           children: [
             TextFormField(
               controller: _nameController,
-              decoration: const InputDecoration(
-                labelText: 'Nome',
-                hintText: 'Ex: Laboratório 66',
-                prefixIcon: Icon(Icons.sensor_door_rounded),
+              decoration: InputDecoration(
+                labelText: context.l.spaceFormNameLabel,
+                hintText: context.l.spaceFormNameHint,
+                prefixIcon: const Icon(Icons.sensor_door_rounded),
               ),
               validator: (value) =>
                   value == null || value.trim().isEmpty ? 'Informe o nome.' : null,
@@ -64,10 +65,10 @@ class _SpaceFormSheetState extends State<SpaceFormSheet> {
             const SizedBox(height: 14),
             TextFormField(
               controller: _descriptionController,
-              decoration: const InputDecoration(
-                labelText: 'Descrição',
-                hintText: 'Detalhes sobre o space',
-                prefixIcon: Icon(Icons.notes_rounded),
+              decoration: InputDecoration(
+                labelText: context.l.spaceFormDescLabel,
+                hintText: context.l.spaceFormDescHint,
+                prefixIcon: const Icon(Icons.notes_rounded),
               ),
               minLines: 2,
               maxLines: 4,
@@ -79,7 +80,7 @@ class _SpaceFormSheetState extends State<SpaceFormSheet> {
             ),
             const SizedBox(height: 18),
             NeonGradientButton(
-              label: 'Salvar espaço',
+              label: context.l.spaceFormSaveButton,
               icon: Icons.save_rounded,
               gradient: const [
                 GateWiseColors.electricBlue,
@@ -151,9 +152,9 @@ class _SpaceActiveToggle extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Status do space',
-                      style: TextStyle(
+                    Text(
+                      context.l.spaceFormStatusLabel,
+                      style: const TextStyle(
                         color: GateWiseColors.textPrimary,
                         fontSize: 14,
                         fontWeight: FontWeight.w800,
@@ -161,7 +162,7 @@ class _SpaceActiveToggle extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      value ? 'Ativo e disponível.' : 'Inativo temporariamente.',
+                      value ? context.l.spaceFormStatusActive : context.l.spaceFormStatusInactive,
                       style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.56),
                         fontSize: 12,
