@@ -173,6 +173,14 @@
   "spaceDeviceDesc": "Generate RSA keys to flash onto the device.",
   "spaceDeviceProvisionButton": "Provision device",
   "spaceDeviceBackendKeyButton": "Backend public key",
+
+  "spaceEsp32TutorialTitle": "How to configure the ESP32",
+  "spaceEsp32TutorialScan": "Scan the QR code below to access the firmware repository on GitHub:",
+  "spaceEsp32TutorialIdHint": "The ID of this space is {id} — use this value as the device identifier in the firmware.",
+  "@spaceEsp32TutorialIdHint": {
+    "placeholders": { "id": { "type": "Object" } }
+  },
+  "spaceEsp32TutorialKeysHint": "Use the keys downloaded above to complete the device security configuration.",
   "spaceGrantsSection": "Access requests",
   "spaceGrantsRequestButton": "Request",
   "spaceGrantsUnavailable": "Requests unavailable",

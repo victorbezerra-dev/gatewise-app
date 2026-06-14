@@ -533,6 +533,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get spaceDeviceBackendKeyButton => 'Backend public key';
 
   @override
+  String get spaceEsp32TutorialTitle => 'How to configure the ESP32';
+
+  @override
+  String get spaceEsp32TutorialScan =>
+      'Scan the QR code below to access the firmware repository on GitHub:';
+
+  @override
+  String spaceEsp32TutorialIdHint(Object id) {
+    return 'The ID of this space is $id — use this value as the device identifier in the firmware.';
+  }
+
+  @override
+  String get spaceEsp32TutorialKeysHint =>
+      'Use the keys downloaded above to complete the device security configuration.';
+
+  @override
   String get spaceGrantsSection => 'Access requests';
 
   @override

@@ -173,6 +173,14 @@
   "spaceDeviceDesc": "Générez les clés RSA à flasher sur l'appareil.",
   "spaceDeviceProvisionButton": "Provisionner l'appareil",
   "spaceDeviceBackendKeyButton": "Clé publique serveur",
+
+  "spaceEsp32TutorialTitle": "Comment configurer l'ESP32",
+  "spaceEsp32TutorialScan": "Scannez le QR code ci-dessous pour accéder au dépôt du firmware sur GitHub :",
+  "spaceEsp32TutorialIdHint": "L'ID de ce space est {id} — utilisez cette valeur comme identifiant de l'appareil dans le firmware.",
+  "@spaceEsp32TutorialIdHint": {
+    "placeholders": { "id": { "type": "Object" } }
+  },
+  "spaceEsp32TutorialKeysHint": "Utilisez les clés téléchargées ci-dessus pour finaliser la configuration de sécurité de l'appareil.",
   "spaceGrantsSection": "Demandes d'accès",
   "spaceGrantsRequestButton": "Demander",
   "spaceGrantsUnavailable": "Demandes indisponibles",

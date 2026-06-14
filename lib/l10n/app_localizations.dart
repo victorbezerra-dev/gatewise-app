@@ -1064,6 +1064,30 @@ abstract class AppLocalizations {
   /// **'Chave pública do backend'**
   String get spaceDeviceBackendKeyButton;
 
+  /// No description provided for @spaceEsp32TutorialTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Como configurar o ESP32'**
+  String get spaceEsp32TutorialTitle;
+
+  /// No description provided for @spaceEsp32TutorialScan.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escaneie o QR code abaixo para acessar o repositório do firmware no GitHub:'**
+  String get spaceEsp32TutorialScan;
+
+  /// No description provided for @spaceEsp32TutorialIdHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'O ID deste space é {id} — use esse valor como identificador do dispositivo no firmware.'**
+  String spaceEsp32TutorialIdHint(Object id);
+
+  /// No description provided for @spaceEsp32TutorialKeysHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Utilize as chaves baixadas acima para finalizar a configuração de segurança do dispositivo.'**
+  String get spaceEsp32TutorialKeysHint;
+
   /// No description provided for @spaceGrantsSection.
   ///
   /// In pt, this message translates to:
