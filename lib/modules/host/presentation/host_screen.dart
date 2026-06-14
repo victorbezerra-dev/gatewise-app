@@ -10,7 +10,6 @@ import '../../organizations/presentation/organizations_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
 import 'dialog_notifier.dart';
 import 'host_websocket_provider.dart';
-import 'widgets/custom_dialog.dart';
 
 class HostScreen extends ConsumerStatefulWidget {
   const HostScreen({super.key});
@@ -82,9 +81,7 @@ class _HostScreenState extends ConsumerState<HostScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Scaffold(
+    return Scaffold(
           backgroundColor: GateWiseColors.background,
           extendBody: true,
           body: TechBackground(
@@ -178,10 +175,7 @@ class _HostScreenState extends ConsumerState<HostScreen> {
               ),
             ],
           ),
-          ),
         ),
-        const DialogHost(),
-      ],
     );
   }
 }
