@@ -6,7 +6,8 @@ import 'package:signalr_netcore/hub_connection.dart';
 
 import '../../../core/l10n/l10n.dart';
 import '../../../core/theme/gatewise_theme.dart';
-import '../../access_history/presentation/access_history_screen.dart';
+import '../../access/presentation/access_log_providers.dart';
+import '../../access/presentation/access_screen.dart';
 import '../../organizations/presentation/organizations_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
 import 'dialog_notifier.dart';
@@ -31,8 +32,8 @@ class _HostScreenState extends ConsumerState<HostScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      hubConnection = ref.read(signalRProvider);
+    Future.microtask(() async {
+      hubConnection = await ref.read(signalRProvider.future);
 
       hubConnection.off('access_result');
       hubConnection.on('access_result', (arguments) async {
@@ -41,10 +42,22 @@ class _HostScreenState extends ConsumerState<HostScreen> {
         if (!mounted) return;
 
         final l = context.l;
+        final spaceName = data['spaceName'] as String? ?? '';
         if (data['status'] == 'opened') {
-          ref.read(dialogProvider.notifier).showSuccess(l.wsAccessOpened);
+          ref
+              .read(dialogProvider.notifier)
+              .showSuccess(l.wsAccessOpened(spaceName));
         } else if (data['status'] == 'failed') {
-          ref.read(dialogProvider.notifier).showError(l.wsAccessFailed);
+          ref
+              .read(dialogProvider.notifier)
+              .showError(l.wsAccessFailed(spaceName));
+        }
+
+        final spaceId = data['spaceId'] as int?;
+        final logState = ref.read(accessLogControllerProvider);
+        if (logState.viewMode == AccessLogViewMode.myLogs ||
+            logState.selectedSpaceId == spaceId) {
+          ref.read(accessLogControllerProvider.notifier).refresh();
         }
       });
 
@@ -103,7 +116,7 @@ class _HostScreenState extends ConsumerState<HostScreen> {
                 physics: const NeverScrollableScrollPhysics(),
                 children: const [
                   OrganizationsScreen(),
-                  AccessHistoryScreen(),
+                  AccessScreen(),
                   ProfileScreen(),
                 ],
               ),
