@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../../../core/l10n/l10n.dart';
 import '../../../../core/theme/gatewise_theme.dart';
 import '../../domain/entities/organization_invite_entity.dart';
 import 'org_ui_helpers.dart';
@@ -88,7 +89,9 @@ class _InviteCardState extends State<InviteCard> {
               children: [
                 RoleBadge(role: invite.role),
                 TechStatusPill(
-                  label: invite.isActive ? 'ATIVO' : 'INATIVO',
+                  label: invite.isActive
+                      ? context.l.statusActive
+                      : context.l.statusInactive,
                   icon: invite.isActive
                       ? Icons.check_rounded
                       : Icons.block_rounded,

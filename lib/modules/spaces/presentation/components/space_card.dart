@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/l10n/l10n.dart';
 import '../../../../core/theme/gatewise_theme.dart';
 import '../../domain/entities/space_entity.dart';
 import 'space_avatar.dart';
@@ -81,7 +82,7 @@ class SpaceCard extends StatelessWidget {
                                   Text(
                                     space.description?.trim().isNotEmpty == true
                                         ? space.description!.trim()
-                                        : 'Sem descrição cadastrada',
+                                        : context.l.noDescription,
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
@@ -121,7 +122,9 @@ class SpaceCard extends StatelessWidget {
                           runSpacing: 8,
                           children: [
                             TechStatusPill(
-                              label: space.isActive ? 'ATIVO' : 'INATIVO',
+                              label: space.isActive
+                                  ? context.l.statusActive
+                                  : context.l.statusInactive,
                               icon: space.isActive
                                   ? Icons.check_circle_rounded
                                   : Icons.pause_circle_outline_rounded,

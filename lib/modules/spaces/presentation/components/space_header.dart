@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/l10n/l10n.dart';
 import '../../../../core/theme/gatewise_theme.dart';
 import '../../domain/entities/space_entity.dart';
 import 'space_avatar.dart';
@@ -78,7 +79,9 @@ class SpaceHeader extends StatelessWidget {
                               runSpacing: 8,
                               children: [
                                 TechStatusPill(
-                                  label: space.isActive ? 'ATIVO' : 'INATIVO',
+                                  label: space.isActive
+                                      ? context.l.statusActive
+                                      : context.l.statusInactive,
                                   icon: space.isActive
                                       ? Icons.check_circle_rounded
                                       : Icons.pause_circle_outline_rounded,
@@ -99,7 +102,7 @@ class SpaceHeader extends StatelessWidget {
                   Text(
                     space.description?.trim().isNotEmpty == true
                         ? space.description!.trim()
-                        : 'Sem descrição cadastrada.',
+                        : context.l.noDescription,
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.66),
                       fontSize: 13,
@@ -141,7 +144,9 @@ class SpaceHeader extends StatelessWidget {
                   ],
                   const SizedBox(height: 16),
                   NeonGradientButton(
-                    label: isOpening ? 'Abrindo porta...' : 'Abrir porta',
+                    label: isOpening
+                        ? context.l.spaceOpeningButton
+                        : context.l.spaceOpenButton,
                     icon: Icons.lock_rounded,
                     height: 50,
                     gradient: GateWiseColors.successGradient,
@@ -157,7 +162,7 @@ class SpaceHeader extends StatelessWidget {
                             child: OutlinedButton.icon(
                               onPressed: onEdit,
                               icon: const Icon(Icons.edit_rounded, size: 18),
-                              label: const Text('Editar'),
+                              label: Text(context.l.actionEdit),
                             ),
                           ),
                         if (onEdit != null && onDelete != null)
@@ -178,7 +183,7 @@ class SpaceHeader extends StatelessWidget {
                                 Icons.delete_outline_rounded,
                                 size: 18,
                               ),
-                              label: const Text('Deletar'),
+                              label: Text(context.l.actionDelete),
                             ),
                           ),
                       ],

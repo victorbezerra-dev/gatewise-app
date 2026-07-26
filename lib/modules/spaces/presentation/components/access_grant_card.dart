@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/gatewise_theme.dart';
+import '../../../../core/widgets/user_avatar.dart';
 import '../../domain/entities/access_grant_entity.dart';
 import '../../domain/value_objects/access_grant_status_vo.dart';
 import '../../../../core/l10n/l10n.dart';
@@ -35,17 +36,9 @@ class AccessGrantCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                CircleAvatar(
-                  backgroundColor: GateWiseColors.surfaceLight,
-                  child: Text(
-                    grant.authorizedUserName.trim().isEmpty
-                        ? '?'
-                        : grant.authorizedUserName.trim()[0].toUpperCase(),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
+                UserAvatar(
+                  name: grant.authorizedUserName,
+                  avatarUrl: grant.authorizedUserAvatarUrl,
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -80,7 +73,7 @@ class AccessGrantCard extends StatelessWidget {
                   ),
                 ),
                 TechStatusPill(
-                  label: grant.status.label.toUpperCase(),
+                  label: grant.status.label(context).toUpperCase(),
                   icon: statusIcon,
                   color: statusColor,
                 ),

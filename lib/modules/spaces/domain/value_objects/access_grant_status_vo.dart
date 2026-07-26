@@ -1,3 +1,6 @@
+import 'package:flutter/widgets.dart';
+import '../../../../core/l10n/l10n.dart';
+
 enum AccessGrantStatus {
   pending('Pending'),
   granted('Granted'),
@@ -7,14 +10,14 @@ enum AccessGrantStatus {
 
   final String apiValue;
 
-  String get label {
+  String label(BuildContext context) {
     switch (this) {
       case AccessGrantStatus.pending:
-        return 'Pendente';
+        return context.l.grantStatusPending;
       case AccessGrantStatus.granted:
-        return 'Autorizado';
+        return context.l.grantStatusGranted;
       case AccessGrantStatus.rejected:
-        return 'Rejeitado';
+        return context.l.grantStatusRejected;
     }
   }
 

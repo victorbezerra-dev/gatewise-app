@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/l10n/l10n.dart';
 import '../../../../core/theme/gatewise_theme.dart';
 import '../../domain/entities/organization_entity.dart';
 import 'organization_avatar.dart';
@@ -49,7 +50,9 @@ class OrganizationHeader extends StatelessWidget {
                       runSpacing: 8,
                       children: [
                         TechStatusPill(
-                          label: organization.isActive ? 'ATIVA' : 'INATIVA',
+                          label: organization.isActive
+                              ? context.l.statusActiveFem
+                              : context.l.statusInactiveFem,
                           icon: organization.isActive
                               ? Icons.check_circle_rounded
                               : Icons.pause_circle_outline_rounded,
@@ -68,7 +71,7 @@ class OrganizationHeader extends StatelessWidget {
           Text(
             organization.description?.trim().isNotEmpty == true
                 ? organization.description!.trim()
-                : 'Sem descrição cadastrada.',
+                : context.l.noDescription,
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.62),
               fontSize: 13,
@@ -84,7 +87,7 @@ class OrganizationHeader extends StatelessWidget {
                     child: OutlinedButton.icon(
                       onPressed: onEdit,
                       icon: const Icon(Icons.edit_rounded, size: 18),
-                      label: const Text('Editar'),
+                      label: Text(context.l.actionEdit),
                     ),
                   ),
                 if (onEdit != null && onDelete != null)
@@ -100,7 +103,7 @@ class OrganizationHeader extends StatelessWidget {
                         ),
                       ),
                       icon: const Icon(Icons.delete_outline_rounded, size: 18),
-                      label: const Text('Deletar'),
+                      label: Text(context.l.actionDelete),
                     ),
                   ),
               ],
