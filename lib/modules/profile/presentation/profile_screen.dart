@@ -3,13 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/auth/auth_notifier.dart';
-import '../../../core/config/app_config.dart';
 import '../../../core/domain/entities/user_entity.dart';
 import '../../../core/domain/value_objects/user_type_vo.dart';
 import '../../../core/l10n/l10n.dart';
 import '../../../core/providers/locale_provider.dart';
 import '../../../core/providers/user_profile_provider.dart';
 import '../../../core/theme/gatewise_theme.dart';
+import '../../../core/widgets/user_avatar.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -563,8 +563,6 @@ class _ProfileAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final avatarUrl = _avatarUrl(user.userAvatarUrl);
-
     return Container(
       width: 70,
       height: 70,
@@ -582,46 +580,12 @@ class _ProfileAvatar extends StatelessWidget {
           ),
         ],
       ),
-      child: CircleAvatar(
-        backgroundColor: GateWiseColors.surfaceLight,
-        backgroundImage: avatarUrl != null ? NetworkImage(avatarUrl) : null,
-        child: avatarUrl == null
-            ? Text(
-                _initials(user.name),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                ),
-              )
-            : null,
+      child: UserAvatar(
+        name: user.name,
+        avatarUrl: user.userAvatarUrl,
+        radius: 35,
       ),
     );
-  }
-
-  static String? _avatarUrl(String value) {
-    final avatarPath = value.trim();
-    if (avatarPath.isEmpty) return null;
-    if (avatarPath.startsWith('http://') || avatarPath.startsWith('https://')) {
-      return avatarPath;
-    }
-
-    final baseUrl = AppConfig.suapMediaBaseUrl.replaceAll(RegExp(r'/+$'), '');
-    final normalizedPath = avatarPath.replaceAll(RegExp(r'^/+'), '');
-    return '$baseUrl/$normalizedPath';
-  }
-
-  static String _initials(String name) {
-    final parts = name
-        .trim()
-        .split(RegExp(r'\s+'))
-        .where((part) => part.isNotEmpty)
-        .toList();
-
-    if (parts.isEmpty) return '?';
-    if (parts.length == 1) return parts.first[0].toUpperCase();
-
-    return '${parts.first[0]}${parts.last[0]}'.toUpperCase();
   }
 }
 
