@@ -269,6 +269,27 @@ class AppLocalizationsEs extends AppLocalizations {
   String get orgDeleteSuccess => 'Organización eliminada.';
 
   @override
+  String get orgLeaveButton => 'Salir de la organización';
+
+  @override
+  String get orgLeaveTitle => '¿Salir de la organización?';
+
+  @override
+  String orgLeaveMessage(String name) {
+    return '¿Seguro que quieres salir de $name? Esta acción no se puede deshacer.';
+  }
+
+  @override
+  String get orgLeaveConfirm => 'Salir';
+
+  @override
+  String get orgLeaveSuccess => 'Saliste de la organización.';
+
+  @override
+  String get orgLeaveOnlyOwnerError =>
+      'Eres el único propietario de esta organización. Transfiere la titularidad o elimina la organización antes de salir.';
+
+  @override
   String get orgRemoveMemberTitle => '¿Eliminar miembro?';
 
   @override

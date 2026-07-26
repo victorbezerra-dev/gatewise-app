@@ -271,6 +271,27 @@ class AppLocalizationsFr extends AppLocalizations {
   String get orgDeleteSuccess => 'Organisation supprimée.';
 
   @override
+  String get orgLeaveButton => 'Quitter l\'organisation';
+
+  @override
+  String get orgLeaveTitle => 'Quitter l\'organisation ?';
+
+  @override
+  String orgLeaveMessage(String name) {
+    return 'Voulez-vous vraiment quitter $name ? Cette action est irréversible.';
+  }
+
+  @override
+  String get orgLeaveConfirm => 'Quitter';
+
+  @override
+  String get orgLeaveSuccess => 'Vous avez quitté l\'organisation.';
+
+  @override
+  String get orgLeaveOnlyOwnerError =>
+      'Vous êtes le seul propriétaire de cette organisation. Transférez la titularité ou supprimez l\'organisation avant de la quitter.';
+
+  @override
   String get orgRemoveMemberTitle => 'Retirer le membre ?';
 
   @override

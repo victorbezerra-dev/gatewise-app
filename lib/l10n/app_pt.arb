@@ -106,6 +106,15 @@
   },
   "orgDeleteConfirm": "Deletar",
   "orgDeleteSuccess": "Organização deletada.",
+  "orgLeaveButton": "Sair da organização",
+  "orgLeaveTitle": "Sair da organização?",
+  "orgLeaveMessage": "Tem certeza que deseja sair de {name}? Esta ação não pode ser desfeita.",
+  "@orgLeaveMessage": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "orgLeaveConfirm": "Sair",
+  "orgLeaveSuccess": "Você saiu da organização.",
+  "orgLeaveOnlyOwnerError": "Você é o único proprietário desta organização. Transfira a titularidade ou exclua a organização antes de sair.",
   "orgRemoveMemberTitle": "Remover membro?",
   "orgRemoveMemberMessage": "Remover {name} da organização?",
   "@orgRemoveMemberMessage": {

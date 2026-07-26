@@ -131,6 +131,19 @@ class OrganizationRepository {
     return _decodeList(response.data, OrganizationMemberDto.fromJson);
   }
 
+  Future<void> leaveOrganization(int organizationId) async {
+    final path = '$_basePath/$organizationId/leave';
+    _logRequest('POST', path);
+    final response = await httpClient.post(path);
+    _logResponse('POST', path, response);
+    _ensureSuccess(
+      response.statusCode,
+      response.data,
+      expected: const [204],
+      badRequestMessage: _messageForLeaveBadRequest,
+    );
+  }
+
   Future<void> removeMember(int organizationId, int memberId) async {
     final path = '$_basePath/$organizationId/members/$memberId';
     _logRequest('DELETE', path);
@@ -217,6 +230,7 @@ class OrganizationRepository {
     int? statusCode,
     dynamic data, {
     required List<int> expected,
+    String Function(String body)? badRequestMessage,
   }) {
     if (expected.contains(statusCode)) return;
     final body = data == null
@@ -224,11 +238,36 @@ class OrganizationRepository {
         : data is String
             ? data
             : jsonEncode(data);
+    if (statusCode == 400 && badRequestMessage != null) {
+      throw OrganizationApiException(
+        badRequestMessage(body),
+        statusCode: statusCode,
+      );
+    }
     throw OrganizationApiException(
       _messageForStatus(statusCode ?? 0, body),
       statusCode: statusCode,
     );
   }
+
+  String _messageForLeaveBadRequest(String body) {
+    final text = body.trim();
+    if (text.isEmpty) return _leaveOnlyOwnerMessage;
+    try {
+      final decoded = jsonDecode(text);
+      if (decoded is Map) {
+        final msg = decoded['message']?.toString().trim();
+        if (msg != null && msg.isNotEmpty) return msg;
+      }
+    } catch (_) {
+      // Not JSON: the backend returns the 400 as a plain-text body.
+    }
+    return text;
+  }
+
+  static const _leaveOnlyOwnerMessage =
+      'Você é o único proprietário desta organização. Transfira a '
+      'titularidade ou exclua a organização antes de sair.';
 
   String _messageForStatus(int statusCode, String body) {
     switch (statusCode) {

@@ -584,6 +584,42 @@ abstract class AppLocalizations {
   /// **'Organização deletada.'**
   String get orgDeleteSuccess;
 
+  /// No description provided for @orgLeaveButton.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sair da organização'**
+  String get orgLeaveButton;
+
+  /// No description provided for @orgLeaveTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sair da organização?'**
+  String get orgLeaveTitle;
+
+  /// No description provided for @orgLeaveMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tem certeza que deseja sair de {name}? Esta ação não pode ser desfeita.'**
+  String orgLeaveMessage(String name);
+
+  /// No description provided for @orgLeaveConfirm.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sair'**
+  String get orgLeaveConfirm;
+
+  /// No description provided for @orgLeaveSuccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você saiu da organização.'**
+  String get orgLeaveSuccess;
+
+  /// No description provided for @orgLeaveOnlyOwnerError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você é o único proprietário desta organização. Transfira a titularidade ou exclua a organização antes de sair.'**
+  String get orgLeaveOnlyOwnerError;
+
   /// No description provided for @orgRemoveMemberTitle.
   ///
   /// In pt, this message translates to:

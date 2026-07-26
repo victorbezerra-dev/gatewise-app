@@ -204,6 +204,15 @@ class OrganizationController extends StateNotifier<OrganizationState> {
     });
   }
 
+  Future<bool> leaveOrganization(int organizationId) async {
+    final result = await _runAction(() async {
+      await _repository.leaveOrganization(organizationId);
+      await loadInitial();
+      return true;
+    });
+    return result ?? false;
+  }
+
   Future<bool> removeMember(int organizationId, int memberId) async {
     final result = await _runAction(() async {
       await _repository.removeMember(organizationId, memberId);

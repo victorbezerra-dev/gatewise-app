@@ -71,6 +71,14 @@ class _OrganizationDetailsScreenState
           icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () => context.pop(),
         ),
+        actions: [
+          if (state.selectedOrganization.valueOrNull case final organization?)
+            IconButton(
+              icon: const Icon(Icons.logout_rounded),
+              tooltip: context.l.orgLeaveButton,
+              onPressed: () => _confirmLeave(context, organization, notifier),
+            ),
+        ],
       ),
       body: TechBackground(
         showTechIcons: false,
@@ -288,6 +296,30 @@ class _OrganizationDetailsScreenState
       return;
     }
     showSnack(context, context.l.orgDeleteSuccess);
+    context.pop();
+  }
+
+  Future<void> _confirmLeave(
+    BuildContext context,
+    Organization organization,
+    OrganizationController notifier,
+  ) async {
+    final confirmed = await confirm(
+      context,
+      title: context.l.orgLeaveTitle,
+      message: context.l.orgLeaveMessage(organization.name),
+      confirmLabel: context.l.orgLeaveConfirm,
+      danger: true,
+    );
+    if (!confirmed) return;
+
+    final ok = await notifier.leaveOrganization(organization.id);
+    if (!context.mounted) return;
+    if (!ok) {
+      showActionError(context, ref);
+      return;
+    }
+    showSnack(context, context.l.orgLeaveSuccess);
     context.pop();
   }
 
