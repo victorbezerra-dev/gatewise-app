@@ -11,10 +11,11 @@ import 'dtos/space_dto.dart';
 import 'dtos/space_payload_dto.dart';
 
 class SpaceApiException implements Exception {
-  const SpaceApiException(this.message, {this.statusCode});
+  const SpaceApiException(this.message, {this.statusCode, this.reasonCode});
 
   final String message;
   final int? statusCode;
+  final String? reasonCode;
 
   @override
   String toString() => message;
@@ -105,6 +106,7 @@ class SpaceRepository {
       throw SpaceApiException(
         _messageForOpenSpace403(response.data),
         statusCode: 403,
+        reasonCode: _reasonCodeForOpenSpace403(response.data),
       );
     }
     _ensureSuccess(response.statusCode, response.data, expected: const [200]);
@@ -138,6 +140,19 @@ class SpaceRepository {
         if (decoded is Map) return decoded['message']?.toString();
       } catch (_) {}
     }
+    return null;
+  }
+
+  String? _reasonCodeForOpenSpace403(dynamic data) {
+    final raw = data is String
+        ? data.toLowerCase()
+        : data is Map
+        ? jsonEncode(data).toLowerCase()
+        : '';
+    if (raw.contains('not_organization_member')) return 'not_organization_member';
+    if (raw.contains('membership_not_started')) return 'membership_not_started';
+    if (raw.contains('membership_expired')) return 'membership_expired';
+    if (raw.contains('missing_active_access_grant')) return 'missing_active_access_grant';
     return null;
   }
 

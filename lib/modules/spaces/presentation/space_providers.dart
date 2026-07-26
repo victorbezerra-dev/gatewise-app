@@ -28,6 +28,7 @@ class SpaceState {
     this.myGrants = const AsyncData([]),
     this.action = const AsyncData(null),
     this.actionErrorMessage,
+    this.membershipExpired = false,
   });
 
   final AsyncValue<List<Space>> spaces;
@@ -36,6 +37,7 @@ class SpaceState {
   final AsyncValue<List<AccessGrant>> myGrants;
   final AsyncValue<void> action;
   final String? actionErrorMessage;
+  final bool membershipExpired;
 
   SpaceState copyWith({
     AsyncValue<List<Space>>? spaces,
@@ -45,6 +47,7 @@ class SpaceState {
     AsyncValue<void>? action,
     String? actionErrorMessage,
     bool clearActionErrorMessage = false,
+    bool membershipExpired = false,
   }) {
     return SpaceState(
       spaces: spaces ?? this.spaces,
@@ -55,6 +58,7 @@ class SpaceState {
       actionErrorMessage: clearActionErrorMessage
           ? null
           : actionErrorMessage ?? this.actionErrorMessage,
+      membershipExpired: membershipExpired,
     );
   }
 }
@@ -267,6 +271,7 @@ class SpaceController extends StateNotifier<SpaceState> {
       state = state.copyWith(
         action: const AsyncData(null),
         actionErrorMessage: e.toString(),
+        membershipExpired: e is SpaceApiException && e.reasonCode == 'membership_expired',
       );
       return null;
     }

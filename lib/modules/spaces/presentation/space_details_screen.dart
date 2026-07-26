@@ -165,12 +165,16 @@ class _SpaceDetailsScreenState extends ConsumerState<SpaceDetailsScreen> {
         signature: signature,
       );
       if (!ok && context.mounted) {
-        ref
-            .read(dialogProvider.notifier)
-            .showError(
-              ref.read(spaceControllerProvider).actionErrorMessage ??
-                  context.l.spaceCommandError,
-            );
+        if (ref.read(spaceControllerProvider).membershipExpired) {
+          _handleMembershipExpired(context);
+        } else {
+          ref
+              .read(dialogProvider.notifier)
+              .showError(
+                ref.read(spaceControllerProvider).actionErrorMessage ??
+                    context.l.spaceCommandError,
+              );
+        }
       }
     } catch (_) {
       if (context.mounted) {
@@ -179,6 +183,13 @@ class _SpaceDetailsScreenState extends ConsumerState<SpaceDetailsScreen> {
     } finally {
       if (mounted) setState(() => _isOpening = false);
     }
+  }
+
+  void _handleMembershipExpired(BuildContext context) {
+    ref.read(dialogProvider.notifier).showError(context.l.membershipExpiredMessage);
+    ref.invalidate(organizationControllerProvider);
+    ref.invalidate(spaceControllerProvider);
+    context.go('/main');
   }
 
   Future<void> _openEditForm(
