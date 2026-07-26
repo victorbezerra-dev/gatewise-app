@@ -18,11 +18,17 @@
   "splashLoadingText": "carregando",
 
   "navOrgs": "Orgs",
-  "navHistory": "Histórico",
+  "navHistory": "Acessos",
   "navProfile": "Perfil",
 
-  "wsAccessOpened": "Acesso autorizado, Laboratório Aberto!",
-  "wsAccessFailed": "Ocorreu um erro ao tentar abrir a fechadura, tente novamente ou fale com o suporte!",
+  "wsAccessOpened": "Acesso autorizado, {spaceName} aberto!",
+  "@wsAccessOpened": {
+    "placeholders": { "spaceName": { "type": "String" } }
+  },
+  "wsAccessFailed": "Ocorreu um erro ao tentar abrir a fechadura de {spaceName}, tente novamente ou fale com o suporte!",
+  "@wsAccessFailed": {
+    "placeholders": { "spaceName": { "type": "String" } }
+  },
   "wsConnectionError": "Erro de conexão com o servidor.",
 
   "profileTitle": "Meu Perfil",
@@ -304,9 +310,15 @@
   "spaceAuthorizedChip": "AUTORIZADO",
   "spaceAccessInfo": "Módulo conectado ao controle de acesso. Acione a fechadura apenas quando estiver próximo ao ambiente autorizado.",
   "spaceEnterButton": "Entrar no espaço",
+  "spaceOpenButton": "Abrir porta",
   "spaceOpeningButton": "Abrindo porta...",
+  "dialogOpeningSpace": "Abrindo {spaceName}",
+  "@dialogOpeningSpace": {
+    "placeholders": { "spaceName": { "type": "String" } }
+  },
   "spaceCommandError": "Não foi possível enviar o comando.",
   "spaceOpenError": "Erro ao abrir o espaço.",
+  "membershipExpiredMessage": "Seu acesso a esta organização expirou. Solicite um novo convite.",
   "spaceLoadAccessError": "Erro ao carregar acesso",
 
   "spaceFormNewTitle": "Novo espaço",
@@ -366,6 +378,7 @@
   },
 
   "historyTitle": "Histórico",
+  "accessTitle": "Acessos",
   "historyNone": "Nenhum acesso registrado",
   "historyNoneMessage": "Quando você acessar um ambiente, o registro aparecerá aqui.",
 
@@ -393,8 +406,24 @@
   "actionCancel": "Cancelar",
   "actionConfirm": "Confirmar",
   "actionRetry": "Tentar novamente",
+  "actionOk": "OK",
+  "actionClose": "Fechar",
+  "actionEdit": "Editar",
+  "actionDelete": "Deletar",
   "actionGenericError": "Não foi possível concluir a ação. Tente novamente.",
+  "dialogSuccessDefault": "Sucesso!",
+  "dialogErrorDefault": "Erro ao abrir",
+  "dialogTimeoutTitle": "Tempo excedido",
+  "dialogTimeoutDefault": "A operação excedeu o tempo limite. Não obtive resposta do GateWise. Verifique se a fechadura abriu, ou tente novamente.",
   "noDate": "sem data",
+  "noDescription": "Sem descrição cadastrada.",
+  "statusActive": "ATIVO",
+  "statusInactive": "INATIVO",
+  "statusActiveFem": "ATIVA",
+  "statusInactiveFem": "INATIVA",
+  "grantStatusPending": "Pendente",
+  "grantStatusGranted": "Autorizado",
+  "grantStatusRejected": "Rejeitado",
   "formValidationName": "Informe o nome.",
   "formValidationReason": "Informe o motivo."
 }

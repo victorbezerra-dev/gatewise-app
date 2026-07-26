@@ -48,17 +48,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navOrgs => 'Orgs';
 
   @override
-  String get navHistory => 'History';
+  String get navHistory => 'Access';
 
   @override
   String get navProfile => 'Profile';
 
   @override
-  String get wsAccessOpened => 'Access granted — Door is open!';
+  String wsAccessOpened(String spaceName) {
+    return 'Access granted — $spaceName is open!';
+  }
 
   @override
-  String get wsAccessFailed =>
-      'An error occurred while opening the lock. Please try again or contact support.';
+  String wsAccessFailed(String spaceName) {
+    return 'An error occurred while opening the lock at $spaceName. Please try again or contact support.';
+  }
 
   @override
   String get wsConnectionError => 'Server connection error.';
@@ -698,13 +701,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get spaceEnterButton => 'Enter space';
 
   @override
+  String get spaceOpenButton => 'Open door';
+
+  @override
   String get spaceOpeningButton => 'Opening door...';
+
+  @override
+  String dialogOpeningSpace(String spaceName) {
+    return 'Opening $spaceName';
+  }
 
   @override
   String get spaceCommandError => 'Could not send command.';
 
   @override
   String get spaceOpenError => 'Error opening space.';
+
+  @override
+  String get membershipExpiredMessage =>
+      'Your access to this organization has expired. Please request a new invite.';
 
   @override
   String get spaceLoadAccessError => 'Error loading access';
@@ -854,6 +869,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get historyTitle => 'History';
 
   @override
+  String get accessTitle => 'Access';
+
+  @override
   String get historyNone => 'No access records';
 
   @override
@@ -921,11 +939,60 @@ class AppLocalizationsEn extends AppLocalizations {
   String get actionRetry => 'Try again';
 
   @override
+  String get actionOk => 'OK';
+
+  @override
+  String get actionClose => 'Close';
+
+  @override
+  String get actionEdit => 'Edit';
+
+  @override
+  String get actionDelete => 'Delete';
+
+  @override
   String get actionGenericError =>
       'Could not complete the action. Please try again.';
 
   @override
+  String get dialogSuccessDefault => 'Success!';
+
+  @override
+  String get dialogErrorDefault => 'Error opening';
+
+  @override
+  String get dialogTimeoutTitle => 'Timeout';
+
+  @override
+  String get dialogTimeoutDefault =>
+      'The operation timed out. No response was received from GateWise. Check if the lock opened, or try again.';
+
+  @override
   String get noDate => 'no date';
+
+  @override
+  String get noDescription => 'No description added.';
+
+  @override
+  String get statusActive => 'ACTIVE';
+
+  @override
+  String get statusInactive => 'INACTIVE';
+
+  @override
+  String get statusActiveFem => 'ACTIVE';
+
+  @override
+  String get statusInactiveFem => 'INACTIVE';
+
+  @override
+  String get grantStatusPending => 'Pending';
+
+  @override
+  String get grantStatusGranted => 'Granted';
+
+  @override
+  String get grantStatusRejected => 'Rejected';
 
   @override
   String get formValidationName => 'Please enter a name.';

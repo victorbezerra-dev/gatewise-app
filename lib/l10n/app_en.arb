@@ -15,11 +15,17 @@
   "splashLoadingText": "loading",
 
   "navOrgs": "Orgs",
-  "navHistory": "History",
+  "navHistory": "Access",
   "navProfile": "Profile",
 
-  "wsAccessOpened": "Access granted — Door is open!",
-  "wsAccessFailed": "An error occurred while opening the lock. Please try again or contact support.",
+  "wsAccessOpened": "Access granted — {spaceName} is open!",
+  "@wsAccessOpened": {
+    "placeholders": { "spaceName": { "type": "String" } }
+  },
+  "wsAccessFailed": "An error occurred while opening the lock at {spaceName}. Please try again or contact support.",
+  "@wsAccessFailed": {
+    "placeholders": { "spaceName": { "type": "String" } }
+  },
   "wsConnectionError": "Server connection error.",
 
   "profileTitle": "My Profile",
@@ -226,9 +232,15 @@
   "spaceAuthorizedChip": "AUTHORIZED",
   "spaceAccessInfo": "Module connected to access control. Activate the lock only when you are near the authorized environment.",
   "spaceEnterButton": "Enter space",
+  "spaceOpenButton": "Open door",
   "spaceOpeningButton": "Opening door...",
+  "dialogOpeningSpace": "Opening {spaceName}",
+  "@dialogOpeningSpace": {
+    "placeholders": { "spaceName": { "type": "String" } }
+  },
   "spaceCommandError": "Could not send command.",
   "spaceOpenError": "Error opening space.",
+  "membershipExpiredMessage": "Your access to this organization has expired. Please request a new invite.",
   "spaceLoadAccessError": "Error loading access",
 
   "spaceFormNewTitle": "New space",
@@ -279,6 +291,7 @@
   "keyExportError": "Error: {error}",
 
   "historyTitle": "History",
+  "accessTitle": "Access",
   "historyNone": "No access records",
   "historyNoneMessage": "When you access an environment, the record will appear here.",
 
@@ -306,8 +319,24 @@
   "actionCancel": "Cancel",
   "actionConfirm": "Confirm",
   "actionRetry": "Try again",
+  "actionOk": "OK",
+  "actionClose": "Close",
+  "actionEdit": "Edit",
+  "actionDelete": "Delete",
   "actionGenericError": "Could not complete the action. Please try again.",
+  "dialogSuccessDefault": "Success!",
+  "dialogErrorDefault": "Error opening",
+  "dialogTimeoutTitle": "Timeout",
+  "dialogTimeoutDefault": "The operation timed out. No response was received from GateWise. Check if the lock opened, or try again.",
   "noDate": "no date",
+  "noDescription": "No description added.",
+  "statusActive": "ACTIVE",
+  "statusInactive": "INACTIVE",
+  "statusActiveFem": "ACTIVE",
+  "statusInactiveFem": "INACTIVE",
+  "grantStatusPending": "Pending",
+  "grantStatusGranted": "Granted",
+  "grantStatusRejected": "Rejected",
   "formValidationName": "Please enter a name.",
   "formValidationReason": "Please enter a reason."
 }

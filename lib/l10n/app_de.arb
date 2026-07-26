@@ -15,11 +15,17 @@
   "splashLoadingText": "wird geladen",
 
   "navOrgs": "Orgs",
-  "navHistory": "Verlauf",
+  "navHistory": "Zugriffe",
   "navProfile": "Profil",
 
-  "wsAccessOpened": "Zugang gewährt – Labor geöffnet!",
-  "wsAccessFailed": "Beim Öffnen des Schlosses ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut oder kontaktieren Sie den Support.",
+  "wsAccessOpened": "Zugang gewährt – {spaceName} geöffnet!",
+  "@wsAccessOpened": {
+    "placeholders": { "spaceName": { "type": "String" } }
+  },
+  "wsAccessFailed": "Beim Öffnen des Schlosses von {spaceName} ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut oder kontaktieren Sie den Support.",
+  "@wsAccessFailed": {
+    "placeholders": { "spaceName": { "type": "String" } }
+  },
   "wsConnectionError": "Serververbindungsfehler.",
 
   "profileTitle": "Mein Profil",
@@ -226,9 +232,15 @@
   "spaceAuthorizedChip": "AUTORISIERT",
   "spaceAccessInfo": "Modul mit Zugangskontrolle verbunden. Aktivieren Sie das Schloss nur, wenn Sie sich in der Nähe der autorisierten Umgebung befinden.",
   "spaceEnterButton": "Bereich betreten",
+  "spaceOpenButton": "Tür öffnen",
   "spaceOpeningButton": "Tür wird geöffnet...",
+  "dialogOpeningSpace": "{spaceName} wird geöffnet",
+  "@dialogOpeningSpace": {
+    "placeholders": { "spaceName": { "type": "String" } }
+  },
   "spaceCommandError": "Befehl konnte nicht gesendet werden.",
   "spaceOpenError": "Fehler beim Öffnen des Bereichs.",
+  "membershipExpiredMessage": "Ihr Zugriff auf diese Organisation ist abgelaufen. Bitte fordern Sie eine neue Einladung an.",
   "spaceLoadAccessError": "Fehler beim Laden des Zugriffs",
 
   "spaceFormNewTitle": "Neuer Bereich",
@@ -279,6 +291,7 @@
   "keyExportError": "Fehler: {error}",
 
   "historyTitle": "Verlauf",
+  "accessTitle": "Zugriffe",
   "historyNone": "Keine Zugriffsprotokolle",
   "historyNoneMessage": "Wenn Sie auf eine Umgebung zugreifen, wird der Eintrag hier angezeigt.",
 
@@ -306,8 +319,24 @@
   "actionCancel": "Abbrechen",
   "actionConfirm": "Bestätigen",
   "actionRetry": "Erneut versuchen",
+  "actionOk": "OK",
+  "actionClose": "Schließen",
+  "actionEdit": "Bearbeiten",
+  "actionDelete": "Löschen",
   "actionGenericError": "Aktion konnte nicht abgeschlossen werden. Bitte versuchen Sie es erneut.",
+  "dialogSuccessDefault": "Erfolg!",
+  "dialogErrorDefault": "Fehler beim Öffnen",
+  "dialogTimeoutTitle": "Zeitüberschreitung",
+  "dialogTimeoutDefault": "Der Vorgang hat das Zeitlimit überschritten. Keine Antwort von GateWise erhalten. Prüfen Sie, ob das Schloss geöffnet wurde, oder versuchen Sie es erneut.",
   "noDate": "kein Datum",
+  "noDescription": "Keine Beschreibung hinterlegt.",
+  "statusActive": "AKTIV",
+  "statusInactive": "INAKTIV",
+  "statusActiveFem": "AKTIV",
+  "statusInactiveFem": "INAKTIV",
+  "grantStatusPending": "Ausstehend",
+  "grantStatusGranted": "Autorisiert",
+  "grantStatusRejected": "Abgelehnt",
   "formValidationName": "Bitte geben Sie einen Namen ein.",
   "formValidationReason": "Bitte geben Sie einen Grund ein."
 }

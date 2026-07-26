@@ -15,11 +15,17 @@
   "splashLoadingText": "cargando",
 
   "navOrgs": "Orgs",
-  "navHistory": "Historial",
+  "navHistory": "Accesos",
   "navProfile": "Perfil",
 
-  "wsAccessOpened": "¡Acceso autorizado, laboratorio abierto!",
-  "wsAccessFailed": "Ocurrió un error al intentar abrir la cerradura. Inténtalo de nuevo o contacta con soporte.",
+  "wsAccessOpened": "¡Acceso autorizado, {spaceName} abierto!",
+  "@wsAccessOpened": {
+    "placeholders": { "spaceName": { "type": "String" } }
+  },
+  "wsAccessFailed": "Ocurrió un error al intentar abrir la cerradura de {spaceName}. Inténtalo de nuevo o contacta con soporte.",
+  "@wsAccessFailed": {
+    "placeholders": { "spaceName": { "type": "String" } }
+  },
   "wsConnectionError": "Error de conexión con el servidor.",
 
   "profileTitle": "Mi Perfil",
@@ -226,9 +232,15 @@
   "spaceAuthorizedChip": "AUTORIZADO",
   "spaceAccessInfo": "Módulo conectado al control de acceso. Activa la cerradura solo cuando estés cerca del entorno autorizado.",
   "spaceEnterButton": "Entrar al espacio",
+  "spaceOpenButton": "Abrir puerta",
   "spaceOpeningButton": "Abriendo puerta...",
+  "dialogOpeningSpace": "Abriendo {spaceName}",
+  "@dialogOpeningSpace": {
+    "placeholders": { "spaceName": { "type": "String" } }
+  },
   "spaceCommandError": "No fue posible enviar el comando.",
   "spaceOpenError": "Error al abrir el espacio.",
+  "membershipExpiredMessage": "Tu acceso a esta organización ha expirado. Solicita una nueva invitación.",
   "spaceLoadAccessError": "Error al cargar el acceso",
 
   "spaceFormNewTitle": "Nuevo espacio",
@@ -279,6 +291,7 @@
   "keyExportError": "Error: {error}",
 
   "historyTitle": "Historial",
+  "accessTitle": "Accesos",
   "historyNone": "Sin registros de acceso",
   "historyNoneMessage": "Cuando accedas a un entorno, el registro aparecerá aquí.",
 
@@ -306,8 +319,24 @@
   "actionCancel": "Cancelar",
   "actionConfirm": "Confirmar",
   "actionRetry": "Intentar de nuevo",
+  "actionOk": "OK",
+  "actionClose": "Cerrar",
+  "actionEdit": "Editar",
+  "actionDelete": "Eliminar",
   "actionGenericError": "No fue posible completar la acción. Inténtalo de nuevo.",
+  "dialogSuccessDefault": "¡Éxito!",
+  "dialogErrorDefault": "Error al abrir",
+  "dialogTimeoutTitle": "Tiempo excedido",
+  "dialogTimeoutDefault": "La operación superó el tiempo límite. No se obtuvo respuesta de GateWise. Verifique si la cerradura se abrió, o intente nuevamente.",
   "noDate": "sin fecha",
+  "noDescription": "Sin descripción registrada.",
+  "statusActive": "ACTIVO",
+  "statusInactive": "INACTIVO",
+  "statusActiveFem": "ACTIVA",
+  "statusInactiveFem": "INACTIVA",
+  "grantStatusPending": "Pendiente",
+  "grantStatusGranted": "Autorizado",
+  "grantStatusRejected": "Rechazado",
   "formValidationName": "Introduce un nombre.",
   "formValidationReason": "Introduce un motivo."
 }

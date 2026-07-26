@@ -15,11 +15,17 @@
   "splashLoadingText": "chargement",
 
   "navOrgs": "Orgs",
-  "navHistory": "Historique",
+  "navHistory": "Accès",
   "navProfile": "Profil",
 
-  "wsAccessOpened": "Accès autorisé — Laboratoire ouvert !",
-  "wsAccessFailed": "Une erreur s'est produite lors de l'ouverture du verrou. Réessayez ou contactez le support.",
+  "wsAccessOpened": "Accès autorisé — {spaceName} ouvert !",
+  "@wsAccessOpened": {
+    "placeholders": { "spaceName": { "type": "String" } }
+  },
+  "wsAccessFailed": "Une erreur s'est produite lors de l'ouverture du verrou de {spaceName}. Réessayez ou contactez le support.",
+  "@wsAccessFailed": {
+    "placeholders": { "spaceName": { "type": "String" } }
+  },
   "wsConnectionError": "Erreur de connexion au serveur.",
 
   "profileTitle": "Mon profil",
@@ -226,9 +232,15 @@
   "spaceAuthorizedChip": "AUTORISÉ",
   "spaceAccessInfo": "Module connecté au contrôle d'accès. Activez le verrou uniquement lorsque vous êtes à proximité de l'environnement autorisé.",
   "spaceEnterButton": "Entrer dans l'espace",
+  "spaceOpenButton": "Ouvrir la porte",
   "spaceOpeningButton": "Ouverture en cours...",
+  "dialogOpeningSpace": "Ouverture de {spaceName}",
+  "@dialogOpeningSpace": {
+    "placeholders": { "spaceName": { "type": "String" } }
+  },
   "spaceCommandError": "Impossible d'envoyer la commande.",
   "spaceOpenError": "Erreur lors de l'ouverture de l'espace.",
+  "membershipExpiredMessage": "Votre accès à cette organisation a expiré. Veuillez demander une nouvelle invitation.",
   "spaceLoadAccessError": "Erreur lors du chargement de l'accès",
 
   "spaceFormNewTitle": "Nouvel espace",
@@ -279,6 +291,7 @@
   "keyExportError": "Erreur : {error}",
 
   "historyTitle": "Historique",
+  "accessTitle": "Accès",
   "historyNone": "Aucun accès enregistré",
   "historyNoneMessage": "Lorsque vous accéderez à un environnement, l'entrée apparaîtra ici.",
 
@@ -306,8 +319,24 @@
   "actionCancel": "Annuler",
   "actionConfirm": "Confirmer",
   "actionRetry": "Réessayer",
+  "actionOk": "OK",
+  "actionClose": "Fermer",
+  "actionEdit": "Modifier",
+  "actionDelete": "Supprimer",
   "actionGenericError": "Impossible de finaliser l'action. Veuillez réessayer.",
+  "dialogSuccessDefault": "Succès !",
+  "dialogErrorDefault": "Erreur lors de l'ouverture",
+  "dialogTimeoutTitle": "Délai dépassé",
+  "dialogTimeoutDefault": "L'opération a dépassé le délai. Aucune réponse de GateWise. Vérifiez si la serrure s'est ouverte, ou réessayez.",
   "noDate": "sans date",
+  "noDescription": "Aucune description renseignée.",
+  "statusActive": "ACTIF",
+  "statusInactive": "INACTIF",
+  "statusActiveFem": "ACTIVE",
+  "statusInactiveFem": "INACTIVE",
+  "grantStatusPending": "En attente",
+  "grantStatusGranted": "Autorisé",
+  "grantStatusRejected": "Rejeté",
   "formValidationName": "Veuillez saisir un nom.",
   "formValidationReason": "Veuillez saisir un motif."
 }

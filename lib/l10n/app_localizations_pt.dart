@@ -48,17 +48,20 @@ class AppLocalizationsPt extends AppLocalizations {
   String get navOrgs => 'Orgs';
 
   @override
-  String get navHistory => 'Histórico';
+  String get navHistory => 'Acessos';
 
   @override
   String get navProfile => 'Perfil';
 
   @override
-  String get wsAccessOpened => 'Acesso autorizado, Laboratório Aberto!';
+  String wsAccessOpened(String spaceName) {
+    return 'Acesso autorizado, $spaceName aberto!';
+  }
 
   @override
-  String get wsAccessFailed =>
-      'Ocorreu um erro ao tentar abrir a fechadura, tente novamente ou fale com o suporte!';
+  String wsAccessFailed(String spaceName) {
+    return 'Ocorreu um erro ao tentar abrir a fechadura de $spaceName, tente novamente ou fale com o suporte!';
+  }
 
   @override
   String get wsConnectionError => 'Erro de conexão com o servidor.';
@@ -704,13 +707,25 @@ class AppLocalizationsPt extends AppLocalizations {
   String get spaceEnterButton => 'Entrar no espaço';
 
   @override
+  String get spaceOpenButton => 'Abrir porta';
+
+  @override
   String get spaceOpeningButton => 'Abrindo porta...';
+
+  @override
+  String dialogOpeningSpace(String spaceName) {
+    return 'Abrindo $spaceName';
+  }
 
   @override
   String get spaceCommandError => 'Não foi possível enviar o comando.';
 
   @override
   String get spaceOpenError => 'Erro ao abrir o espaço.';
+
+  @override
+  String get membershipExpiredMessage =>
+      'Seu acesso a esta organização expirou. Solicite um novo convite.';
 
   @override
   String get spaceLoadAccessError => 'Erro ao carregar acesso';
@@ -859,6 +874,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get historyTitle => 'Histórico';
 
   @override
+  String get accessTitle => 'Acessos';
+
+  @override
   String get historyNone => 'Nenhum acesso registrado';
 
   @override
@@ -926,11 +944,60 @@ class AppLocalizationsPt extends AppLocalizations {
   String get actionRetry => 'Tentar novamente';
 
   @override
+  String get actionOk => 'OK';
+
+  @override
+  String get actionClose => 'Fechar';
+
+  @override
+  String get actionEdit => 'Editar';
+
+  @override
+  String get actionDelete => 'Deletar';
+
+  @override
   String get actionGenericError =>
       'Não foi possível concluir a ação. Tente novamente.';
 
   @override
+  String get dialogSuccessDefault => 'Sucesso!';
+
+  @override
+  String get dialogErrorDefault => 'Erro ao abrir';
+
+  @override
+  String get dialogTimeoutTitle => 'Tempo excedido';
+
+  @override
+  String get dialogTimeoutDefault =>
+      'A operação excedeu o tempo limite. Não obtive resposta do GateWise. Verifique se a fechadura abriu, ou tente novamente.';
+
+  @override
   String get noDate => 'sem data';
+
+  @override
+  String get noDescription => 'Sem descrição cadastrada.';
+
+  @override
+  String get statusActive => 'ATIVO';
+
+  @override
+  String get statusInactive => 'INATIVO';
+
+  @override
+  String get statusActiveFem => 'ATIVA';
+
+  @override
+  String get statusInactiveFem => 'INATIVA';
+
+  @override
+  String get grantStatusPending => 'Pendente';
+
+  @override
+  String get grantStatusGranted => 'Autorizado';
+
+  @override
+  String get grantStatusRejected => 'Rejeitado';
 
   @override
   String get formValidationName => 'Informe o nome.';

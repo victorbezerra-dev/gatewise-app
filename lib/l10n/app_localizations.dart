@@ -179,7 +179,7 @@ abstract class AppLocalizations {
   /// No description provided for @navHistory.
   ///
   /// In pt, this message translates to:
-  /// **'Histórico'**
+  /// **'Acessos'**
   String get navHistory;
 
   /// No description provided for @navProfile.
@@ -191,14 +191,14 @@ abstract class AppLocalizations {
   /// No description provided for @wsAccessOpened.
   ///
   /// In pt, this message translates to:
-  /// **'Acesso autorizado, Laboratório Aberto!'**
-  String get wsAccessOpened;
+  /// **'Acesso autorizado, {spaceName} aberto!'**
+  String wsAccessOpened(String spaceName);
 
   /// No description provided for @wsAccessFailed.
   ///
   /// In pt, this message translates to:
-  /// **'Ocorreu um erro ao tentar abrir a fechadura, tente novamente ou fale com o suporte!'**
-  String get wsAccessFailed;
+  /// **'Ocorreu um erro ao tentar abrir a fechadura de {spaceName}, tente novamente ou fale com o suporte!'**
+  String wsAccessFailed(String spaceName);
 
   /// No description provided for @wsConnectionError.
   ///
@@ -1358,11 +1358,23 @@ abstract class AppLocalizations {
   /// **'Entrar no espaço'**
   String get spaceEnterButton;
 
+  /// No description provided for @spaceOpenButton.
+  ///
+  /// In pt, this message translates to:
+  /// **'Abrir porta'**
+  String get spaceOpenButton;
+
   /// No description provided for @spaceOpeningButton.
   ///
   /// In pt, this message translates to:
   /// **'Abrindo porta...'**
   String get spaceOpeningButton;
+
+  /// No description provided for @dialogOpeningSpace.
+  ///
+  /// In pt, this message translates to:
+  /// **'Abrindo {spaceName}'**
+  String dialogOpeningSpace(String spaceName);
 
   /// No description provided for @spaceCommandError.
   ///
@@ -1375,6 +1387,12 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Erro ao abrir o espaço.'**
   String get spaceOpenError;
+
+  /// No description provided for @membershipExpiredMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Seu acesso a esta organização expirou. Solicite um novo convite.'**
+  String get membershipExpiredMessage;
 
   /// No description provided for @spaceLoadAccessError.
   ///
@@ -1646,6 +1664,12 @@ abstract class AppLocalizations {
   /// **'Histórico'**
   String get historyTitle;
 
+  /// No description provided for @accessTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Acessos'**
+  String get accessTitle;
+
   /// No description provided for @historyNone.
   ///
   /// In pt, this message translates to:
@@ -1778,17 +1802,113 @@ abstract class AppLocalizations {
   /// **'Tentar novamente'**
   String get actionRetry;
 
+  /// No description provided for @actionOk.
+  ///
+  /// In pt, this message translates to:
+  /// **'OK'**
+  String get actionOk;
+
+  /// No description provided for @actionClose.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fechar'**
+  String get actionClose;
+
+  /// No description provided for @actionEdit.
+  ///
+  /// In pt, this message translates to:
+  /// **'Editar'**
+  String get actionEdit;
+
+  /// No description provided for @actionDelete.
+  ///
+  /// In pt, this message translates to:
+  /// **'Deletar'**
+  String get actionDelete;
+
   /// No description provided for @actionGenericError.
   ///
   /// In pt, this message translates to:
   /// **'Não foi possível concluir a ação. Tente novamente.'**
   String get actionGenericError;
 
+  /// No description provided for @dialogSuccessDefault.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sucesso!'**
+  String get dialogSuccessDefault;
+
+  /// No description provided for @dialogErrorDefault.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao abrir'**
+  String get dialogErrorDefault;
+
+  /// No description provided for @dialogTimeoutTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tempo excedido'**
+  String get dialogTimeoutTitle;
+
+  /// No description provided for @dialogTimeoutDefault.
+  ///
+  /// In pt, this message translates to:
+  /// **'A operação excedeu o tempo limite. Não obtive resposta do GateWise. Verifique se a fechadura abriu, ou tente novamente.'**
+  String get dialogTimeoutDefault;
+
   /// No description provided for @noDate.
   ///
   /// In pt, this message translates to:
   /// **'sem data'**
   String get noDate;
+
+  /// No description provided for @noDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sem descrição cadastrada.'**
+  String get noDescription;
+
+  /// No description provided for @statusActive.
+  ///
+  /// In pt, this message translates to:
+  /// **'ATIVO'**
+  String get statusActive;
+
+  /// No description provided for @statusInactive.
+  ///
+  /// In pt, this message translates to:
+  /// **'INATIVO'**
+  String get statusInactive;
+
+  /// No description provided for @statusActiveFem.
+  ///
+  /// In pt, this message translates to:
+  /// **'ATIVA'**
+  String get statusActiveFem;
+
+  /// No description provided for @statusInactiveFem.
+  ///
+  /// In pt, this message translates to:
+  /// **'INATIVA'**
+  String get statusInactiveFem;
+
+  /// No description provided for @grantStatusPending.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pendente'**
+  String get grantStatusPending;
+
+  /// No description provided for @grantStatusGranted.
+  ///
+  /// In pt, this message translates to:
+  /// **'Autorizado'**
+  String get grantStatusGranted;
+
+  /// No description provided for @grantStatusRejected.
+  ///
+  /// In pt, this message translates to:
+  /// **'Rejeitado'**
+  String get grantStatusRejected;
 
   /// No description provided for @formValidationName.
   ///

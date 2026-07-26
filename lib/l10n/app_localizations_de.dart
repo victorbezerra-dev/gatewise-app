@@ -48,17 +48,20 @@ class AppLocalizationsDe extends AppLocalizations {
   String get navOrgs => 'Orgs';
 
   @override
-  String get navHistory => 'Verlauf';
+  String get navHistory => 'Zugriffe';
 
   @override
   String get navProfile => 'Profil';
 
   @override
-  String get wsAccessOpened => 'Zugang gewährt – Labor geöffnet!';
+  String wsAccessOpened(String spaceName) {
+    return 'Zugang gewährt – $spaceName geöffnet!';
+  }
 
   @override
-  String get wsAccessFailed =>
-      'Beim Öffnen des Schlosses ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut oder kontaktieren Sie den Support.';
+  String wsAccessFailed(String spaceName) {
+    return 'Beim Öffnen des Schlosses von $spaceName ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut oder kontaktieren Sie den Support.';
+  }
 
   @override
   String get wsConnectionError => 'Serververbindungsfehler.';
@@ -709,13 +712,25 @@ class AppLocalizationsDe extends AppLocalizations {
   String get spaceEnterButton => 'Bereich betreten';
 
   @override
+  String get spaceOpenButton => 'Tür öffnen';
+
+  @override
   String get spaceOpeningButton => 'Tür wird geöffnet...';
+
+  @override
+  String dialogOpeningSpace(String spaceName) {
+    return '$spaceName wird geöffnet';
+  }
 
   @override
   String get spaceCommandError => 'Befehl konnte nicht gesendet werden.';
 
   @override
   String get spaceOpenError => 'Fehler beim Öffnen des Bereichs.';
+
+  @override
+  String get membershipExpiredMessage =>
+      'Ihr Zugriff auf diese Organisation ist abgelaufen. Bitte fordern Sie eine neue Einladung an.';
 
   @override
   String get spaceLoadAccessError => 'Fehler beim Laden des Zugriffs';
@@ -870,6 +885,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get historyTitle => 'Verlauf';
 
   @override
+  String get accessTitle => 'Zugriffe';
+
+  @override
   String get historyNone => 'Keine Zugriffsprotokolle';
 
   @override
@@ -937,11 +955,60 @@ class AppLocalizationsDe extends AppLocalizations {
   String get actionRetry => 'Erneut versuchen';
 
   @override
+  String get actionOk => 'OK';
+
+  @override
+  String get actionClose => 'Schließen';
+
+  @override
+  String get actionEdit => 'Bearbeiten';
+
+  @override
+  String get actionDelete => 'Löschen';
+
+  @override
   String get actionGenericError =>
       'Aktion konnte nicht abgeschlossen werden. Bitte versuchen Sie es erneut.';
 
   @override
+  String get dialogSuccessDefault => 'Erfolg!';
+
+  @override
+  String get dialogErrorDefault => 'Fehler beim Öffnen';
+
+  @override
+  String get dialogTimeoutTitle => 'Zeitüberschreitung';
+
+  @override
+  String get dialogTimeoutDefault =>
+      'Der Vorgang hat das Zeitlimit überschritten. Keine Antwort von GateWise erhalten. Prüfen Sie, ob das Schloss geöffnet wurde, oder versuchen Sie es erneut.';
+
+  @override
   String get noDate => 'kein Datum';
+
+  @override
+  String get noDescription => 'Keine Beschreibung hinterlegt.';
+
+  @override
+  String get statusActive => 'AKTIV';
+
+  @override
+  String get statusInactive => 'INAKTIV';
+
+  @override
+  String get statusActiveFem => 'AKTIV';
+
+  @override
+  String get statusInactiveFem => 'INAKTIV';
+
+  @override
+  String get grantStatusPending => 'Ausstehend';
+
+  @override
+  String get grantStatusGranted => 'Autorisiert';
+
+  @override
+  String get grantStatusRejected => 'Abgelehnt';
 
   @override
   String get formValidationName => 'Bitte geben Sie einen Namen ein.';
