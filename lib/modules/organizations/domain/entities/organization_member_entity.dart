@@ -10,6 +10,7 @@ class OrganizationMember {
     required this.role,
     required this.joinedAt,
     this.spaces = const [],
+    this.userAvatarUrl,
   });
 
   final int id;
@@ -19,4 +20,5 @@ class OrganizationMember {
   final OrganizationMemberRole role;
   final DateTime? joinedAt;
   final List<ManagedSpace> spaces;
+  final String? userAvatarUrl;
 }

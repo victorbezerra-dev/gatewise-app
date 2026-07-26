@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/theme/gatewise_theme.dart';
+import '../../../../core/widgets/user_avatar.dart';
 import '../../domain/entities/access_log_entity.dart';
 import '../../domain/value_objects/access_log_status_vo.dart';
 
@@ -26,16 +27,23 @@ class AccessLogCard extends StatelessWidget {
       borderRadius: 18,
       child: Row(
         children: [
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              color: color.withValues(alpha: 0.14),
-              border: Border.all(color: color.withValues(alpha: 0.28)),
+          if (showUser)
+            UserAvatar(
+              name: log.userName,
+              avatarUrl: log.userAvatarUrl,
+              radius: 22,
+            )
+          else
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(14),
+                color: color.withValues(alpha: 0.14),
+                border: Border.all(color: color.withValues(alpha: 0.28)),
+              ),
+              child: Icon(_statusIcon(log.status), color: color, size: 22),
             ),
-            child: Icon(_statusIcon(log.status), color: color, size: 22),
-          ),
           const SizedBox(width: 14),
           Expanded(
             child: Column(

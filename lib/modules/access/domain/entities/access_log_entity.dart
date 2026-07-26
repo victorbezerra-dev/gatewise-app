@@ -6,6 +6,7 @@ class AccessLog {
     required this.commandId,
     required this.userId,
     required this.userName,
+    this.userAvatarUrl,
     required this.spaceId,
     required this.spaceName,
     required this.issuedAt,
@@ -18,6 +19,7 @@ class AccessLog {
   final String commandId;
   final String userId;
   final String userName;
+  final String? userAvatarUrl;
   final int spaceId;
   final String spaceName;
   final DateTime issuedAt;

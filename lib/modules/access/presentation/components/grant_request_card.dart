@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/theme/gatewise_theme.dart';
+import '../../../../core/widgets/user_avatar.dart';
 import '../../../spaces/domain/entities/access_grant_entity.dart';
 import '../../../spaces/domain/value_objects/access_grant_status_vo.dart';
 
@@ -36,18 +37,10 @@ class GrantRequestCard extends StatelessWidget {
           Row(
             children: [
               if (showUser)
-                CircleAvatar(
+                UserAvatar(
+                  name: grant.authorizedUserName,
+                  avatarUrl: grant.authorizedUserAvatarUrl,
                   radius: 20,
-                  backgroundColor: GateWiseColors.surfaceLight,
-                  child: Text(
-                    grant.authorizedUserName.trim().isEmpty
-                        ? '?'
-                        : grant.authorizedUserName.trim()[0].toUpperCase(),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
                 )
               else
                 Container(

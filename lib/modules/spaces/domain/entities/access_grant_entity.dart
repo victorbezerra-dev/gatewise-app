@@ -6,7 +6,9 @@ class AccessGrant {
     required this.authorizedUserId,
     required this.authorizedUserName,
     required this.authorizedUserEmail,
+    this.authorizedUserAvatarUrl,
     this.grantedByUserId,
+    this.grantedByUserAvatarUrl,
     required this.spaceId,
     this.spaceName,
     required this.reason,
@@ -20,7 +22,9 @@ class AccessGrant {
   final String authorizedUserId;
   final String authorizedUserName;
   final String authorizedUserEmail;
+  final String? authorizedUserAvatarUrl;
   final String? grantedByUserId;
+  final String? grantedByUserAvatarUrl;
   final int spaceId;
   final String? spaceName;
   final String reason;

@@ -20,5 +20,6 @@ class OrganizationMemberDto {
             })
             .toList() ??
         const [],
+    userAvatarUrl: json['userAvatarUrl']?.toString(),
   );
 }

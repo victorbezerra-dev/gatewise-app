@@ -8,6 +8,7 @@ class AccessLogDto {
       commandId: json['commandId']?.toString() ?? '',
       userId: json['userId']?.toString() ?? '',
       userName: json['userName']?.toString() ?? '',
+      userAvatarUrl: json['userAvatarUrl']?.toString(),
       spaceId: (json['spaceId'] as num?)?.toInt() ?? 0,
       spaceName: json['spaceName']?.toString() ?? '',
       issuedAt: DateTime.parse(json['issuedAt'].toString()),

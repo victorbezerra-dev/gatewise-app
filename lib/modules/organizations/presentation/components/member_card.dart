@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/theme/gatewise_theme.dart';
+import '../../../../core/widgets/user_avatar.dart';
 import '../../domain/entities/organization_member_entity.dart';
 import '../../domain/value_objects/organization_member_role_vo.dart';
 import 'role_badge.dart';
@@ -38,19 +39,12 @@ class MemberCard extends StatelessWidget {
             Stack(
               clipBehavior: Clip.none,
               children: [
-                CircleAvatar(
+                UserAvatar(
+                  name: member.name,
+                  avatarUrl: member.userAvatarUrl,
                   backgroundColor: isCurrentUser
                       ? GateWiseColors.electricBlue
                       : GateWiseColors.surfaceLight,
-                  child: Text(
-                    member.name.trim().isEmpty
-                        ? '?'
-                        : member.name.trim()[0].toUpperCase(),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
                 ),
                 if (isCurrentUser)
                   Positioned(

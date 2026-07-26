@@ -20,7 +20,11 @@ class AccessGrantDto {
           userJson?['email']?.toString() ??
           json['authorizedUserEmail']?.toString() ??
           '',
+      authorizedUserAvatarUrl:
+          userJson?['userAvatarUrl']?.toString() ??
+          json['authorizedUserAvatarUrl']?.toString(),
       grantedByUserId: json['grantedByUserId']?.toString(),
+      grantedByUserAvatarUrl: json['grantedByUserAvatarUrl']?.toString(),
       spaceId:
           (json['spaceId'] as num?)?.toInt() ??
           (json['labId'] as num?)?.toInt() ??
