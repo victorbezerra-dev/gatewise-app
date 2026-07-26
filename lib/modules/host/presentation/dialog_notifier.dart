@@ -7,26 +7,34 @@ class DialogState {
   final DialogStatus status;
   final String? message;
   final bool isOpen;
+  final String? spaceName;
 
-  DialogState({required this.status, this.message, this.isOpen = false});
+  DialogState({
+    required this.status,
+    this.message,
+    this.isOpen = false,
+    this.spaceName,
+  });
 
-  DialogState copyWith({DialogStatus? status, String? message, bool? isOpen}) =>
-      DialogState(
-        status: status ?? this.status,
-        message: message ?? this.message,
-        isOpen: isOpen ?? this.isOpen,
-      );
+  DialogState copyWith({
+    DialogStatus? status,
+    String? message,
+    bool? isOpen,
+    String? spaceName,
+  }) => DialogState(
+    status: status ?? this.status,
+    message: message ?? this.message,
+    isOpen: isOpen ?? this.isOpen,
+    spaceName: spaceName ?? this.spaceName,
+  );
 
   factory DialogState.idle() =>
       DialogState(status: DialogStatus.idle, isOpen: false);
-  factory DialogState.loading() =>
-      DialogState(status: DialogStatus.loading, isOpen: true);
-  factory DialogState.success([String? msg]) =>
-      DialogState(status: DialogStatus.success, isOpen: true, message: msg);
-  factory DialogState.error([String? msg]) =>
-      DialogState(status: DialogStatus.error, isOpen: true, message: msg);
-  factory DialogState.timeout([String? msg]) =>
-      DialogState(status: DialogStatus.timeout, isOpen: true, message: msg);
+  factory DialogState.loading([String? spaceName]) => DialogState(
+    status: DialogStatus.loading,
+    isOpen: true,
+    spaceName: spaceName,
+  );
 }
 
 class DialogNotifier extends StateNotifier<DialogState> {
@@ -34,35 +42,43 @@ class DialogNotifier extends StateNotifier<DialogState> {
 
   DialogNotifier() : super(DialogState.idle());
 
-  void showLoading({Duration timeout = const Duration(seconds: 15)}) {
+  void showLoading({
+    String? spaceName,
+    Duration timeout = const Duration(seconds: 15),
+  }) {
     _cancelTimeout();
-    state = DialogState.loading();
+    state = DialogState.loading(spaceName);
     _timeoutTimer = Timer(timeout, () {
       if (state.status == DialogStatus.loading) {
-        state = DialogState.timeout(
-          "A operação excedeu o tempo limite. Não obtive resposta do GateWise. "
-          "Verifique se a fechadura abriu, ou tente novamente.",
-        );
+        state = state.copyWith(status: DialogStatus.timeout, isOpen: true);
       }
     });
   }
 
   void showSuccess([String? msg]) {
     _cancelTimeout();
-    state = DialogState.success(msg);
+    state = state.copyWith(
+      status: DialogStatus.success,
+      isOpen: true,
+      message: msg,
+    );
   }
 
   void showError([String? msg]) {
     _cancelTimeout();
-    state = DialogState.error(msg);
+    state = state.copyWith(
+      status: DialogStatus.error,
+      isOpen: true,
+      message: msg,
+    );
   }
 
   void showTimeout([String? msg]) {
     _cancelTimeout();
-    state = DialogState.timeout(
-      msg ??
-          "A operação excedeu o tempo limite. Não obtive resposta do GateWise. "
-              "Verifique se a fechadura abriu, ou tente novamente.",
+    state = state.copyWith(
+      status: DialogStatus.timeout,
+      isOpen: true,
+      message: msg,
     );
   }
 

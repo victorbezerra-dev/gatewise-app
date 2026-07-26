@@ -97,7 +97,7 @@ class _MemberSpaceBodyState extends ConsumerState<MemberSpaceBody> {
 
   Future<void> _openDoor(BuildContext context) async {
     setState(() => _isOpening = true);
-    ref.read(dialogProvider.notifier).showLoading();
+    ref.read(dialogProvider.notifier).showLoading(spaceName: widget.space.name);
     try {
       final signingService = ref.read(signingServiceProvider);
       final timestamp = DateTime.now().millisecondsSinceEpoch;

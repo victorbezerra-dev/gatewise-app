@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gatewise_app/core/l10n/l10n.dart';
 import 'package:gatewise_app/modules/host/presentation/dialog_notifier.dart';
 import 'package:lottie/lottie.dart';
 
@@ -137,8 +138,11 @@ class _DialogContentState extends State<_DialogContent>
             builder: (_, __) {
               int dotCount = (_dotController.value * 3).floor() + 1;
               String dots = '.' * dotCount;
+              final label = context.l.dialogOpeningSpace(
+                widget.state.spaceName ?? '',
+              );
               return Text(
-                'Abrindo laboratório$dots',
+                '$label$dots',
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -160,7 +164,7 @@ class _DialogContentState extends State<_DialogContent>
             height: MediaQuery.of(context).size.width * 0.5,
           ),
           Text(
-            widget.state.message ?? "Sucesso!",
+            widget.state.message ?? context.l.dialogSuccessDefault,
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Color(0xFF101C2B),
@@ -170,7 +174,7 @@ class _DialogContentState extends State<_DialogContent>
           const SizedBox(height: 12),
           TextButton(
             onPressed: widget.onClose,
-            child: const Text("OK", style: TextStyle(color: Colors.blue)),
+            child: Text(context.l.actionOk, style: TextStyle(color: Colors.blue)),
           ),
         ],
       );
@@ -185,15 +189,15 @@ class _DialogContentState extends State<_DialogContent>
           ),
           const SizedBox(height: 16),
           Text(
-            widget.state.message ?? "Erro ao abrir",
+            widget.state.message ?? context.l.dialogErrorDefault,
             textAlign: TextAlign.center,
             style: TextStyle(color: Colors.red, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 12),
           TextButton(
             onPressed: widget.onClose,
-            child: const Text(
-              "Fechar",
+            child: Text(
+              context.l.actionClose,
               style: TextStyle(color: Color.fromARGB(255, 48, 96, 155)),
             ),
           ),
@@ -205,8 +209,8 @@ class _DialogContentState extends State<_DialogContent>
         children: [
           const Icon(Icons.timer_off, color: Colors.orange, size: 60),
           const SizedBox(height: 10),
-          const Text(
-            "Tempo excedido",
+          Text(
+            context.l.dialogTimeoutTitle,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               color: Color(0xFF101C2B),
@@ -214,17 +218,15 @@ class _DialogContentState extends State<_DialogContent>
           ),
           const SizedBox(height: 16),
           Text(
-            widget.state.message ??
-                "A operação excedeu o tempo limite. Não obtive resposta do GateWise. "
-                    "Verifique se a fechadura abriu, ou tente novamente.",
+            widget.state.message ?? context.l.dialogTimeoutDefault,
             textAlign: TextAlign.center,
             style: const TextStyle(color: Color(0xFF101C2B)),
           ),
           const SizedBox(height: 12),
           TextButton(
             onPressed: widget.onClose,
-            child: const Text(
-              "Fechar",
+            child: Text(
+              context.l.actionClose,
               style: TextStyle(color: Color.fromARGB(255, 48, 96, 155)),
             ),
           ),

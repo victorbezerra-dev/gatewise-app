@@ -154,7 +154,7 @@ class _SpaceDetailsScreenState extends ConsumerState<SpaceDetailsScreen> {
     SpaceController notifier,
   ) async {
     setState(() => _isOpening = true);
-    ref.read(dialogProvider.notifier).showLoading();
+    ref.read(dialogProvider.notifier).showLoading(spaceName: space.name);
     try {
       final signingService = ref.read(signingServiceProvider);
       final timestamp = DateTime.now().millisecondsSinceEpoch;
