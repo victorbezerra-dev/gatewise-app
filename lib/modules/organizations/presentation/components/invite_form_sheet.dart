@@ -89,6 +89,10 @@ class _InviteFormSheetState extends ConsumerState<InviteFormSheet> {
               onChanged: (value) => setState(() {
                 _role = value ?? OrganizationMemberRole.member;
                 _selectedSpaceIds.clear();
+                if (_role == OrganizationMemberRole.owner) {
+                  _memberStartsAt = null;
+                  _memberExpiresAt = null;
+                }
               }),
             ),
           const SizedBox(height: 12),
@@ -111,20 +115,22 @@ class _InviteFormSheetState extends ConsumerState<InviteFormSheet> {
               prefixIcon: const Icon(Icons.group_add_rounded),
             ),
           ),
-          const SizedBox(height: 12),
-          _DatePickerField(
-            label: context.l.inviteFormStartsAtLabel,
-            icon: Icons.play_circle_outline_rounded,
-            value: _memberStartsAt,
-            onChanged: (date) => setState(() => _memberStartsAt = date),
-          ),
-          const SizedBox(height: 12),
-          _DatePickerField(
-            label: context.l.inviteFormExpiresAtLabel,
-            icon: Icons.stop_circle_outlined,
-            value: _memberExpiresAt,
-            onChanged: (date) => setState(() => _memberExpiresAt = date),
-          ),
+          if (effectiveRole != OrganizationMemberRole.owner) ...[
+            const SizedBox(height: 12),
+            _DatePickerField(
+              label: context.l.inviteFormStartsAtLabel,
+              icon: Icons.play_circle_outline_rounded,
+              value: _memberStartsAt,
+              onChanged: (date) => setState(() => _memberStartsAt = date),
+            ),
+            const SizedBox(height: 12),
+            _DatePickerField(
+              label: context.l.inviteFormExpiresAtLabel,
+              icon: Icons.stop_circle_outlined,
+              value: _memberExpiresAt,
+              onChanged: (date) => setState(() => _memberExpiresAt = date),
+            ),
+          ],
           const SizedBox(height: 16),
           _SpaceSelector(
             spacesAsync: spacesAsync,
