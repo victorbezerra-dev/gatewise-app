@@ -13,8 +13,9 @@ class GateWiseApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = ref.watch(localeProvider);
+    final router = ref.watch(appRouterProvider);
     return MaterialApp.router(
-      routerConfig: appRouter,
+      routerConfig: router,
       title: 'GateWise',
       debugShowCheckedModeBanner: false,
       theme: GateWiseTheme.dark(),
@@ -26,12 +27,8 @@ class GateWiseApp extends ConsumerWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      builder: (context, child) => Stack(
-        children: [
-          child!,
-          const DialogHost(),
-        ],
-      ),
+      builder: (context, child) =>
+          Stack(children: [child!, const DialogHost()]),
     );
   }
 }
