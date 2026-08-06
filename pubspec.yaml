@@ -49,7 +49,6 @@ dependencies:
   signalr_netcore: ^1.4.3
   share_plus: ^10.1.4
   path_provider: ^2.1.5
-  simple_icons: ^16.23.0
   flutter_native_splash: ^2.4.3
 
 dev_dependencies:
