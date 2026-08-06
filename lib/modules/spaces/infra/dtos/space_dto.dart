@@ -8,5 +8,6 @@ class SpaceDto {
     isActive: json['isActive'] as bool? ?? true,
     createdAt: DateTime.tryParse(json['createdAt']?.toString() ?? ''),
     updatedAt: DateTime.tryParse(json['updatedAt']?.toString() ?? ''),
+    hasAccess: json['hasAccess'] as bool? ?? false,
   );
 }

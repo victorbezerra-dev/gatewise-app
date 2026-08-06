@@ -6,22 +6,40 @@ import '../../domain/entities/space_entity.dart';
 import 'space_avatar.dart';
 
 class SpaceCard extends StatelessWidget {
-  const SpaceCard({super.key, required this.space, required this.onTap});
+  const SpaceCard({
+    super.key,
+    required this.space,
+    required this.onTap,
+    this.locked = false,
+    this.pending = false,
+  });
 
   final Space space;
   final VoidCallback onTap;
 
+  /// Whether the viewer lacks access to this specific space. Purely visual —
+  /// the real gate happens when opening the space's details.
+  final bool locked;
+
+  /// Whether the viewer has an access request awaiting approval for this
+  /// space. Only meaningful when [locked] is true.
+  final bool pending;
+
   @override
   Widget build(BuildContext context) {
-    final statusColor = space.isActive
-        ? GateWiseColors.mint
-        : GateWiseColors.amber;
+    final statusColor = pending
+        ? GateWiseColors.amber
+        : locked
+            ? GateWiseColors.danger
+            : space.isActive
+                ? GateWiseColors.mint
+                : GateWiseColors.amber;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: AnimatedOpacity(
         duration: const Duration(milliseconds: 180),
-        opacity: space.isActive ? 1.0 : 0.68,
+        opacity: locked ? 0.6 : (space.isActive ? 1.0 : 0.68),
         child: GlassPanel(
           padding: EdgeInsets.zero,
           borderRadius: 24,
@@ -121,15 +139,28 @@ class SpaceCard extends StatelessWidget {
                           spacing: 8,
                           runSpacing: 8,
                           children: [
-                            TechStatusPill(
-                              label: space.isActive
-                                  ? context.l.statusActive
-                                  : context.l.statusInactive,
-                              icon: space.isActive
-                                  ? Icons.check_circle_rounded
-                                  : Icons.pause_circle_outline_rounded,
-                              color: statusColor,
-                            ),
+                            if (locked && pending)
+                              TechStatusPill(
+                                label: context.l.spaceAccessPendingChip,
+                                icon: Icons.schedule_rounded,
+                                color: GateWiseColors.amber,
+                              )
+                            else if (locked)
+                              TechStatusPill(
+                                label: context.l.spaceAccessLockedChip,
+                                icon: Icons.lock_rounded,
+                                color: GateWiseColors.danger,
+                              )
+                            else
+                              TechStatusPill(
+                                label: space.isActive
+                                    ? context.l.statusActive
+                                    : context.l.statusInactive,
+                                icon: space.isActive
+                                    ? Icons.check_circle_rounded
+                                    : Icons.pause_circle_outline_rounded,
+                                color: statusColor,
+                              ),
                             _SpaceInfoChip(
                               icon: Icons.tag_rounded,
                               label: 'ID ${space.id}',

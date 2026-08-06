@@ -31,7 +31,7 @@ class _MemberSpaceBodyState extends ConsumerState<MemberSpaceBody> {
   bool _isOpening = false;
 
   _MemberAccess _resolveAccess(List<AccessGrant> grants) {
-    if (grants.any((g) => g.status == AccessGrantStatus.granted)) {
+    if (widget.space.hasAccess) {
       return _MemberAccess.granted;
     }
     if (grants.any((g) => g.status == AccessGrantStatus.pending)) {

@@ -32,14 +32,13 @@ class SpaceDetailsScreen extends ConsumerStatefulWidget {
 class _SpaceDetailsScreenState extends ConsumerState<SpaceDetailsScreen> {
   bool _isOpening = false;
 
-  bool get _canManage {
+  bool _canManage(Space space) {
     final role = ref
         .read(organizationControllerProvider)
         .viewerMembership
         ?.role;
-    return role == null ||
-        role == OrganizationMemberRole.owner ||
-        role == OrganizationMemberRole.manager;
+    if (role == null || role == OrganizationMemberRole.owner) return true;
+    return role == OrganizationMemberRole.manager && space.hasAccess;
   }
 
   @override
@@ -67,7 +66,6 @@ class _SpaceDetailsScreenState extends ConsumerState<SpaceDetailsScreen> {
         ),
       ),
       body: TechBackground(
-        showTechIcons: false,
         child: SafeArea(
           top: false,
           child: state.selectedSpace.when(
@@ -99,7 +97,7 @@ class _SpaceDetailsScreenState extends ConsumerState<SpaceDetailsScreen> {
                 );
               }
 
-              if (!_canManage) {
+              if (!_canManage(space)) {
                 return MemberSpaceBody(space: space);
               }
 

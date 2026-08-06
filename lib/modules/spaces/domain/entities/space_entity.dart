@@ -6,6 +6,7 @@ class Space {
     required this.isActive,
     required this.createdAt,
     required this.updatedAt,
+    required this.hasAccess,
   });
 
   final int id;
@@ -14,4 +15,9 @@ class Space {
   final bool isActive;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+
+  /// Whether the current user has an active grant or manager/owner role for
+  /// this specific space. Fail-closed: absent or unparsable on the backend
+  /// means false, never assume access by omission.
+  final bool hasAccess;
 }

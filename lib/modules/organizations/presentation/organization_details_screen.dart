@@ -8,6 +8,7 @@ import '../../../core/l10n/l10n.dart';
 import '../../../core/providers/user_profile_provider.dart';
 import '../../../core/theme/gatewise_theme.dart';
 import '../../spaces/domain/entities/space_entity.dart';
+import '../../spaces/domain/value_objects/access_grant_status_vo.dart';
 import '../../spaces/presentation/components/space_card.dart';
 import '../../spaces/presentation/space_providers.dart';
 import '../domain/entities/organization_entity.dart';
@@ -49,6 +50,7 @@ class _OrganizationDetailsScreenState
           .read(organizationControllerProvider.notifier)
           .loadOrganizationDetails(widget.organizationId);
       ref.read(spaceControllerProvider.notifier).loadSpaces(widget.organizationId);
+      ref.read(spaceControllerProvider.notifier).loadAllMyGrantsForCurrentUser();
     });
   }
 
@@ -74,14 +76,16 @@ class _OrganizationDetailsScreenState
         actions: [
           if (state.selectedOrganization.valueOrNull case final organization?)
             IconButton(
-              icon: const Icon(Icons.logout_rounded),
+              icon: const Icon(
+                Icons.logout_rounded,
+                color: GateWiseColors.danger,
+              ),
               tooltip: context.l.orgLeaveButton,
               onPressed: () => _confirmLeave(context, organization, notifier),
             ),
         ],
       ),
       body: TechBackground(
-        showTechIcons: false,
         child: SafeArea(
           top: false,
           child: state.selectedOrganization.when(
@@ -164,7 +168,10 @@ class _OrganizationDetailsScreenState
                     child: TabBarView(
                       controller: _tabController,
                       children: [
-                        _SpacesTab(organizationId: organization.id),
+                        _SpacesTab(
+                          organizationId: organization.id,
+                          isOwner: canManage,
+                        ),
                         _MembersTab(
                           state: state,
                           organizationId: organization.id,
@@ -497,14 +504,11 @@ class _OrganizationDetailsScreenState
       (s) => s.spaceId == spaceId,
       orElse: () => ManagedSpace(spaceId: spaceId, name: context.l.thisSpace),
     );
-    final isLast = invite.spaces.length == 1;
 
     final confirmed = await confirm(
       context,
       title: context.l.orgRemoveSpaceTitle,
-      message: isLast
-          ? context.l.orgRemoveSpaceMessageLast(space.name, invite.code)
-          : context.l.orgRemoveSpaceMessage(space.name, invite.code),
+      message: context.l.orgRemoveSpaceMessageLast(space.name, invite.code),
       confirmLabel: context.l.orgRemoveSpaceConfirm,
       danger: true,
     );
@@ -520,7 +524,7 @@ class _OrganizationDetailsScreenState
       showActionError(context, ref);
       return;
     }
-    showSnack(context, isLast ? context.l.orgRemoveSpaceSuccessDeactivated : context.l.orgRemoveSpaceSuccess);
+    showSnack(context, context.l.orgRemoveSpaceSuccessDeactivated);
   }
 }
 
@@ -902,14 +906,19 @@ class _InvitesTab extends StatelessWidget {
 }
 
 class _SpacesTab extends ConsumerWidget {
-  const _SpacesTab({required this.organizationId});
+  const _SpacesTab({required this.organizationId, required this.isOwner});
 
   final int organizationId;
+  final bool isOwner;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final spacesState = ref.watch(spaceControllerProvider);
     final spaceNotifier = ref.read(spaceControllerProvider.notifier);
+    final pendingSpaceIds = (spacesState.myGrants.valueOrNull ?? const [])
+        .where((g) => g.status == AccessGrantStatus.pending)
+        .map((g) => g.spaceId)
+        .toSet();
 
     return RefreshIndicator(
       color: GateWiseColors.electricBlue,
@@ -954,6 +963,8 @@ class _SpacesTab extends ConsumerWidget {
                             .map(
                               (space) => SpaceCard(
                                 space: space,
+                                locked: !isOwner && !space.hasAccess,
+                                pending: pendingSpaceIds.contains(space.id),
                                 onTap: () =>
                                     context.push('/spaces/${space.id}'),
                               ),

@@ -4,12 +4,15 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/gatewise_theme.dart';
 import '../domain/entities/space_entity.dart';
+import '../domain/value_objects/access_grant_status_vo.dart';
 import '../infra/dtos/space_payload_dto.dart';
 import 'components/space_card.dart';
 import 'components/space_form_sheet.dart';
 import 'components/space_ui_helpers.dart';
 import 'space_providers.dart';
 import '../../../modules/organizations/domain/value_objects/organization_member_role_vo.dart';
+import '../../../modules/organizations/presentation/components/join_organization_sheet.dart';
+import '../../../modules/organizations/presentation/components/org_ui_helpers.dart';
 import '../../../modules/organizations/presentation/components/status_panels.dart';
 import '../../../modules/organizations/presentation/organization_providers.dart';
 import '../../../core/l10n/l10n.dart';
@@ -34,6 +37,7 @@ class _SpacesScreenState extends ConsumerState<SpacesScreen> {
       if (orgId != null) {
         ref.read(spaceControllerProvider.notifier).loadSpaces(orgId);
       }
+      ref.read(spaceControllerProvider.notifier).loadAllMyGrantsForCurrentUser();
     });
   }
 
@@ -50,6 +54,10 @@ class _SpacesScreenState extends ConsumerState<SpacesScreen> {
         .viewerMembership
         ?.role;
     final canCreate = role == null || role == OrganizationMemberRole.owner;
+    final pendingSpaceIds = (state.myGrants.valueOrNull ?? const [])
+        .where((g) => g.status == AccessGrantStatus.pending)
+        .map((g) => g.spaceId)
+        .toSet();
 
     return Scaffold(
       backgroundColor: GateWiseColors.background,
@@ -61,7 +69,6 @@ class _SpacesScreenState extends ConsumerState<SpacesScreen> {
         ),
       ),
       body: TechBackground(
-        showTechIcons: false,
         child: SafeArea(
           top: false,
           child: RefreshIndicator(
@@ -87,6 +94,7 @@ class _SpacesScreenState extends ConsumerState<SpacesScreen> {
                     spaces: spacesSnapshot,
                     canCreate: canCreate,
                     onCreate: () => _openSpaceForm(context, notifier),
+                    onAddByCode: () => _openAddSpaceByCode(context, notifier),
                   ),
                   const SizedBox(height: 22),
                   Row(
@@ -127,6 +135,8 @@ class _SpacesScreenState extends ConsumerState<SpacesScreen> {
                             .map(
                               (space) => SpaceCard(
                                 space: space,
+                                locked: !canCreate && !space.hasAccess,
+                                pending: pendingSpaceIds.contains(space.id),
                                 onTap: () =>
                                     context.push('/spaces/${space.id}'),
                               ),
@@ -171,6 +181,37 @@ class _SpacesScreenState extends ConsumerState<SpacesScreen> {
     }
     context.push('/spaces/${space.id}/provision');
   }
+
+  Future<void> _openAddSpaceByCode(
+    BuildContext context,
+    SpaceController notifier,
+  ) async {
+    final orgId = ref
+        .read(organizationControllerProvider)
+        .selectedOrganization
+        .valueOrNull
+        ?.id;
+    if (orgId == null) return;
+
+    final code = await showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => const JoinOrganizationSheet(addSpaceVariant: true),
+    );
+    if (code == null || code.trim().isEmpty) return;
+
+    final result = await ref
+        .read(organizationControllerProvider.notifier)
+        .joinByCode(code, organizationId: orgId);
+    if (!context.mounted) return;
+    if (result == null) {
+      showJoinActionError(context, ref);
+      return;
+    }
+    showSnack(context, messageForJoinResult(context, result));
+    await notifier.loadSpaces(orgId);
+  }
 }
 
 class _SpacesHero extends StatelessWidget {
@@ -178,11 +219,13 @@ class _SpacesHero extends StatelessWidget {
     required this.spaces,
     required this.canCreate,
     required this.onCreate,
+    required this.onAddByCode,
   });
 
   final List<Space> spaces;
   final bool canCreate;
   final VoidCallback onCreate;
+  final VoidCallback onAddByCode;
 
   @override
   Widget build(BuildContext context) {
@@ -275,8 +318,8 @@ class _SpacesHero extends StatelessWidget {
                       ),
                     ],
                   ),
-                  if (canCreate) ...[
-                    const SizedBox(height: 18),
+                  const SizedBox(height: 18),
+                  if (canCreate)
                     SizedBox(
                       height: 44,
                       width: double.infinity,
@@ -289,8 +332,17 @@ class _SpacesHero extends StatelessWidget {
                         icon: const Icon(Icons.add_rounded, size: 18),
                         label: Text(context.l.spacesNewButton),
                       ),
+                    )
+                  else
+                    SizedBox(
+                      height: 44,
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: onAddByCode,
+                        icon: const Icon(Icons.vpn_key_rounded, size: 18),
+                        label: Text(context.l.orgAddSpaceByCodeButton),
+                      ),
                     ),
-                  ],
                 ],
               ),
             ),

@@ -119,6 +119,24 @@ class SpaceController extends StateNotifier<SpaceState> {
     }
   }
 
+  /// Loads every access-grant request the current user has made, across all
+  /// spaces, so space lists can flag which locked cards have a pending
+  /// request instead of just showing them all as plain "no access".
+  Future<void> loadAllMyGrantsForCurrentUser() async {
+    try {
+      final userJson = await SecureStore.getUserJson();
+      if (userJson == null) {
+        state = state.copyWith(myGrants: const AsyncData([]));
+        return;
+      }
+      final user = User.fromJson(jsonDecode(userJson) as Map<String, dynamic>);
+      final data = await _repository.listMyGrants(user.id);
+      state = state.copyWith(myGrants: AsyncData(data));
+    } catch (_) {
+      state = state.copyWith(myGrants: const AsyncData([]));
+    }
+  }
+
   Future<void> loadSpace(int id) async {
     try {
       final space = await _repository.getSpaceById(id);
