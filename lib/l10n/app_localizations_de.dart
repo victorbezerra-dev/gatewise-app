@@ -9,9 +9,6 @@ class AppLocalizationsDe extends AppLocalizations {
   AppLocalizationsDe([String locale = 'de']) : super(locale);
 
   @override
-  String get authIotPill => 'IoT-Automatisierungsplattform';
-
-  @override
   String get authTagline => 'Das Tor zu intelligenten Umgebungen.';
 
   @override
@@ -185,6 +182,36 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String orgsJoinSpacesAdded(String name) {
+    return 'Sie sind bereits Mitglied von $name, haben aber Zugang zu neuen Bereichen erhalten.';
+  }
+
+  @override
+  String get orgsJoinAlreadyInSpaces =>
+      'Sie haben bereits Zugang zu den Bereichen dieser Einladung.';
+
+  @override
+  String get orgsJoinRoleMismatch =>
+      'Sie sind bereits Mitglied dieser Organisation mit einer anderen Rolle.';
+
+  @override
+  String get orgAddSpaceByCodeButton => 'Per Code';
+
+  @override
+  String get orgAddSpaceWrongOrgError =>
+      'Dieser Code gehört zu einer anderen Organisation als der, die Sie gerade ansehen. Gehen Sie zur Organisationsliste, um darauf zuzugreifen.';
+
+  @override
+  String get orgAddSpaceSheetTitle => 'Neue(n) Bereich(e) hinzufügen';
+
+  @override
+  String get orgAddSpaceSheetSubtitle =>
+      'Geben Sie einen Einladungscode ein, um Zugang zu neuen Bereichen dieser Organisation zu erhalten.';
+
+  @override
+  String get orgAddSpaceSheetButton => 'Bereich(e) hinzufügen';
+
+  @override
   String get orgDetailsTitle => 'Organisation';
 
   @override
@@ -237,7 +264,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Diese Organisation hat noch keine Mitglieder.';
 
   @override
-  String get orgInvitesSection => 'Aktive Einladungen';
+  String get orgInvitesSection => 'Einladungen';
 
   @override
   String get orgInvitesNewButton => 'Neu';
@@ -366,19 +393,11 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String orgRemoveSpaceMessage(String space, String code) {
-    return '\"$space\" aus Einladung $code entfernen?';
-  }
-
-  @override
   String get orgRemoveSpaceConfirm => 'Entfernen';
 
   @override
   String get orgRemoveSpaceSuccessDeactivated =>
       'Bereich entfernt. Einladung deaktiviert.';
-
-  @override
-  String get orgRemoveSpaceSuccess => 'Bereich entfernt.';
 
   @override
   String orgInviteCreated(String code) {
@@ -718,6 +737,12 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get spaceRequestAccessButton => 'Zugriff anfragen';
+
+  @override
+  String get spaceAccessLockedChip => 'Kein Zugriff';
+
+  @override
+  String get spaceAccessPendingChip => 'Ausstehend';
 
   @override
   String get spaceMyAccess => 'Mein Zugriff';

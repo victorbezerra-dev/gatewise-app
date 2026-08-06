@@ -1,7 +1,6 @@
 {
   "@@locale": "pt",
 
-  "authIotPill": "Plataforma de automação IoT",
   "authTagline": "A porta de entrada para ambientes inteligentes.",
   "authSubtitle": "Conecte, automatize e proteja qualquer ambiente, em qualquer escala, de forma inteligente.",
   "authLoginButton": "Entrar com GateWise",
@@ -76,6 +75,17 @@
   "@orgsJoinedSuccess": {
     "placeholders": { "name": { "type": "String" } }
   },
+  "orgsJoinSpacesAdded": "Você já é membro de {name}, mas ganhou acesso a novo(s) espaço(s).",
+  "@orgsJoinSpacesAdded": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "orgsJoinAlreadyInSpaces": "Você já tem acesso ao(s) espaço(s) deste convite.",
+  "orgsJoinRoleMismatch": "Você já é membro desta organização com um papel diferente.",
+  "orgAddSpaceByCodeButton": "Por código",
+  "orgAddSpaceWrongOrgError": "Este código pertence a uma organização diferente da que você está visualizando. Acesse a lista de organizações para entrar nela.",
+  "orgAddSpaceSheetTitle": "Adicionar novo(s) espaço(s)",
+  "orgAddSpaceSheetSubtitle": "Insira um código de convite para ganhar acesso a novo(s) espaço(s) desta organização.",
+  "orgAddSpaceSheetButton": "Adicionar espaço(s)",
 
   "orgDetailsTitle": "Organização",
   "orgDetailsErrorLoad": "Erro ao abrir organização",
@@ -93,7 +103,7 @@
   "orgMembersUnavailable": "Membros indisponíveis",
   "orgMembersNone": "Nenhum membro encontrado",
   "orgMembersNoneMessage": "Ainda não há membros nesta organização.",
-  "orgInvitesSection": "Convites ativos",
+  "orgInvitesSection": "Convites",
   "orgInvitesNewButton": "Novo",
   "orgInvitesNone": "Nenhum convite ativo",
   "orgInvitesNoneMessage": "Crie convites para permitir a entrada de novos membros.",
@@ -170,16 +180,8 @@
       "code": { "type": "String" }
     }
   },
-  "orgRemoveSpaceMessage": "Remover \"{space}\" do convite {code}?",
-  "@orgRemoveSpaceMessage": {
-    "placeholders": {
-      "space": { "type": "String" },
-      "code": { "type": "String" }
-    }
-  },
   "orgRemoveSpaceConfirm": "Remover",
   "orgRemoveSpaceSuccessDeactivated": "Espaço removido. Convite desativado.",
-  "orgRemoveSpaceSuccess": "Espaço removido.",
   "orgInviteCreated": "Convite {code} criado e copiado.",
   "@orgInviteCreated": {
     "placeholders": { "code": { "type": "String" } }
@@ -315,6 +317,8 @@
   "spaceRejectedButton": "Solicitar novamente",
   "spaceNoAccessMessage": "Você não tem acesso a este espaço.",
   "spaceRequestAccessButton": "Solicitar Acesso",
+  "spaceAccessLockedChip": "Sem acesso",
+  "spaceAccessPendingChip": "Aguardando",
   "spaceMyAccess": "Meu acesso",
   "spaceAuthorizedChip": "AUTORIZADO",
   "spaceAccessInfo": "Módulo conectado ao controle de acesso. Acione a fechadura apenas quando estiver próximo ao ambiente autorizado.",

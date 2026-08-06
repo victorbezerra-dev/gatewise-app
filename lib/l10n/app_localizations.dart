@@ -104,12 +104,6 @@ abstract class AppLocalizations {
     Locale('pt'),
   ];
 
-  /// No description provided for @authIotPill.
-  ///
-  /// In pt, this message translates to:
-  /// **'Plataforma de automação IoT'**
-  String get authIotPill;
-
   /// No description provided for @authTagline.
   ///
   /// In pt, this message translates to:
@@ -428,6 +422,54 @@ abstract class AppLocalizations {
   /// **'Você entrou em {name}.'**
   String orgsJoinedSuccess(String name);
 
+  /// No description provided for @orgsJoinSpacesAdded.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você já é membro de {name}, mas ganhou acesso a novo(s) espaço(s).'**
+  String orgsJoinSpacesAdded(String name);
+
+  /// No description provided for @orgsJoinAlreadyInSpaces.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você já tem acesso ao(s) espaço(s) deste convite.'**
+  String get orgsJoinAlreadyInSpaces;
+
+  /// No description provided for @orgsJoinRoleMismatch.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você já é membro desta organização com um papel diferente.'**
+  String get orgsJoinRoleMismatch;
+
+  /// No description provided for @orgAddSpaceByCodeButton.
+  ///
+  /// In pt, this message translates to:
+  /// **'Por código'**
+  String get orgAddSpaceByCodeButton;
+
+  /// No description provided for @orgAddSpaceWrongOrgError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Este código pertence a uma organização diferente da que você está visualizando. Acesse a lista de organizações para entrar nela.'**
+  String get orgAddSpaceWrongOrgError;
+
+  /// No description provided for @orgAddSpaceSheetTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Adicionar novo(s) espaço(s)'**
+  String get orgAddSpaceSheetTitle;
+
+  /// No description provided for @orgAddSpaceSheetSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Insira um código de convite para ganhar acesso a novo(s) espaço(s) desta organização.'**
+  String get orgAddSpaceSheetSubtitle;
+
+  /// No description provided for @orgAddSpaceSheetButton.
+  ///
+  /// In pt, this message translates to:
+  /// **'Adicionar espaço(s)'**
+  String get orgAddSpaceSheetButton;
+
   /// No description provided for @orgDetailsTitle.
   ///
   /// In pt, this message translates to:
@@ -527,7 +569,7 @@ abstract class AppLocalizations {
   /// No description provided for @orgInvitesSection.
   ///
   /// In pt, this message translates to:
-  /// **'Convites ativos'**
+  /// **'Convites'**
   String get orgInvitesSection;
 
   /// No description provided for @orgInvitesNewButton.
@@ -734,12 +776,6 @@ abstract class AppLocalizations {
   /// **'Remover \"{space}\" desativará o convite {code}.'**
   String orgRemoveSpaceMessageLast(String space, String code);
 
-  /// No description provided for @orgRemoveSpaceMessage.
-  ///
-  /// In pt, this message translates to:
-  /// **'Remover \"{space}\" do convite {code}?'**
-  String orgRemoveSpaceMessage(String space, String code);
-
   /// No description provided for @orgRemoveSpaceConfirm.
   ///
   /// In pt, this message translates to:
@@ -751,12 +787,6 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Espaço removido. Convite desativado.'**
   String get orgRemoveSpaceSuccessDeactivated;
-
-  /// No description provided for @orgRemoveSpaceSuccess.
-  ///
-  /// In pt, this message translates to:
-  /// **'Espaço removido.'**
-  String get orgRemoveSpaceSuccess;
 
   /// No description provided for @orgInviteCreated.
   ///
@@ -1369,6 +1399,18 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Solicitar Acesso'**
   String get spaceRequestAccessButton;
+
+  /// No description provided for @spaceAccessLockedChip.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sem acesso'**
+  String get spaceAccessLockedChip;
+
+  /// No description provided for @spaceAccessPendingChip.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aguardando'**
+  String get spaceAccessPendingChip;
 
   /// No description provided for @spaceMyAccess.
   ///
