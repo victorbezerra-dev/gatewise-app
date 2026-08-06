@@ -8,6 +8,7 @@ class SecureStore {
   static const _kAccessToken = 'access_token';
   static const _kRefreshToken = 'refresh_token';
   static const _kIdToken = 'id_token';
+  static const _kExpiresAt = 'expires_at';
   static const _kUserData = 'user_data';
   static const _kPrivateKey = 'private_key';
   static const _kPublicKey = 'public_key';
@@ -16,6 +17,7 @@ class SecureStore {
     required String accessToken,
     String? refreshToken,
     String? idToken,
+    DateTime? expiresAt,
   }) async {
     await _storage.write(key: _kAccessToken, value: accessToken);
     if (refreshToken != null) {
@@ -23,6 +25,14 @@ class SecureStore {
     }
     if (idToken != null) {
       await _storage.write(key: _kIdToken, value: idToken);
+    }
+    if (expiresAt != null) {
+      await _storage.write(
+        key: _kExpiresAt,
+        value: expiresAt.millisecondsSinceEpoch.toString(),
+      );
+    } else {
+      await _storage.delete(key: _kExpiresAt);
     }
   }
 
@@ -33,6 +43,13 @@ class SecureStore {
       _storage.read(key: _kRefreshToken);
 
   static Future<String?> get idToken async => _storage.read(key: _kIdToken);
+
+  static Future<DateTime?> get expiresAt async {
+    final raw = await _storage.read(key: _kExpiresAt);
+    if (raw == null) return null;
+    final ms = int.tryParse(raw);
+    return ms == null ? null : DateTime.fromMillisecondsSinceEpoch(ms);
+  }
 
   static Future<void> saveUserJson(String userJson) =>
       _storage.write(key: _kUserData, value: userJson);

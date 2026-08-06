@@ -9,7 +9,7 @@ import 'secure_storage.dart';
 class CustomHttpClientImpl implements CustomHttpClient {
   CustomHttpClientImpl({
     required String baseUrl,
-    Future<void> Function()? onUnauthorized,
+    Future<bool> Function()? onUnauthorized,
   }) {
     _dio = Dio(
       BaseOptions(
@@ -41,32 +41,28 @@ class CustomHttpClientImpl implements CustomHttpClient {
     String path, {
     Map<String, String>? headers,
     Object? body,
-  }) =>
-      _dio.post(path, data: body, options: _opts(headers));
+  }) => _dio.post(path, data: body, options: _opts(headers));
 
   @override
   Future<Response<dynamic>> patch(
     String path, {
     Map<String, String>? headers,
     Object? body,
-  }) =>
-      _dio.patch(path, data: body, options: _opts(headers));
+  }) => _dio.patch(path, data: body, options: _opts(headers));
 
   @override
   Future<Response<dynamic>> put(
     String path, {
     Map<String, String>? headers,
     Object? body,
-  }) =>
-      _dio.put(path, data: body, options: _opts(headers));
+  }) => _dio.put(path, data: body, options: _opts(headers));
 
   @override
   Future<Response<dynamic>> delete(
     String path, {
     Map<String, String>? headers,
     Object? body,
-  }) =>
-      _dio.delete(path, data: body, options: _opts(headers));
+  }) => _dio.delete(path, data: body, options: _opts(headers));
 
   Options? _opts(Map<String, String>? headers) =>
       headers != null ? Options(headers: headers) : null;
@@ -139,12 +135,9 @@ class _AuthInterceptor extends Interceptor {
 }
 
 class _UnauthorizedInterceptor extends Interceptor {
-  _UnauthorizedInterceptor({
-    required this.onUnauthorized,
-    required this.dio,
-  });
+  _UnauthorizedInterceptor({required this.onUnauthorized, required this.dio});
 
-  final Future<void> Function() onUnauthorized;
+  final Future<bool> Function() onUnauthorized;
   final Dio dio;
 
   @override
@@ -154,7 +147,11 @@ class _UnauthorizedInterceptor extends Interceptor {
   ) async {
     if (response.statusCode == 401 &&
         response.requestOptions.extra['_retry'] != true) {
-      await onUnauthorized();
+      final refreshed = await onUnauthorized();
+      if (!refreshed) {
+        handler.next(response);
+        return;
+      }
       final opts = response.requestOptions..extra['_retry'] = true;
       try {
         handler.resolve(await dio.fetch(opts));

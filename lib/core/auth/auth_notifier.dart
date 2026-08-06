@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/services.dart';
@@ -7,6 +8,9 @@ import 'package:openid_client/openid_client_io.dart';
 import 'auth_config.dart';
 import 'auth_state.dart';
 import '../infra/secure_storage.dart';
+
+const _refreshBuffer = Duration(seconds: 30);
+const _minRefreshDelay = Duration(seconds: 5);
 
 class AuthCancelledException implements Exception {
   const AuthCancelledException();
@@ -21,6 +25,14 @@ class AuthNotifier extends StateNotifier<AuthState> {
     _bootstrap();
   }
   late Flow _flow;
+  Timer? _refreshTimer;
+  Future<void>? _refreshFuture;
+
+  @override
+  void dispose() {
+    _refreshTimer?.cancel();
+    super.dispose();
+  }
 
   Uri _registrationUriFrom(Uri authenticationUri) {
     return authenticationUri.replace(
@@ -94,19 +106,42 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
     log(tokenResponse.accessToken ?? '');
 
+    await _saveSession(tokenResponse, fallbackRefreshToken: '');
+  }
+
+  Future<void> _saveSession(
+    TokenResponse tokenResponse, {
+    String? fallbackRefreshToken,
+  }) async {
+    final accessToken = tokenResponse.accessToken!;
     await SecureStore.saveTokens(
-      accessToken: tokenResponse.accessToken!,
-      refreshToken: tokenResponse.refreshToken ?? '',
+      accessToken: accessToken,
+      refreshToken: tokenResponse.refreshToken ?? fallbackRefreshToken,
       idToken: tokenResponse.idToken.toCompactSerialization(),
+      expiresAt: tokenResponse.expiresAt,
     );
 
-    state = AuthAuthenticated(tokenResponse.accessToken!);
+    state = AuthAuthenticated(accessToken);
+    _scheduleRefresh(tokenResponse.expiresAt);
+  }
+
+  void _scheduleRefresh(DateTime? expiresAt) {
+    _refreshTimer?.cancel();
+    if (expiresAt == null) return;
+
+    var delay = expiresAt.difference(DateTime.now()) - _refreshBuffer;
+    if (delay < _minRefreshDelay) delay = _minRefreshDelay;
+
+    _refreshTimer = Timer(delay, () {
+      refresh();
+    });
   }
 
   Future<void> _bootstrap() async {
     final token = await SecureStore.accessToken;
     if (token != null) {
       state = AuthAuthenticated(token);
+      _scheduleRefresh(await SecureStore.expiresAt);
     } else {
       state = AuthUnauthenticated();
     }
@@ -140,11 +175,17 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
-  Future<void> refresh() async {
+  Future<void> refresh() {
+    return _refreshFuture ??= _doRefresh().whenComplete(() {
+      _refreshFuture = null;
+    });
+  }
+
+  Future<void> _doRefresh() async {
     try {
       final refreshToken = await SecureStore.refreshToken;
       if (refreshToken == null) {
-        state = AuthUnauthenticated();
+        await _forceLogout();
         return;
       }
 
@@ -153,16 +194,17 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final credential = client.createCredential(refreshToken: refreshToken);
       final tokenResponse = await credential.getTokenResponse();
 
-      await SecureStore.saveTokens(
-        accessToken: tokenResponse.accessToken!,
-        refreshToken: tokenResponse.refreshToken ?? refreshToken,
-        idToken: tokenResponse.idToken.toCompactSerialization(),
-      );
-
-      state = AuthAuthenticated(tokenResponse.accessToken!);
+      await _saveSession(tokenResponse, fallbackRefreshToken: refreshToken);
     } catch (e) {
-      state = AuthUnauthenticated(error: e.toString());
+      log('Error refreshing token: $e');
+      await _forceLogout(error: e.toString());
     }
+  }
+
+  Future<void> _forceLogout({String? error}) async {
+    _refreshTimer?.cancel();
+    await SecureStore.clearAll();
+    state = AuthUnauthenticated(error: error);
   }
 
   Future<void> logout() async {
@@ -181,6 +223,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     } catch (e) {
       log('Error ending Keycloak session: $e');
     } finally {
+      _refreshTimer?.cancel();
       await SecureStore.clearAll();
       state = AuthUnauthenticated();
     }
