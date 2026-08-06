@@ -193,13 +193,14 @@ class _OrganizationsScreenState extends ConsumerState<OrganizationsScreen> {
     );
     if (code == null || code.trim().isEmpty) return;
 
-    final organization = await notifier.joinByCode(code);
+    final result = await notifier.joinByCode(code);
     if (!context.mounted) return;
-    if (organization == null) {
-      showActionError(context, ref);
+    if (result == null) {
+      showJoinActionError(context, ref);
       return;
     }
-    showSnack(context, context.l.orgsJoinedSuccess(organization.name));
+    final organization = result.organization;
+    showSnack(context, messageForJoinResult(context, result));
     context.push('/organizations/${organization.id}');
   }
 }

@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/theme/gatewise_theme.dart';
+import '../../domain/entities/join_organization_result_entity.dart';
+import '../../domain/value_objects/join_organization_status_vo.dart';
 import '../organization_providers.dart';
 
 Future<bool> confirm(
@@ -63,6 +65,35 @@ void showActionError(BuildContext context, WidgetRef ref) {
         : context.l.actionGenericError,
     isError: true,
   );
+}
+
+void showJoinActionError(BuildContext context, WidgetRef ref) {
+  final message = ref.read(organizationControllerProvider).actionErrorMessage;
+  final normalized = message?.trim().toLowerCase() ?? '';
+  final isRoleMismatch = normalized.contains('different role');
+  final isWrongOrganization = normalized.contains('different organization');
+  showSnack(
+    context,
+    isRoleMismatch
+        ? context.l.orgsJoinRoleMismatch
+        : isWrongOrganization
+            ? context.l.orgAddSpaceWrongOrgError
+            : (message?.trim().isNotEmpty == true
+                ? message!.trim()
+                : context.l.actionGenericError),
+    isError: true,
+  );
+}
+
+String messageForJoinResult(BuildContext context, JoinOrganizationResult result) {
+  return switch (result.status) {
+    JoinOrganizationStatus.joined =>
+      context.l.orgsJoinedSuccess(result.organization.name),
+    JoinOrganizationStatus.alreadyMemberSpacesAdded =>
+      context.l.orgsJoinSpacesAdded(result.organization.name),
+    JoinOrganizationStatus.alreadyMemberAlreadyInSpaces =>
+      context.l.orgsJoinAlreadyInSpaces,
+  };
 }
 
 String formatDate(DateTime? date, {BuildContext? context}) {

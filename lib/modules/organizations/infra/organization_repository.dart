@@ -5,10 +5,12 @@ import 'package:dio/dio.dart';
 
 import '../../../core/domain/interfaces/custom_http_client.dart';
 import '../domain/entities/organization_entity.dart';
+import '../domain/entities/join_organization_result_entity.dart';
 import '../domain/value_objects/organization_member_role_vo.dart';
 import '../domain/entities/organization_invite_entity.dart';
 import '../domain/entities/organization_member_entity.dart';
 import 'dtos/create_invite_dto.dart';
+import 'dtos/join_organization_response_dto.dart';
 import 'dtos/organization_dto.dart';
 import 'dtos/organization_invite_dto.dart';
 import 'dtos/organization_member_dto.dart';
@@ -112,14 +114,27 @@ class OrganizationRepository {
     return _decodeList(response.data, OrganizationInviteDto.fromJson);
   }
 
-  Future<Organization> joinByCode(String code) async {
+  Future<JoinOrganizationResult> joinByCode(
+    String code, {
+    int? organizationId,
+  }) async {
     const path = '$_basePath/join';
-    final body = jsonEncode({'code': code.trim()});
+    final body = jsonEncode({
+      'code': code.trim(),
+      if (organizationId != null) 'organizationId': organizationId,
+    });
     _logRequest('POST', path, body: body);
     final response = await httpClient.post(path, body: body);
     _logResponse('POST', path, response);
-    _ensureSuccess(response.statusCode, response.data, expected: const [200]);
-    return OrganizationDto.fromJson(response.data as Map<String, dynamic>);
+    _ensureSuccess(
+      response.statusCode,
+      response.data,
+      expected: const [200],
+      badRequestMessage: _messageForJoinBadRequest,
+    );
+    return JoinOrganizationResponseDto.fromJson(
+      response.data as Map<String, dynamic>,
+    );
   }
 
   Future<List<OrganizationMember>> listMembers(int organizationId) async {
@@ -268,6 +283,21 @@ class OrganizationRepository {
   static const _leaveOnlyOwnerMessage =
       'Você é o único proprietário desta organização. Transfira a '
       'titularidade ou exclua a organização antes de sair.';
+
+  String _messageForJoinBadRequest(String body) {
+    final text = body.trim();
+    if (text.isEmpty) return 'Código inválido, expirado ou dados incorretos.';
+    try {
+      final decoded = jsonDecode(text);
+      if (decoded is Map) {
+        final msg = decoded['message']?.toString().trim();
+        if (msg != null && msg.isNotEmpty) return msg;
+      }
+    } catch (_) {
+      // Not JSON: the backend returns the 400 as a plain-text body.
+    }
+    return text;
+  }
 
   String _messageForStatus(int statusCode, String body) {
     switch (statusCode) {

@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/providers/custom_http_client_provider.dart';
 import '../domain/entities/organization_entity.dart';
+import '../domain/entities/join_organization_result_entity.dart';
 import '../domain/entities/organization_invite_entity.dart';
 import '../domain/entities/organization_member_entity.dart';
 import '../domain/value_objects/organization_member_role_vo.dart';
@@ -196,11 +197,17 @@ class OrganizationController extends StateNotifier<OrganizationState> {
     });
   }
 
-  Future<Organization?> joinByCode(String code) async {
+  Future<JoinOrganizationResult?> joinByCode(
+    String code, {
+    int? organizationId,
+  }) async {
     return _runAction(() async {
-      final organization = await _repository.joinByCode(code);
+      final result = await _repository.joinByCode(
+        code,
+        organizationId: organizationId,
+      );
       await loadInitial();
-      return organization;
+      return result;
     });
   }
 
@@ -237,7 +244,11 @@ class OrganizationController extends StateNotifier<OrganizationState> {
     int spaceId,
   ) async {
     final result = await _runAction(() async {
-      await _repository.removeSpaceFromInvite(organizationId, inviteId, spaceId);
+      await _repository.removeSpaceFromInvite(
+        organizationId,
+        inviteId,
+        spaceId,
+      );
       await loadInvites(organizationId);
       return true;
     });
@@ -269,7 +280,11 @@ class OrganizationController extends StateNotifier<OrganizationState> {
     int spaceManagerId,
   ) async {
     final result = await _runAction(() async {
-      await _repository.removeSpaceManager(organizationId, spaceId, spaceManagerId);
+      await _repository.removeSpaceManager(
+        organizationId,
+        spaceId,
+        spaceManagerId,
+      );
       await loadMembers(organizationId);
       return true;
     });
