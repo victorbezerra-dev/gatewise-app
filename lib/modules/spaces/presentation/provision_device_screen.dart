@@ -57,7 +57,6 @@ class _ProvisionDeviceScreenState extends ConsumerState<ProvisionDeviceScreen> {
         ),
       ),
       body: TechBackground(
-        showTechIcons: false,
         child: SafeArea(
           top: false,
           child: _result.when(

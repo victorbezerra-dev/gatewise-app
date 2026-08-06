@@ -38,7 +38,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
 
     Future.delayed(const Duration(seconds: 4), () {
       if (!mounted) return;
-      context.go('/auth-login');
+      context.go('/main');
     });
   }
 

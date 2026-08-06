@@ -42,7 +42,6 @@ class SheetScaffold extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         child: showGradientBackground
             ? TechBackground(
-                showTechIcons: false,
                 child: SafeArea(
                   top: false,
                   child: _SheetContent(

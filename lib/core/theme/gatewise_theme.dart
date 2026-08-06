@@ -1,7 +1,6 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:simple_icons/simple_icons.dart';
 
 class GateWiseColors {
   const GateWiseColors._();
@@ -143,13 +142,11 @@ class TechBackground extends StatelessWidget {
     required this.child,
     this.padding,
     this.showGrid = true,
-    this.showTechIcons = true,
   });
 
   final Widget child;
   final EdgeInsetsGeometry? padding;
   final bool showGrid;
-  final bool showTechIcons;
 
   @override
   Widget build(BuildContext context) {
@@ -178,150 +175,6 @@ class TechBackground extends StatelessWidget {
           ),
           if (showGrid)
             Positioned.fill(child: CustomPaint(painter: _CircuitGridPainter())),
-          if (showTechIcons) ...[
-            const _FloatingTechIcon(
-              alignment: Alignment(-0.86, -0.68),
-              icon: SimpleIcons.arduino,
-              size: 38,
-              rotation: -0.14,
-              color: GateWiseColors.electricBlue,
-              opacity: 0.075,
-            ),
-            const _FloatingTechIcon(
-              alignment: Alignment(0.78, -0.62),
-              icon: SimpleIcons.capacitor,
-              size: 36,
-              rotation: 0.2,
-              opacity: 0.07,
-            ),
-            const _FloatingTechIcon(
-              alignment: Alignment(-0.34, -0.48),
-              icon: SimpleIcons.raspberrypi,
-              size: 30,
-              rotation: 0.1,
-              opacity: 0.05,
-            ),
-            const _FloatingTechIcon(
-              alignment: Alignment(0.04, -0.56),
-              icon: SimpleIcons.python,
-              size: 31,
-              rotation: -0.12,
-              color: GateWiseColors.electricBlue,
-              opacity: 0.062,
-            ),
-            const _FloatingTechIcon(
-              alignment: Alignment(0.34, -0.38),
-              icon: SimpleIcons.espressif,
-              size: 34,
-              rotation: -0.2,
-              color: GateWiseColors.electricBlue,
-              opacity: 0.055,
-            ),
-            const _FloatingTechIcon(
-              alignment: Alignment(-0.9, -0.06),
-              icon: SimpleIcons.mqtt,
-              size: 34,
-              rotation: 0.22,
-              opacity: 0.06,
-            ),
-            const _FloatingTechIcon(
-              alignment: Alignment(0.9, 0.02),
-              icon: SimpleIcons.nodered,
-              size: 36,
-              rotation: -0.16,
-              color: GateWiseColors.electricBlue,
-              opacity: 0.052,
-            ),
-            const _FloatingTechIcon(
-              alignment: Alignment(-0.26, 0.04),
-              icon: SimpleIcons.dart,
-              size: 29,
-              rotation: 0.18,
-              opacity: 0.048,
-            ),
-            const _FloatingTechIcon(
-              alignment: Alignment(0.28, 0.12),
-              icon: SimpleIcons.flutter,
-              size: 30,
-              rotation: -0.1,
-              color: GateWiseColors.electricBlue,
-              opacity: 0.052,
-            ),
-            const _FloatingTechIcon(
-              alignment: Alignment(-0.58, 0.26),
-              icon: SimpleIcons.platformio,
-              size: 38,
-              rotation: 0.18,
-              opacity: 0.06,
-            ),
-            const _FloatingTechIcon(
-              alignment: Alignment(-0.96, 0.46),
-              icon: SimpleIcons.javascript,
-              size: 28,
-              rotation: -0.24,
-              opacity: 0.045,
-            ),
-            const _FloatingTechIcon(
-              alignment: Alignment(0.62, 0.3),
-              icon: SimpleIcons.homeassistant,
-              size: 36,
-              rotation: -0.22,
-              color: GateWiseColors.electricBlue,
-              opacity: 0.06,
-            ),
-            const _FloatingTechIcon(
-              alignment: Alignment(0.96, 0.46),
-              icon: SimpleIcons.docker,
-              size: 31,
-              rotation: 0.18,
-              opacity: 0.045,
-            ),
-            const _FloatingTechIcon(
-              alignment: Alignment(-0.18, 0.48),
-              icon: Icons.memory_rounded,
-              size: 32,
-              rotation: -0.18,
-              opacity: 0.05,
-            ),
-            const _FloatingTechIcon(
-              alignment: Alignment(0.22, 0.62),
-              icon: Icons.settings_input_component_rounded,
-              size: 34,
-              rotation: 0.24,
-              color: GateWiseColors.electricBlue,
-              opacity: 0.05,
-            ),
-            const _FloatingTechIcon(
-              alignment: Alignment(-0.42, 0.72),
-              icon: SimpleIcons.typescript,
-              size: 29,
-              rotation: 0.14,
-              color: GateWiseColors.electricBlue,
-              opacity: 0.047,
-            ),
-            const _FloatingTechIcon(
-              alignment: Alignment(0.46, 0.72),
-              icon: SimpleIcons.kubernetes,
-              size: 30,
-              rotation: -0.2,
-              opacity: 0.044,
-            ),
-            const _FloatingTechIcon(
-              alignment: Alignment(-0.78, 0.78),
-              icon: Icons.sensors_rounded,
-              size: 34,
-              rotation: -0.22,
-              opacity: 0.055,
-            ),
-            const _FloatingTechIcon(
-              alignment: Alignment(0.82, 0.78),
-              icon: Icons.usb_rounded,
-              size: 30,
-              rotation: 0.12,
-              color: GateWiseColors.electricBlue,
-              opacity: 0.045,
-            ),
-          ],
           Positioned.fill(child: content),
         ],
       ),
@@ -490,40 +343,6 @@ class TechStatusPill extends StatelessWidget {
   }
 }
 
-class _FloatingTechIcon extends StatelessWidget {
-  const _FloatingTechIcon({
-    required this.alignment,
-    required this.icon,
-    required this.size,
-    this.rotation = 0,
-    this.color = GateWiseColors.neonCyan,
-    this.opacity = 0.055,
-  });
-
-  final Alignment alignment;
-  final IconData icon;
-  final double size;
-  final double rotation;
-  final Color color;
-  final double opacity;
-
-  @override
-  Widget build(BuildContext context) {
-    return IgnorePointer(
-      child: Align(
-        alignment: alignment,
-        child: Transform.rotate(
-          angle: rotation,
-          child: Opacity(
-            opacity: opacity,
-            child: Icon(icon, color: color, size: size),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class _CircuitGridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
@@ -545,101 +364,108 @@ class _CircuitGridPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.2;
 
+    // Nine well-separated L-shaped traces, one per cell of a loose 3x3
+    // grid, so the circuit reads as a calm, evenly spaced pattern instead
+    // of a dense tangle in one corner.
     final circuitPath = Path()
-      ..moveTo(size.width * 0.1, size.height * 0.18)
-      ..lineTo(size.width * 0.35, size.height * 0.18)
-      ..lineTo(size.width * 0.46, size.height * 0.28)
-      ..lineTo(size.width * 0.78, size.height * 0.28)
-      ..moveTo(size.width * 0.18, size.height * 0.72)
-      ..lineTo(size.width * 0.36, size.height * 0.58)
-      ..lineTo(size.width * 0.62, size.height * 0.58)
-      ..lineTo(size.width * 0.88, size.height * 0.42)
-      ..moveTo(size.width * 0.04, size.height * 0.42)
-      ..lineTo(size.width * 0.18, size.height * 0.42)
-      ..lineTo(size.width * 0.27, size.height * 0.35)
-      ..lineTo(size.width * 0.43, size.height * 0.35)
-      ..lineTo(size.width * 0.52, size.height * 0.46)
-      ..lineTo(size.width * 0.69, size.height * 0.46)
-      ..moveTo(size.width * 0.08, size.height * 0.9)
-      ..lineTo(size.width * 0.22, size.height * 0.82)
-      ..lineTo(size.width * 0.41, size.height * 0.82)
-      ..lineTo(size.width * 0.51, size.height * 0.72)
-      ..lineTo(size.width * 0.75, size.height * 0.72)
-      ..lineTo(size.width * 0.93, size.height * 0.63)
-      ..moveTo(size.width * 0.92, size.height * 0.12)
-      ..lineTo(size.width * 0.76, size.height * 0.18)
-      ..lineTo(size.width * 0.67, size.height * 0.1)
-      ..lineTo(size.width * 0.52, size.height * 0.1)
-      ..moveTo(size.width * 0.57, size.height * 0.93)
-      ..lineTo(size.width * 0.65, size.height * 0.84)
-      ..lineTo(size.width * 0.84, size.height * 0.84);
+      ..moveTo(size.width * 0.06, size.height * 0.14)
+      ..lineTo(size.width * 0.22, size.height * 0.14)
+      ..lineTo(size.width * 0.32, size.height * 0.24)
+      ..moveTo(size.width * 0.42, size.height * 0.12)
+      ..lineTo(size.width * 0.58, size.height * 0.12)
+      ..lineTo(size.width * 0.66, size.height * 0.22)
+      ..moveTo(size.width * 0.76, size.height * 0.14)
+      ..lineTo(size.width * 0.92, size.height * 0.14)
+      ..lineTo(size.width * 0.96, size.height * 0.24)
+      ..moveTo(size.width * 0.08, size.height * 0.48)
+      ..lineTo(size.width * 0.24, size.height * 0.48)
+      ..lineTo(size.width * 0.34, size.height * 0.58)
+      ..moveTo(size.width * 0.44, size.height * 0.46)
+      ..lineTo(size.width * 0.60, size.height * 0.46)
+      ..lineTo(size.width * 0.60, size.height * 0.58)
+      ..moveTo(size.width * 0.74, size.height * 0.44)
+      ..lineTo(size.width * 0.90, size.height * 0.44)
+      ..lineTo(size.width * 0.90, size.height * 0.58)
+      ..moveTo(size.width * 0.08, size.height * 0.82)
+      ..lineTo(size.width * 0.24, size.height * 0.82)
+      ..lineTo(size.width * 0.34, size.height * 0.72)
+      ..moveTo(size.width * 0.42, size.height * 0.84)
+      ..lineTo(size.width * 0.58, size.height * 0.84)
+      ..lineTo(size.width * 0.66, size.height * 0.74)
+      ..moveTo(size.width * 0.76, size.height * 0.80)
+      ..lineTo(size.width * 0.92, size.height * 0.80)
+      ..lineTo(size.width * 0.92, size.height * 0.92);
 
     canvas.drawPath(circuitPath, circuitPaint);
 
     final accentCircuitPaint = Paint()
-      ..color = GateWiseColors.electricBlue.withValues(alpha: 0.075)
+      ..color = GateWiseColors.electricBlue.withValues(alpha: 0.08)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1;
 
+    // A few soft curves tucked into the gaps between traces, kept short so
+    // they add texture without crowding the pattern above.
     final accentPath = Path()
-      ..moveTo(size.width * 0.02, size.height * 0.3)
+      ..moveTo(size.width * 0.34, size.height * 0.08)
       ..cubicTo(
-        size.width * 0.16,
-        size.height * 0.22,
-        size.width * 0.24,
-        size.height * 0.5,
         size.width * 0.38,
-        size.height * 0.41,
-      )
-      ..moveTo(size.width * 0.66, size.height * 0.2)
-      ..cubicTo(
-        size.width * 0.78,
-        size.height * 0.36,
-        size.width * 0.86,
-        size.height * 0.14,
-        size.width * 0.98,
-        size.height * 0.32,
-      )
-      ..moveTo(size.width * 0.12, size.height * 0.62)
-      ..cubicTo(
-        size.width * 0.28,
-        size.height * 0.68,
-        size.width * 0.32,
-        size.height * 0.9,
+        size.height * 0.02,
+        size.width * 0.44,
+        size.height * 0.02,
         size.width * 0.48,
-        size.height * 0.76,
+        size.height * 0.08,
       )
-      ..moveTo(size.width * 0.58, size.height * 0.58)
+      ..moveTo(size.width * 0.02, size.height * 0.30)
       ..cubicTo(
-        size.width * 0.74,
-        size.height * 0.52,
-        size.width * 0.8,
-        size.height * 0.86,
-        size.width * 0.96,
-        size.height * 0.74,
+        size.width * 0.10,
+        size.height * 0.35,
+        size.width * 0.10,
+        size.height * 0.42,
+        size.width * 0.02,
+        size.height * 0.46,
+      )
+      ..moveTo(size.width * 0.98, size.height * 0.30)
+      ..cubicTo(
+        size.width * 0.90,
+        size.height * 0.35,
+        size.width * 0.90,
+        size.height * 0.42,
+        size.width * 0.98,
+        size.height * 0.46,
+      )
+      ..moveTo(size.width * 0.34, size.height * 0.94)
+      ..cubicTo(
+        size.width * 0.38,
+        size.height * 0.98,
+        size.width * 0.44,
+        size.height * 0.98,
+        size.width * 0.48,
+        size.height * 0.94,
       );
 
     canvas.drawPath(accentPath, accentCircuitPaint);
 
     final nodePaint = Paint()
-      ..color = GateWiseColors.neonCyan.withValues(alpha: 0.22)
+      ..color = GateWiseColors.neonCyan.withValues(alpha: 0.3)
       ..style = PaintingStyle.fill;
 
     for (final offset in [
-      Offset(size.width * 0.35, size.height * 0.18),
-      Offset(size.width * 0.46, size.height * 0.28),
-      Offset(size.width * 0.62, size.height * 0.58),
-      Offset(size.width * 0.88, size.height * 0.42),
-      Offset(size.width * 0.27, size.height * 0.35),
-      Offset(size.width * 0.52, size.height * 0.46),
-      Offset(size.width * 0.22, size.height * 0.82),
-      Offset(size.width * 0.51, size.height * 0.72),
-      Offset(size.width * 0.75, size.height * 0.72),
-      Offset(size.width * 0.76, size.height * 0.18),
-      Offset(size.width * 0.65, size.height * 0.84),
-      Offset(size.width * 0.84, size.height * 0.84),
+      Offset(size.width * 0.22, size.height * 0.14),
+      Offset(size.width * 0.32, size.height * 0.24),
+      Offset(size.width * 0.58, size.height * 0.12),
+      Offset(size.width * 0.66, size.height * 0.22),
+      Offset(size.width * 0.92, size.height * 0.14),
+      Offset(size.width * 0.24, size.height * 0.48),
+      Offset(size.width * 0.34, size.height * 0.58),
+      Offset(size.width * 0.60, size.height * 0.46),
+      Offset(size.width * 0.90, size.height * 0.44),
+      Offset(size.width * 0.24, size.height * 0.82),
+      Offset(size.width * 0.34, size.height * 0.72),
+      Offset(size.width * 0.58, size.height * 0.84),
+      Offset(size.width * 0.66, size.height * 0.74),
+      Offset(size.width * 0.92, size.height * 0.80),
     ]) {
-      canvas.drawCircle(offset, 3.5 + math.sin(offset.dx) * 0.2, nodePaint);
+      canvas.drawCircle(offset, 4.2 + math.sin(offset.dx) * 0.3, nodePaint);
     }
   }
 

@@ -78,16 +78,6 @@ class AuthLoginScreen extends ConsumerWidget {
                 ),
               ),
               Align(
-                alignment: Alignment.topCenter,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 24),
-                  child: TechStatusPill(
-                    label: l.authIotPill,
-                    icon: Icons.lock_outline_rounded,
-                  ),
-                ),
-              ),
-              Align(
                 alignment: Alignment.center,
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.symmetric(
