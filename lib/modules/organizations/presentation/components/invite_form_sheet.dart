@@ -43,10 +43,13 @@ class _InviteFormSheetState extends ConsumerState<InviteFormSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveRole =
-        _viewerIsManager ? OrganizationMemberRole.member : _role;
-    final isInvitingManager =
-        !_viewerIsManager && _role == OrganizationMemberRole.manager;
+    final effectiveRole = _role;
+    final isInvitingManager = _role == OrganizationMemberRole.manager;
+    final roleOptions = _viewerIsManager
+        ? OrganizationMemberRole.values
+            .where((role) => role != OrganizationMemberRole.owner)
+            .toList()
+        : OrganizationMemberRole.values;
 
     final allSpacesAsync = ref.watch(spaceControllerProvider).spaces;
     final spacesAsync = _viewerIsManager
@@ -61,40 +64,28 @@ class _InviteFormSheetState extends ConsumerState<InviteFormSheet> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (_viewerIsManager)
-            InputDecorator(
-              decoration: InputDecoration(
-                labelText: context.l.inviteFormRoleLabel,
-                prefixIcon: const Icon(Icons.shield_rounded),
-              ),
-              child: Text(
-                OrganizationMemberRole.member.label,
-                style: const TextStyle(color: Colors.white),
-              ),
-            )
-          else
-            DropdownButtonFormField<OrganizationMemberRole>(
-              initialValue: _role,
-              dropdownColor: GateWiseColors.surface,
-              decoration: InputDecoration(
-                labelText: context.l.inviteFormRoleLabel,
-                prefixIcon: const Icon(Icons.shield_rounded),
-              ),
-              items: OrganizationMemberRole.values
-                  .map(
-                    (role) =>
-                        DropdownMenuItem(value: role, child: Text(role.label)),
-                  )
-                  .toList(),
-              onChanged: (value) => setState(() {
-                _role = value ?? OrganizationMemberRole.member;
-                _selectedSpaceIds.clear();
-                if (_role == OrganizationMemberRole.owner) {
-                  _memberStartsAt = null;
-                  _memberExpiresAt = null;
-                }
-              }),
+          DropdownButtonFormField<OrganizationMemberRole>(
+            initialValue: _role,
+            dropdownColor: GateWiseColors.surface,
+            decoration: InputDecoration(
+              labelText: context.l.inviteFormRoleLabel,
+              prefixIcon: const Icon(Icons.shield_rounded),
             ),
+            items: roleOptions
+                .map(
+                  (role) =>
+                      DropdownMenuItem(value: role, child: Text(role.label)),
+                )
+                .toList(),
+            onChanged: (value) => setState(() {
+              _role = value ?? OrganizationMemberRole.member;
+              _selectedSpaceIds.clear();
+              if (_role != OrganizationMemberRole.member) {
+                _memberStartsAt = null;
+                _memberExpiresAt = null;
+              }
+            }),
+          ),
           const SizedBox(height: 12),
           TextField(
             controller: _expiresController,
@@ -115,7 +106,7 @@ class _InviteFormSheetState extends ConsumerState<InviteFormSheet> {
               prefixIcon: const Icon(Icons.group_add_rounded),
             ),
           ),
-          if (effectiveRole != OrganizationMemberRole.owner) ...[
+          if (effectiveRole == OrganizationMemberRole.member) ...[
             const SizedBox(height: 12),
             _DatePickerField(
               label: context.l.inviteFormStartsAtLabel,

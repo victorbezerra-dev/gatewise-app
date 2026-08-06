@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/theme/gatewise_theme.dart';
 import '../../domain/entities/organization_invite_entity.dart';
+import '../../domain/value_objects/organization_member_role_vo.dart';
 import 'org_ui_helpers.dart';
 import 'role_badge.dart';
 
@@ -32,8 +33,8 @@ class _InviteCardState extends State<InviteCard> {
   Widget build(BuildContext context) {
     final invite = widget.invite;
     final hasSpaces = invite.spaces.isNotEmpty;
-    final hasMemberWindow =
-        invite.memberStartsAt != null || invite.memberExpiresAt != null;
+    final hasMemberWindow = invite.role == OrganizationMemberRole.member &&
+        (invite.memberStartsAt != null || invite.memberExpiresAt != null);
     final hasMore = invite.spaces.length > _kMaxVisibleSpaces;
     final visibleSpaces = _spacesExpanded
         ? invite.spaces
@@ -72,7 +73,7 @@ class _InviteCardState extends State<InviteCard> {
                     color: GateWiseColors.electricBlue,
                   ),
                 ),
-                if (widget.onRevoke != null)
+                if (widget.onRevoke != null && invite.isActive)
                   IconButton(
                     tooltip: 'Revogar convite',
                     onPressed: widget.onRevoke,
@@ -154,7 +155,7 @@ class _InviteCardState extends State<InviteCard> {
                   for (final space in visibleSpaces)
                     _SpaceChip(
                       name: space.name,
-                      onRemove: widget.onRemoveSpace != null
+                      onRemove: widget.onRemoveSpace != null && invite.isActive
                           ? () => widget.onRemoveSpace!(space.spaceId)
                           : null,
                     ),
