@@ -20,20 +20,32 @@ class HostScreen extends ConsumerStatefulWidget {
   ConsumerState<HostScreen> createState() => _HostScreenState();
 }
 
-class _HostScreenState extends ConsumerState<HostScreen> {
+class _HostScreenState extends ConsumerState<HostScreen>
+    with WidgetsBindingObserver {
   final _pageController = PageController(initialPage: 0);
   final NotchBottomBarController _controller = NotchBottomBarController(
     index: 0,
   );
 
   late HubConnection hubConnection;
+  bool _hubReady = false;
   bool _signalrConnected = false;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     Future.microtask(() async {
       hubConnection = await ref.read(signalRProvider.future);
+
+      hubConnection.onclose(({error}) {
+        log('SignalR connection closed: $error');
+        _signalrConnected = false;
+      });
+      hubConnection.onreconnected(({connectionId}) {
+        log('SignalR reconnected!');
+        _signalrConnected = true;
+      });
 
       hubConnection.off('access_result');
       hubConnection.on('access_result', (arguments) async {
@@ -61,12 +73,13 @@ class _HostScreenState extends ConsumerState<HostScreen> {
         }
       });
 
+      _hubReady = true;
       _connectSignalR();
     });
   }
 
   Future<void> _connectSignalR() async {
-    if (_signalrConnected) return;
+    if (!_hubReady || _signalrConnected) return;
     try {
       if (hubConnection.state != HubConnectionState.Connected) {
         await hubConnection.start();
@@ -84,7 +97,15 @@ class _HostScreenState extends ConsumerState<HostScreen> {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _connectSignalR();
+    }
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _pageController.dispose();
     hubConnection.stop();
     super.dispose();

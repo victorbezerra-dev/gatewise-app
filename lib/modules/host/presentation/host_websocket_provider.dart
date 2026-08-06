@@ -5,13 +5,13 @@ import '../../../core/config/app_config.dart';
 import '../../../core/infra/secure_storage.dart';
 
 final signalRProvider = FutureProvider<HubConnection>((ref) async {
-  final token = await SecureStore.accessToken;
-
-  var url = AppConfig.accessConfirmationHubUrl;
-  if (token != null && token.isNotEmpty) {
-    final separator = url.contains('?') ? '&' : '?';
-    url = '$url${separator}access_token=${Uri.encodeComponent(token)}';
-  }
-
-  return HubConnectionBuilder().withUrl(url).build();
+  return HubConnectionBuilder()
+      .withUrl(
+        AppConfig.accessConfirmationHubUrl,
+        options: HttpConnectionOptions(
+          accessTokenFactory: () async => await SecureStore.accessToken ?? '',
+        ),
+      )
+      .withAutomaticReconnect()
+      .build();
 });
