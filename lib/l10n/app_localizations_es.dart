@@ -1058,6 +1058,695 @@ class AppLocalizationsEs extends AppLocalizations {
   String get formValidationReason => 'Introduce un motivo.';
 
   @override
+  String get equipmentsSection => 'Equipos';
+
+  @override
+  String get equipmentsAddButton => 'Añadir';
+
+  @override
+  String get equipmentsEmpty => 'Ningún equipo';
+
+  @override
+  String get equipmentsEmptyMessage =>
+      'Este espacio aún no tiene equipos para controlar.';
+
+  @override
+  String get equipmentsEmptyManagerMessage =>
+      'Registra aires acondicionados, TV, proyectores y otros aparatos infrarrojos.';
+
+  @override
+  String get equipmentsLoadError => 'No se pudieron cargar los equipos';
+
+  @override
+  String equipmentsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count equipos',
+      one: '1 equipo',
+      zero: 'Ningún equipo',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String equipmentsOnCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count encendidos',
+      one: '1 encendido',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get equipmentsEntryManagerHint => 'Toca para registrar el primero';
+
+  @override
+  String get equipmentFormRemoteLabel => 'Marca del control';
+
+  @override
+  String get equipmentFormRemoteHint =>
+      'Los botones del control original de la marca se crean automáticamente.';
+
+  @override
+  String equipmentFormRemoteButtons(int count) {
+    return 'Se crearán $count botones automáticamente';
+  }
+
+  @override
+  String get equipmentFormRemoteNone => 'Ninguna (grabar los botones)';
+
+  @override
+  String get equipmentFormRemoteRequired => 'Elige la marca';
+
+  @override
+  String get remoteTitle => 'Control remoto';
+
+  @override
+  String get remoteVolumeLabel => 'VOL';
+
+  @override
+  String get remoteChannelLabel => 'CANAL';
+
+  @override
+  String get remoteNumbersToggle => 'Teclado numérico';
+
+  @override
+  String get remoteOtherButtons => 'Otros botones';
+
+  @override
+  String get equipmentInactiveBadge => 'Inactivo';
+
+  @override
+  String get equipmentTypeAirConditioner => 'Aire acondicionado';
+
+  @override
+  String get equipmentTypeTv => 'TV';
+
+  @override
+  String get equipmentTypeProjector => 'Proyector';
+
+  @override
+  String get equipmentTypeFan => 'Ventilador';
+
+  @override
+  String get equipmentTypeLight => 'Iluminación';
+
+  @override
+  String get equipmentTypeSound => 'Sonido';
+
+  @override
+  String get equipmentTypeScreen => 'Pantalla';
+
+  @override
+  String get equipmentTypeOther => 'Otro';
+
+  @override
+  String get equipmentDetailsTitle => 'Equipo';
+
+  @override
+  String get equipmentLoadError => 'No se pudo cargar el equipo';
+
+  @override
+  String equipmentUsageWindow(String start, String end) {
+    return 'Uso de $start a $end';
+  }
+
+  @override
+  String equipmentControllerInfo(String name) {
+    return 'Controlador: $name';
+  }
+
+  @override
+  String get equipmentNoControlTitle => 'Solo visualización';
+
+  @override
+  String get equipmentNoControlMessage =>
+      'Pide a un gestor del espacio que te permita controlar los equipos.';
+
+  @override
+  String equipmentLastChange(String name, String date) {
+    return 'Último cambio de $name el $date';
+  }
+
+  @override
+  String get equipmentCommandOk => 'Comando confirmado por el equipo.';
+
+  @override
+  String get equipmentCommandFailed =>
+      'El controlador no pudo ejecutar el comando.';
+
+  @override
+  String equipmentCommandFailedReason(String reason) {
+    return 'El controlador no pudo ejecutar el comando: $reason';
+  }
+
+  @override
+  String get equipmentCommandTimeout =>
+      'El controlador no respondió. Verifica que esté encendido y conectado.';
+
+  @override
+  String get equipmentUpdated => 'Equipo actualizado.';
+
+  @override
+  String get equipmentDeleted => 'Equipo eliminado.';
+
+  @override
+  String get equipmentDeleteTitle => '¿Eliminar equipo?';
+
+  @override
+  String equipmentDeleteMessage(String name) {
+    return '\"$name\" se eliminará junto con sus botones y programaciones.';
+  }
+
+  @override
+  String get equipmentErrorForbidden =>
+      'No tienes permiso para controlar este equipo.';
+
+  @override
+  String get equipmentErrorNotFound => 'Equipo no encontrado.';
+
+  @override
+  String get equipmentErrorProtocol =>
+      'Elige una marca de aire acondicionado o captura el control original.';
+
+  @override
+  String get equipmentFormNewTitle => 'Nuevo equipo';
+
+  @override
+  String get equipmentFormEditTitle => 'Editar equipo';
+
+  @override
+  String get equipmentFormSubtitle =>
+      'Define qué ESP32 controla el aparato y cuándo se puede usar.';
+
+  @override
+  String get equipmentFormNameLabel => 'Nombre';
+
+  @override
+  String get equipmentFormNameHint => 'Ej.: Aire de la sala 12';
+
+  @override
+  String get equipmentFormTypeLabel => 'Tipo';
+
+  @override
+  String get equipmentFormControllerLabel => 'Controlador (ESP32)';
+
+  @override
+  String get equipmentFormControllerHint =>
+      'El ESP32 cuyo LED infrarrojo apunta al aparato.';
+
+  @override
+  String get equipmentFormNoControllers =>
+      'Registra un controlador en este espacio antes de añadir equipos.';
+
+  @override
+  String get equipmentFormControllerRequired => 'Elige el controlador.';
+
+  @override
+  String get equipmentFormProtocolTitle => 'Marca del aire acondicionado';
+
+  @override
+  String get equipmentFormProtocolHint =>
+      'Captura una señal del control original para detectar la marca, o elígela de la lista.';
+
+  @override
+  String get equipmentFormLearnButton => 'Capturar del control original';
+
+  @override
+  String equipmentFormLearned(String protocol) {
+    return 'Detectado: $protocol';
+  }
+
+  @override
+  String get equipmentFormProtocolLabel => 'Marca / protocolo';
+
+  @override
+  String get equipmentFormProtocolRequired => 'Elige la marca del aparato.';
+
+  @override
+  String get equipmentFormModelLabel => 'Modelo';
+
+  @override
+  String get equipmentFormMinTemperature => 'Temp. mínima';
+
+  @override
+  String get equipmentFormMaxTemperature => 'Temp. máxima';
+
+  @override
+  String get equipmentFormTemperatureInvalid => 'Usa un valor entre 10 y 35.';
+
+  @override
+  String get equipmentFormUsageWindow => 'Limitar horario de uso';
+
+  @override
+  String get equipmentFormUsageWindowHint =>
+      'Fuera de este horario solo los gestores pueden usar el aparato.';
+
+  @override
+  String get equipmentFormUsageStart => 'Inicio';
+
+  @override
+  String get equipmentFormUsageEnd => 'Fin';
+
+  @override
+  String get equipmentFormAutoOff => 'Apagar al final del horario';
+
+  @override
+  String get equipmentFormAutoOffHint =>
+      'Si está encendido, el aire se apaga automáticamente a la hora final.';
+
+  @override
+  String get equipmentFormActive => 'Equipo activo';
+
+  @override
+  String get equipmentFormActiveHint =>
+      'Los equipos inactivos se ocultan a los miembros.';
+
+  @override
+  String get airConditionerOn => 'ENCENDIDO';
+
+  @override
+  String get airConditionerOff => 'Apagado';
+
+  @override
+  String airConditionerAllowedRange(String min, String max) {
+    return 'Temperatura permitida: $min° a $max°';
+  }
+
+  @override
+  String get airConditionerModeLabel => 'Modo';
+
+  @override
+  String get airConditionerFanLabel => 'Ventilación';
+
+  @override
+  String get airConditionerSwingLabel => 'Dirección del aire';
+
+  @override
+  String get airConditionerModeAuto => 'Auto';
+
+  @override
+  String get airConditionerModeCool => 'Frío';
+
+  @override
+  String get airConditionerModeHeat => 'Calor';
+
+  @override
+  String get airConditionerModeDry => 'Deshumidificar';
+
+  @override
+  String get airConditionerModeFan => 'Ventilar';
+
+  @override
+  String get airConditionerLevelAuto => 'Auto';
+
+  @override
+  String get airConditionerLevelOff => 'Apagado';
+
+  @override
+  String get airConditionerFanMin => 'Mínima';
+
+  @override
+  String get airConditionerFanLow => 'Baja';
+
+  @override
+  String get airConditionerFanMedium => 'Media';
+
+  @override
+  String get airConditionerFanHigh => 'Alta';
+
+  @override
+  String get airConditionerFanMax => 'Máxima';
+
+  @override
+  String get airConditionerSwingLowest => 'Más bajo';
+
+  @override
+  String get airConditionerSwingLow => 'Bajo';
+
+  @override
+  String get airConditionerSwingMiddle => 'Medio';
+
+  @override
+  String get airConditionerSwingHigh => 'Alto';
+
+  @override
+  String get airConditionerSwingHighest => 'Más alto';
+
+  @override
+  String get airConditionerSwingLeftMax => 'Extremo izquierdo';
+
+  @override
+  String get airConditionerSwingLeft => 'Izquierda';
+
+  @override
+  String get airConditionerSwingRight => 'Derecha';
+
+  @override
+  String get airConditionerSwingRightMax => 'Extremo derecho';
+
+  @override
+  String get airConditionerSwingWide => 'Amplio';
+
+  @override
+  String get airConditionerTurbo => 'Turbo';
+
+  @override
+  String get airConditionerEcono => 'Económico';
+
+  @override
+  String get airConditionerQuiet => 'Silencioso';
+
+  @override
+  String get airConditionerLight => 'Luz del panel';
+
+  @override
+  String get buttonsSection => 'Botones del control';
+
+  @override
+  String get buttonsAddButton => 'Grabar botón';
+
+  @override
+  String get buttonsEmpty => 'Ningún botón grabado';
+
+  @override
+  String get buttonsEmptyMessage =>
+      'Graba los botones del control remoto original para usarlos en la app.';
+
+  @override
+  String get buttonCreated => 'Botón grabado.';
+
+  @override
+  String get buttonDeleteTitle => '¿Eliminar botón?';
+
+  @override
+  String buttonDeleteMessage(String name) {
+    return 'Se eliminará el botón \"$name\".';
+  }
+
+  @override
+  String get buttonFormNewTitle => 'Nuevo botón';
+
+  @override
+  String get buttonFormEditTitle => 'Editar botón';
+
+  @override
+  String get buttonFormSubtitle =>
+      'Dale un nombre y un icono a la señal grabada.';
+
+  @override
+  String get buttonFormNameLabel => 'Nombre del botón';
+
+  @override
+  String get buttonFormNameHint => 'Ej.: Encender/apagar';
+
+  @override
+  String get buttonFormIconLabel => 'Icono';
+
+  @override
+  String get schedulesSection => 'Programaciones';
+
+  @override
+  String get schedulesAddButton => 'Programar';
+
+  @override
+  String get schedulesEmpty => 'Ninguna programación';
+
+  @override
+  String get schedulesEmptyMessage =>
+      'Enciende o apaga el aparato automáticamente en días y horas fijos.';
+
+  @override
+  String get scheduleSaved => 'Programación guardada.';
+
+  @override
+  String get scheduleDeleteTitle => '¿Eliminar programación?';
+
+  @override
+  String get scheduleDeleteMessage => 'La programación dejará de ejecutarse.';
+
+  @override
+  String get scheduleInactive => 'Pausada';
+
+  @override
+  String get scheduleEveryDay => 'Todos los días';
+
+  @override
+  String get scheduleWeekdays => 'Días laborables';
+
+  @override
+  String scheduleTurnOnAt(String degrees) {
+    return 'Encender a $degrees°';
+  }
+
+  @override
+  String schedulePress(String name) {
+    return 'Pulsar \"$name\"';
+  }
+
+  @override
+  String get scheduleActionTurnOn => 'Encender';
+
+  @override
+  String get scheduleActionTurnOff => 'Apagar';
+
+  @override
+  String get scheduleActionPressButton => 'Pulsar un botón';
+
+  @override
+  String get scheduleFormNewTitle => 'Nueva programación';
+
+  @override
+  String get scheduleFormEditTitle => 'Editar programación';
+
+  @override
+  String get scheduleFormSubtitle =>
+      'El horario sigue la zona horaria de la organización.';
+
+  @override
+  String get scheduleFormNameLabel => 'Nombre (opcional)';
+
+  @override
+  String get scheduleFormNameHint => 'Ej.: Apagar al final de la jornada';
+
+  @override
+  String get scheduleFormTimeLabel => 'Hora';
+
+  @override
+  String get scheduleFormActionLabel => 'Acción';
+
+  @override
+  String get scheduleFormButtonLabel => 'Botón';
+
+  @override
+  String get scheduleFormNoButtons =>
+      'Graba un botón en este equipo para poder programarlo.';
+
+  @override
+  String scheduleFormTemperature(String degrees) {
+    return 'Temperatura: $degrees°';
+  }
+
+  @override
+  String get scheduleFormActive => 'Programación activa';
+
+  @override
+  String get scheduleFormDaysRequired => 'Elige al menos un día.';
+
+  @override
+  String get scheduleFormButtonRequired => 'Elige el botón.';
+
+  @override
+  String get historySection => 'Historial de comandos';
+
+  @override
+  String get historyEmpty => 'Aún no se ha enviado ningún comando.';
+
+  @override
+  String historySeeAll(int count) {
+    return 'Ver todos ($count)';
+  }
+
+  @override
+  String get historyAirConditioner => 'Comando del aire acondicionado';
+
+  @override
+  String get historyButtonPressed => 'Botón del control';
+
+  @override
+  String get historyLearn => 'Captura de señal';
+
+  @override
+  String get historySourceManual => 'Manual';
+
+  @override
+  String get historySourceSchedule => 'Programación';
+
+  @override
+  String get historySourceAutoOff => 'Apagado automático';
+
+  @override
+  String get learnTitle => 'Grabar señal';
+
+  @override
+  String get learnSubtitleAirConditioner =>
+      'Apunta el control del aire al ESP32 y pulsa el botón de encendido.';
+
+  @override
+  String get learnSubtitleButton =>
+      'Apunta el control remoto al ESP32 y pulsa el botón que quieres grabar.';
+
+  @override
+  String get learnStarting => 'Preparando el controlador…';
+
+  @override
+  String get learnListening => 'Esperando la señal';
+
+  @override
+  String learnListeningHint(int seconds) {
+    return 'Pulsa el botón en el control remoto. Quedan $seconds s.';
+  }
+
+  @override
+  String get learnCaptured => 'Señal capturada';
+
+  @override
+  String learnCapturedAirConditioner(String protocol) {
+    return 'Aire acondicionado detectado ($protocol).';
+  }
+
+  @override
+  String learnCapturedButton(String protocol) {
+    return 'Señal $protocol grabada.';
+  }
+
+  @override
+  String get learnUseSignal => 'Usar esta señal';
+
+  @override
+  String get learnCaptureAgain => 'Capturar de nuevo';
+
+  @override
+  String get learnFailedTitle => 'No se pudo grabar';
+
+  @override
+  String get learnFailed => 'El controlador no recibió ninguna señal.';
+
+  @override
+  String get learnTimeout =>
+      'No se recibió ninguna señal a tiempo. Acerca el control al ESP32 e inténtalo de nuevo.';
+
+  @override
+  String learnNotAirConditioner(String protocol) {
+    return 'La señal ($protocol) no es de un aire acondicionado compatible. Elige la marca de la lista.';
+  }
+
+  @override
+  String get learnErrorNotAirConditioner =>
+      'La señal capturada no es de un aire acondicionado compatible.';
+
+  @override
+  String get controllersSection => 'Otros controladores';
+
+  @override
+  String get controllersAddButton => 'Añadir';
+
+  @override
+  String get controllersEmpty => 'Ningún controlador';
+
+  @override
+  String get controllersEmptyMessage =>
+      'Añade aquí ESP32 extra para controlar equipos en otros puntos del espacio. El ESP32 de la cerradura está en la pantalla del espacio.';
+
+  @override
+  String get controllersLoadError => 'No se pudieron cargar los controladores';
+
+  @override
+  String get spaceDeviceOtherControllersButton => 'Otros controladores';
+
+  @override
+  String get controllersScreenTitle => 'Controladores del espacio';
+
+  @override
+  String get controllerNoKeysBadge => 'Sin claves';
+
+  @override
+  String get controllerNeverSeen => 'Nunca conectado';
+
+  @override
+  String get controllerSeenNow => 'En línea ahora';
+
+  @override
+  String controllerSeenMinutes(int count) {
+    return 'Visto hace $count min';
+  }
+
+  @override
+  String controllerSeenHours(int count) {
+    return 'Visto hace $count h';
+  }
+
+  @override
+  String controllerSeenDays(int count) {
+    return 'Visto hace $count d';
+  }
+
+  @override
+  String get controllerRotateKeysAction => 'Generar nuevas claves';
+
+  @override
+  String get controllerRotateKeysTitle => '¿Generar nuevas claves?';
+
+  @override
+  String controllerRotateKeysMessage(String name) {
+    return 'El ESP32 \"$name\" dejará de funcionar hasta que se grabe con las nuevas claves.';
+  }
+
+  @override
+  String get controllerDeleteTitle => '¿Eliminar controlador?';
+
+  @override
+  String controllerDeleteMessage(String name) {
+    return '\"$name\" se eliminará de este espacio.';
+  }
+
+  @override
+  String get controllerDeleted => 'Controlador eliminado.';
+
+  @override
+  String get controllerUpdated => 'Controlador actualizado.';
+
+  @override
+  String get controllerErrorHasEquipments =>
+      'Mueve o elimina primero los equipos de este controlador.';
+
+  @override
+  String get controllerErrorWithoutKeys =>
+      'Genera primero las claves del controlador.';
+
+  @override
+  String get controllerFormNewTitle => 'Nuevo controlador';
+
+  @override
+  String get controllerFormEditTitle => 'Editar controlador';
+
+  @override
+  String get controllerFormSubtitle =>
+      'Después de guardar, graba las claves generadas en el firmware del ESP32.';
+
+  @override
+  String get controllerFormNameLabel => 'Nombre';
+
+  @override
+  String get controllerFormNameHint => 'Ej.: ESP32 del fondo de la sala';
+
+  @override
+  String get controllerFormCreateButton => 'Crear y generar claves';
+
+  @override
   String get provisionFirmwareIdsTitle => 'Identificación en el firmware';
 
   @override
