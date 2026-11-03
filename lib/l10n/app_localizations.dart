@@ -2000,6 +2000,18 @@ abstract class AppLocalizations {
   /// **'Informe o motivo.'**
   String get formValidationReason;
 
+  /// No description provided for @provisionFirmwareIdsTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Identificação no firmware'**
+  String get provisionFirmwareIdsTitle;
+
+  /// No description provided for @provisionFirmwareIdsDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Use estes valores no lugar de <<SPACE_ID>> e <<CONTROLLER_ID>> no código do ESP32.'**
+  String get provisionFirmwareIdsDesc;
+
   /// No description provided for @orgFormTimeZoneLabel.
   ///
   /// In pt, this message translates to:

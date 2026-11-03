@@ -112,14 +112,13 @@ class SpaceRepository {
     _ensureSuccess(response.statusCode, response.data, expected: const [200]);
   }
 
-  Future<String> generateDeviceKeys(int spaceId) async {
+  Future<Map<String, dynamic>> generateDeviceKeys(int spaceId) async {
     final path = '$_spacesPath/$spaceId/generate-device-keys';
     _logRequest('POST', path);
     final response = await httpClient.post(path, body: '{}');
     _logResponse('POST', path, response);
     _ensureSuccess(response.statusCode, response.data, expected: const [200]);
-    final data = response.data as Map<String, dynamic>;
-    return data['devicePrivateKeyPem'] as String;
+    return (response.data as Map).cast<String, dynamic>();
   }
 
   Future<String> getBackendPublicKey() async {
@@ -149,10 +148,12 @@ class SpaceRepository {
         : data is Map
         ? jsonEncode(data).toLowerCase()
         : '';
-    if (raw.contains('not_organization_member')) return 'not_organization_member';
+    if (raw.contains('not_organization_member'))
+      return 'not_organization_member';
     if (raw.contains('membership_not_started')) return 'membership_not_started';
     if (raw.contains('membership_expired')) return 'membership_expired';
-    if (raw.contains('missing_active_access_grant')) return 'missing_active_access_grant';
+    if (raw.contains('missing_active_access_grant'))
+      return 'missing_active_access_grant';
     return null;
   }
 

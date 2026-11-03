@@ -6,6 +6,7 @@ import '../../modules/host/presentation/host_screen.dart';
 import '../../modules/organizations/presentation/organization_details_screen.dart';
 import '../../modules/spaces/presentation/provision_device_screen.dart';
 import '../../modules/spaces/presentation/space_details_screen.dart';
+import '../../modules/spaces/presentation/space_providers.dart';
 import '../../modules/spaces/presentation/spaces_screen.dart';
 import '../../modules/splash_screen/presentation/splash_screen.dart';
 import '../auth/auth_notifier.dart';
@@ -65,7 +66,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/spaces/:id/provision',
         builder: (context, state) {
           final id = int.tryParse(state.pathParameters['id'] ?? '');
-          return ProvisionDeviceScreen(spaceId: id ?? 0);
+          return ProvisionDeviceScreen(
+            spaceId: id ?? 0,
+            initialKeys: state.extra as DeviceProvisionResult?,
+          );
         },
       ),
     ],

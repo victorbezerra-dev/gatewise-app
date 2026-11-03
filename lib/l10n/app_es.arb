@@ -353,6 +353,8 @@
   "formValidationName": "Introduce un nombre.",
   "formValidationReason": "Introduce un motivo.",
 
+  "provisionFirmwareIdsTitle": "Identificación en el firmware",
+  "provisionFirmwareIdsDesc": "Usa estos valores en lugar de <<SPACE_ID>> y <<CONTROLLER_ID>> en el código del ESP32.",
   "orgFormTimeZoneLabel": "Zona horaria",
   "orgFormTimeZoneHint": "Se usa en los horarios de uso y programaciones de los equipos."
 }

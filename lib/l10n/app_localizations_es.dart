@@ -1058,6 +1058,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get formValidationReason => 'Introduce un motivo.';
 
   @override
+  String get provisionFirmwareIdsTitle => 'Identificación en el firmware';
+
+  @override
+  String get provisionFirmwareIdsDesc =>
+      'Usa estos valores en lugar de <<SPACE_ID>> y <<CONTROLLER_ID>> en el código del ESP32.';
+
+  @override
   String get orgFormTimeZoneLabel => 'Zona horaria';
 
   @override
