@@ -9,6 +9,7 @@ class OrganizationDto {
     isActive: json['isActive'] as bool? ?? true,
     createdAt: DateTime.tryParse(json['createdAt']?.toString() ?? ''),
     updatedAt: DateTime.tryParse(json['updatedAt']?.toString() ?? ''),
+    timeZoneId: json['timeZoneId']?.toString(),
   );
 }
 

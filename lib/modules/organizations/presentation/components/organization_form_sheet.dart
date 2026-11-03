@@ -20,6 +20,7 @@ class _OrganizationFormSheetState extends State<OrganizationFormSheet> {
   late final TextEditingController _nameController;
   late final TextEditingController _descriptionController;
   late bool _isActive;
+  late String _timeZoneId;
 
   @override
   void initState() {
@@ -30,6 +31,7 @@ class _OrganizationFormSheetState extends State<OrganizationFormSheet> {
       text: organization?.description ?? '',
     );
     _isActive = organization?.isActive ?? true;
+    _timeZoneId = organization?.timeZoneId ?? organizationTimeZones.first;
   }
 
   @override
@@ -76,6 +78,27 @@ class _OrganizationFormSheetState extends State<OrganizationFormSheet> {
               maxLines: 4,
             ),
             const SizedBox(height: 14),
+            DropdownButtonFormField<String>(
+              initialValue: _timeZoneId,
+              isExpanded: true,
+              dropdownColor: GateWiseColors.surface,
+              decoration: InputDecoration(
+                labelText: context.l.orgFormTimeZoneLabel,
+                helperText: context.l.orgFormTimeZoneHint,
+                helperMaxLines: 2,
+                prefixIcon: const Icon(Icons.public_rounded),
+              ),
+              items: [
+                for (final zone in {_timeZoneId, ...organizationTimeZones})
+                  DropdownMenuItem(
+                    value: zone,
+                    child: Text(zone.replaceAll('_', ' ')),
+                  ),
+              ],
+              onChanged: (value) =>
+                  setState(() => _timeZoneId = value ?? _timeZoneId),
+            ),
+            const SizedBox(height: 14),
             _OrganizationActiveToggle(
               value: _isActive,
               onChanged: (value) => setState(() => _isActive = value),
@@ -95,6 +118,7 @@ class _OrganizationFormSheetState extends State<OrganizationFormSheet> {
                     name: _nameController.text.trim(),
                     description: _descriptionController.text.trim(),
                     isActive: _isActive,
+                    timeZoneId: _timeZoneId,
                   ),
                 );
               },

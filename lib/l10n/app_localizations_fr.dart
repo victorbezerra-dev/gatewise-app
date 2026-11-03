@@ -1060,4 +1060,11 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get formValidationReason => 'Veuillez saisir un motif.';
+
+  @override
+  String get orgFormTimeZoneLabel => 'Fuseau horaire';
+
+  @override
+  String get orgFormTimeZoneHint =>
+      'Utilisé pour les heures d\'utilisation et les programmations des équipements.';
 }

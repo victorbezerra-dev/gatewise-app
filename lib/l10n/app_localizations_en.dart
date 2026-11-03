@@ -1045,4 +1045,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get formValidationReason => 'Please enter a reason.';
+
+  @override
+  String get orgFormTimeZoneLabel => 'Time zone';
+
+  @override
+  String get orgFormTimeZoneHint =>
+      'Used for equipment usage hours and schedules.';
 }

@@ -438,5 +438,8 @@
   "grantStatusGranted": "Autorizado",
   "grantStatusRejected": "Rejeitado",
   "formValidationName": "Informe o nome.",
-  "formValidationReason": "Informe o motivo."
+  "formValidationReason": "Informe o motivo.",
+
+  "orgFormTimeZoneLabel": "Fuso horário",
+  "orgFormTimeZoneHint": "Usado nos horários de uso e agendamentos dos equipamentos."
 }

@@ -351,5 +351,8 @@
   "grantStatusGranted": "Autorizado",
   "grantStatusRejected": "Rechazado",
   "formValidationName": "Introduce un nombre.",
-  "formValidationReason": "Introduce un motivo."
+  "formValidationReason": "Introduce un motivo.",
+
+  "orgFormTimeZoneLabel": "Zona horaria",
+  "orgFormTimeZoneHint": "Se usa en los horarios de uso y programaciones de los equipos."
 }

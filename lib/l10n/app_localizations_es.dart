@@ -1056,4 +1056,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get formValidationReason => 'Introduce un motivo.';
+
+  @override
+  String get orgFormTimeZoneLabel => 'Zona horaria';
+
+  @override
+  String get orgFormTimeZoneHint =>
+      'Se usa en los horarios de uso y programaciones de los equipos.';
 }

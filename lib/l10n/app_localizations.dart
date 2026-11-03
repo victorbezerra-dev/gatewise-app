@@ -1999,6 +1999,18 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Informe o motivo.'**
   String get formValidationReason;
+
+  /// No description provided for @orgFormTimeZoneLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fuso horário'**
+  String get orgFormTimeZoneLabel;
+
+  /// No description provided for @orgFormTimeZoneHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Usado nos horários de uso e agendamentos dos equipamentos.'**
+  String get orgFormTimeZoneHint;
 }
 
 class _AppLocalizationsDelegate

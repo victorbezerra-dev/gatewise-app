@@ -351,5 +351,8 @@
   "grantStatusGranted": "Autorisiert",
   "grantStatusRejected": "Abgelehnt",
   "formValidationName": "Bitte geben Sie einen Namen ein.",
-  "formValidationReason": "Bitte geben Sie einen Grund ein."
+  "formValidationReason": "Bitte geben Sie einen Grund ein.",
+
+  "orgFormTimeZoneLabel": "Zeitzone",
+  "orgFormTimeZoneHint": "Wird für Nutzungszeiten und Zeitpläne der Geräte verwendet."
 }

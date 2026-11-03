@@ -1050,4 +1050,11 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get formValidationReason => 'Informe o motivo.';
+
+  @override
+  String get orgFormTimeZoneLabel => 'Fuso horário';
+
+  @override
+  String get orgFormTimeZoneHint =>
+      'Usado nos horários de uso e agendamentos dos equipamentos.';
 }

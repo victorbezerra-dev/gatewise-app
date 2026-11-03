@@ -351,5 +351,8 @@
   "grantStatusGranted": "Granted",
   "grantStatusRejected": "Rejected",
   "formValidationName": "Please enter a name.",
-  "formValidationReason": "Please enter a reason."
+  "formValidationReason": "Please enter a reason.",
+
+  "orgFormTimeZoneLabel": "Time zone",
+  "orgFormTimeZoneHint": "Used for equipment usage hours and schedules."
 }

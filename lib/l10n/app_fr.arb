@@ -351,5 +351,8 @@
   "grantStatusGranted": "Autorisé",
   "grantStatusRejected": "Rejeté",
   "formValidationName": "Veuillez saisir un nom.",
-  "formValidationReason": "Veuillez saisir un motif."
+  "formValidationReason": "Veuillez saisir un motif.",
+
+  "orgFormTimeZoneLabel": "Fuseau horaire",
+  "orgFormTimeZoneHint": "Utilisé pour les heures d'utilisation et les programmations des équipements."
 }
