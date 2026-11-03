@@ -37,7 +37,9 @@ class _SpacesScreenState extends ConsumerState<SpacesScreen> {
       if (orgId != null) {
         ref.read(spaceControllerProvider.notifier).loadSpaces(orgId);
       }
-      ref.read(spaceControllerProvider.notifier).loadAllMyGrantsForCurrentUser();
+      ref
+          .read(spaceControllerProvider.notifier)
+          .loadAllMyGrantsForCurrentUser();
     });
   }
 
@@ -99,9 +101,7 @@ class _SpacesScreenState extends ConsumerState<SpacesScreen> {
                   const SizedBox(height: 22),
                   Row(
                     children: [
-                      Expanded(
-                        child: SectionTitle(context.l.spacesOrgSection),
-                      ),
+                      Expanded(child: SectionTitle(context.l.spacesOrgSection)),
                       _CountPill(count: spacesSnapshot.length),
                     ],
                   ),

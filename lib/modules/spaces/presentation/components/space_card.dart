@@ -30,10 +30,10 @@ class SpaceCard extends StatelessWidget {
     final statusColor = pending
         ? GateWiseColors.amber
         : locked
-            ? GateWiseColors.danger
-            : space.isActive
-                ? GateWiseColors.mint
-                : GateWiseColors.amber;
+        ? GateWiseColors.danger
+        : space.isActive
+        ? GateWiseColors.mint
+        : GateWiseColors.amber;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
