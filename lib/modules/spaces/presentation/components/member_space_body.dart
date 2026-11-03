@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/theme/gatewise_theme.dart';
+import '../../../../modules/equipments/presentation/components/equipments_entry_card.dart';
+import '../../../../modules/equipments/presentation/equipment_providers.dart';
 import '../../../../modules/home/presentation/rsa_signing_service_provider.dart';
 import '../../../../modules/host/presentation/dialog_notifier.dart';
 import '../../../../modules/organizations/presentation/components/status_panels.dart';
@@ -51,7 +53,10 @@ class _MemberSpaceBodyState extends ConsumerState<MemberSpaceBody> {
     return RefreshIndicator(
       color: GateWiseColors.electricBlue,
       backgroundColor: GateWiseColors.surface,
-      onRefresh: () => notifier.loadMyGrantsForCurrentUser(widget.space.id),
+      onRefresh: () {
+        ref.invalidate(spaceEquipmentsProvider(widget.space.id));
+        return notifier.loadMyGrantsForCurrentUser(widget.space.id);
+      },
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.fromLTRB(18, 8, 18, 24),
@@ -77,10 +82,20 @@ class _MemberSpaceBodyState extends ConsumerState<MemberSpaceBody> {
             final access = _resolveAccess(grants);
 
             if (access == _MemberAccess.granted) {
-              return _GrantedAccessView(
-                space: widget.space,
-                isOpening: _isOpening,
-                onOpen: () => _openDoor(context),
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _GrantedAccessView(
+                    space: widget.space,
+                    isOpening: _isOpening,
+                    onOpen: () => _openDoor(context),
+                  ),
+                  const SizedBox(height: 22),
+                  EquipmentsEntryCard(
+                    spaceId: widget.space.id,
+                    canManage: false,
+                  ),
+                ],
               );
             }
 
@@ -133,7 +148,9 @@ class _MemberSpaceBodyState extends ConsumerState<MemberSpaceBody> {
   }
 
   void _handleMembershipExpired(BuildContext context) {
-    ref.read(dialogProvider.notifier).showError(context.l.membershipExpiredMessage);
+    ref
+        .read(dialogProvider.notifier)
+        .showError(context.l.membershipExpiredMessage);
     ref.invalidate(organizationControllerProvider);
     ref.invalidate(spaceControllerProvider);
     context.go('/main');

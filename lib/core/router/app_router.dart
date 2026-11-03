@@ -2,10 +2,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../modules/authenticate/presentation/auth_screen.dart';
+import '../../modules/equipments/presentation/equipment_details_screen.dart';
+import '../../modules/equipments/presentation/space_controllers_screen.dart';
+import '../../modules/equipments/presentation/space_equipments_screen.dart';
 import '../../modules/host/presentation/host_screen.dart';
 import '../../modules/organizations/presentation/organization_details_screen.dart';
 import '../../modules/spaces/presentation/provision_device_screen.dart';
 import '../../modules/spaces/presentation/space_details_screen.dart';
+import '../../modules/spaces/presentation/space_providers.dart';
 import '../../modules/spaces/presentation/spaces_screen.dart';
 import '../../modules/splash_screen/presentation/splash_screen.dart';
 import '../auth/auth_notifier.dart';
@@ -65,7 +69,38 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/spaces/:id/provision',
         builder: (context, state) {
           final id = int.tryParse(state.pathParameters['id'] ?? '');
-          return ProvisionDeviceScreen(spaceId: id ?? 0);
+          return ProvisionDeviceScreen(
+            spaceId: id ?? 0,
+            initialKeys: state.extra as DeviceProvisionResult?,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/spaces/:id/controllers',
+        builder: (context, state) {
+          final id = int.tryParse(state.pathParameters['id'] ?? '');
+          return SpaceControllersScreen(spaceId: id ?? 0);
+        },
+      ),
+      GoRoute(
+        path: '/spaces/:id/equipments',
+        builder: (context, state) {
+          final id = int.tryParse(state.pathParameters['id'] ?? '');
+          return SpaceEquipmentsScreen(
+            spaceId: id ?? 0,
+            canManage: state.uri.queryParameters['manage'] == 'true',
+          );
+        },
+      ),
+      GoRoute(
+        path: '/spaces/:spaceId/equipments/:id',
+        builder: (context, state) {
+          final spaceId = int.tryParse(state.pathParameters['spaceId'] ?? '');
+          final id = int.tryParse(state.pathParameters['id'] ?? '');
+          return EquipmentDetailsScreen(
+            spaceId: spaceId ?? 0,
+            equipmentId: id ?? 0,
+          );
         },
       ),
     ],

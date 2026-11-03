@@ -16,6 +16,7 @@ class AccessGrant {
     this.grantedAt,
     this.revokedAt,
     this.createdAt,
+    this.canControlDevices = false,
   });
 
   final int id;
@@ -32,4 +33,5 @@ class AccessGrant {
   final DateTime? grantedAt;
   final DateTime? revokedAt;
   final DateTime? createdAt;
+  final bool canControlDevices;
 }

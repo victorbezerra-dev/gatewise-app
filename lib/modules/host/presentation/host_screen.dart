@@ -8,6 +8,7 @@ import '../../../core/l10n/l10n.dart';
 import '../../../core/theme/gatewise_theme.dart';
 import '../../access/presentation/access_log_providers.dart';
 import '../../access/presentation/access_screen.dart';
+import '../../equipments/presentation/equipment_providers.dart';
 import '../../organizations/presentation/organizations_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
 import 'dialog_notifier.dart';
@@ -71,6 +72,24 @@ class _HostScreenState extends ConsumerState<HostScreen>
             logState.selectedSpaceId == spaceId) {
           ref.read(accessLogControllerProvider.notifier).refresh();
         }
+      });
+
+      final equipmentEvents = ref.read(equipmentEventsProvider);
+      hubConnection.off('equipment_result');
+      hubConnection.on('equipment_result', (arguments) {
+        final data = arguments?.first as Map?;
+        if (data == null) return;
+        equipmentEvents.add(
+          EquipmentEvent.fromHub(EquipmentEventKind.result, data),
+        );
+      });
+      hubConnection.off('ir_learned');
+      hubConnection.on('ir_learned', (arguments) {
+        final data = arguments?.first as Map?;
+        if (data == null) return;
+        equipmentEvents.add(
+          EquipmentEvent.fromHub(EquipmentEventKind.learned, data),
+        );
       });
 
       _hubReady = true;

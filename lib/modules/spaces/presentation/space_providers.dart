@@ -67,10 +67,14 @@ class DeviceProvisionResult {
   const DeviceProvisionResult({
     required this.devicePrivateKeyPem,
     required this.backendPublicKeyPem,
+    this.controllerId,
+    this.mqttTopic,
   });
 
   final String devicePrivateKeyPem;
   final String backendPublicKeyPem;
+  final int? controllerId;
+  final String? mqttTopic;
 }
 
 class SpaceController extends StateNotifier<SpaceState> {
@@ -100,7 +104,11 @@ class SpaceController extends StateNotifier<SpaceState> {
       grants: const AsyncLoading(),
       myGrants: const AsyncLoading(),
     );
-    await Future.wait([loadSpace(id), loadGrants(id), loadMyGrantsForCurrentUser(id)]);
+    await Future.wait([
+      loadSpace(id),
+      loadGrants(id),
+      loadMyGrantsForCurrentUser(id),
+    ]);
   }
 
   Future<void> loadMyGrantsForCurrentUser(int spaceId) async {
@@ -180,7 +188,11 @@ class SpaceController extends StateNotifier<SpaceState> {
     });
   }
 
-  Future<bool> updateSpace(int organizationId, int id, SpacePayload payload) async {
+  Future<bool> updateSpace(
+    int organizationId,
+    int id,
+    SpacePayload payload,
+  ) async {
     final result = await _runAction(() async {
       await _repository.updateSpace(id, payload);
       await loadSpaceDetails(id);
@@ -221,13 +233,15 @@ class SpaceController extends StateNotifier<SpaceState> {
 
   Future<DeviceProvisionResult?> provisionDevice(int spaceId) async {
     return _runAction(() async {
-      final results = await Future.wait([
-        _repository.generateDeviceKeys(spaceId),
-        _repository.getBackendPublicKey(),
-      ]);
+      final keys = await _repository.generateDeviceKeys(spaceId);
+      final backendKey = keys['backendPublicKeyPem']?.toString();
       return DeviceProvisionResult(
-        devicePrivateKeyPem: results[0],
-        backendPublicKeyPem: results[1],
+        devicePrivateKeyPem: keys['devicePrivateKeyPem'].toString(),
+        backendPublicKeyPem: backendKey == null || backendKey.isEmpty
+            ? await _repository.getBackendPublicKey()
+            : backendKey,
+        controllerId: (keys['controllerId'] as num?)?.toInt(),
+        mqttTopic: keys['mqttTopic']?.toString(),
       );
     });
   }
@@ -244,7 +258,10 @@ class SpaceController extends StateNotifier<SpaceState> {
     final result = await _runAction(() async {
       await _repository.reviewGrant(
         grantId,
-        AccessGrantReviewPayload(status: AccessGrantReviewStatus.approved, reason: reason),
+        AccessGrantReviewPayload(
+          status: AccessGrantReviewStatus.approved,
+          reason: reason,
+        ),
       );
       await loadGrants(spaceId);
       return true;
@@ -256,7 +273,10 @@ class SpaceController extends StateNotifier<SpaceState> {
     final result = await _runAction(() async {
       await _repository.reviewGrant(
         grantId,
-        AccessGrantReviewPayload(status: AccessGrantReviewStatus.rejected, reason: reason),
+        AccessGrantReviewPayload(
+          status: AccessGrantReviewStatus.rejected,
+          reason: reason,
+        ),
       );
       await loadGrants(spaceId);
       return true;
@@ -289,7 +309,8 @@ class SpaceController extends StateNotifier<SpaceState> {
       state = state.copyWith(
         action: const AsyncData(null),
         actionErrorMessage: e.toString(),
-        membershipExpired: e is SpaceApiException && e.reasonCode == 'membership_expired',
+        membershipExpired:
+            e is SpaceApiException && e.reasonCode == 'membership_expired',
       );
       return null;
     }

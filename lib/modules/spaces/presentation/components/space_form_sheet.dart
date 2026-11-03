@@ -43,7 +43,9 @@ class _SpaceFormSheetState extends State<SpaceFormSheet> {
     final isEditing = widget.space != null;
 
     return SheetScaffold(
-      title: isEditing ? context.l.spaceFormEditTitle : context.l.spaceFormNewTitle,
+      title: isEditing
+          ? context.l.spaceFormEditTitle
+          : context.l.spaceFormNewTitle,
       subtitle: isEditing
           ? context.l.spaceFormEditSubtitle
           : context.l.spaceFormNewSubtitle,
@@ -59,8 +61,9 @@ class _SpaceFormSheetState extends State<SpaceFormSheet> {
                 hintText: context.l.spaceFormNameHint,
                 prefixIcon: const Icon(Icons.sensor_door_rounded),
               ),
-              validator: (value) =>
-                  value == null || value.trim().isEmpty ? 'Informe o nome.' : null,
+              validator: (value) => value == null || value.trim().isEmpty
+                  ? 'Informe o nome.'
+                  : null,
             ),
             const SizedBox(height: 14),
             TextFormField(
@@ -135,9 +138,7 @@ class _SpaceActiveToggle extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: statusColor.withValues(alpha: 0.12),
-                  border: Border.all(
-                    color: statusColor.withValues(alpha: 0.3),
-                  ),
+                  border: Border.all(color: statusColor.withValues(alpha: 0.3)),
                 ),
                 child: Icon(
                   value
@@ -162,7 +163,9 @@ class _SpaceActiveToggle extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      value ? context.l.spaceFormStatusActive : context.l.spaceFormStatusInactive,
+                      value
+                          ? context.l.spaceFormStatusActive
+                          : context.l.spaceFormStatusInactive,
                       style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.56),
                         fontSize: 12,

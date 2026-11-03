@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/theme/gatewise_theme.dart';
+import '../../../../modules/equipments/presentation/equipment_providers.dart';
 import '../../../../modules/organizations/presentation/components/status_panels.dart';
 import '../../domain/entities/space_entity.dart';
 import '../space_providers.dart';
@@ -116,10 +119,40 @@ class DeviceSection extends StatelessWidget {
                 icon: const Icon(Icons.ios_share_rounded, size: 17),
                 label: Text(context.l.spaceDeviceBackendKeyButton),
               ),
+              const SizedBox(height: 10),
+              _OtherControllersButton(spaceId: space.id),
             ],
           ),
         ),
       ],
+    );
+  }
+}
+
+class _OtherControllersButton extends ConsumerWidget {
+  const _OtherControllersButton({required this.spaceId});
+
+  final int spaceId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final count = ref
+        .watch(spaceControllersProvider(spaceId))
+        .valueOrNull
+        ?.where((c) => !c.hasLock)
+        .length;
+
+    return OutlinedButton.icon(
+      onPressed: () async {
+        await context.push('/spaces/$spaceId/controllers');
+        ref.invalidate(spaceControllersProvider(spaceId));
+      },
+      icon: const Icon(Icons.developer_board_rounded, size: 17),
+      label: Text(
+        count == null || count == 0
+            ? context.l.spaceDeviceOtherControllersButton
+            : '${context.l.spaceDeviceOtherControllersButton} ($count)',
+      ),
     );
   }
 }

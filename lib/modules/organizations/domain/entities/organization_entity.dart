@@ -8,6 +8,7 @@ class Organization {
     required this.isActive,
     required this.createdAt,
     required this.updatedAt,
+    this.timeZoneId,
   });
 
   final int id;
@@ -16,6 +17,9 @@ class Organization {
   final bool isActive;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+
+  /// IANA time zone used for equipment usage windows and schedules.
+  final String? timeZoneId;
 }
 
 class ManagedSpace {

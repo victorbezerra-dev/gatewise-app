@@ -37,6 +37,7 @@ class AccessGrantDto {
       grantedAt: DateTime.tryParse(json['grantedAt']?.toString() ?? ''),
       revokedAt: DateTime.tryParse(json['revokedAt']?.toString() ?? ''),
       createdAt: DateTime.tryParse(json['createdAt']?.toString() ?? ''),
+      canControlDevices: json['canControlDevices'] == true,
     );
   }
 }

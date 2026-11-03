@@ -44,10 +44,9 @@ class _RequestAccessSheetState extends State<RequestAccessSheet> {
               ),
               minLines: 3,
               maxLines: 5,
-              validator: (value) =>
-                  value == null || value.trim().isEmpty
-                      ? context.l.formValidationReason
-                      : null,
+              validator: (value) => value == null || value.trim().isEmpty
+                  ? context.l.formValidationReason
+                  : null,
             ),
             const SizedBox(height: 18),
             NeonGradientButton(

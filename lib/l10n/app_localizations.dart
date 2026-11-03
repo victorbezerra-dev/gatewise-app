@@ -1999,6 +1999,1254 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Informe o motivo.'**
   String get formValidationReason;
+
+  /// No description provided for @equipmentsSection.
+  ///
+  /// In pt, this message translates to:
+  /// **'Equipamentos'**
+  String get equipmentsSection;
+
+  /// No description provided for @equipmentsAddButton.
+  ///
+  /// In pt, this message translates to:
+  /// **'Adicionar'**
+  String get equipmentsAddButton;
+
+  /// No description provided for @equipmentsEmpty.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum equipamento'**
+  String get equipmentsEmpty;
+
+  /// No description provided for @equipmentsEmptyMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Este espaço ainda não tem equipamentos para controlar.'**
+  String get equipmentsEmptyMessage;
+
+  /// No description provided for @equipmentsEmptyManagerMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cadastre ar-condicionado, TV, projetor e outros aparelhos controlados por infravermelho.'**
+  String get equipmentsEmptyManagerMessage;
+
+  /// No description provided for @equipmentsLoadError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível carregar os equipamentos'**
+  String get equipmentsLoadError;
+
+  /// No description provided for @equipmentsCount.
+  ///
+  /// In pt, this message translates to:
+  /// **'{count, plural, =0{Nenhum equipamento} =1{1 equipamento} other{{count} equipamentos}}'**
+  String equipmentsCount(int count);
+
+  /// No description provided for @equipmentsOnCount.
+  ///
+  /// In pt, this message translates to:
+  /// **'{count, plural, =1{1 ligado} other{{count} ligados}}'**
+  String equipmentsOnCount(int count);
+
+  /// No description provided for @equipmentsEntryManagerHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Toque para cadastrar o primeiro'**
+  String get equipmentsEntryManagerHint;
+
+  /// No description provided for @equipmentFormRemoteLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Marca do controle'**
+  String get equipmentFormRemoteLabel;
+
+  /// No description provided for @equipmentFormRemoteHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Os botões do controle original da marca são criados automaticamente.'**
+  String get equipmentFormRemoteHint;
+
+  /// No description provided for @equipmentFormRemoteButtons.
+  ///
+  /// In pt, this message translates to:
+  /// **'{count} botões serão criados automaticamente'**
+  String equipmentFormRemoteButtons(int count);
+
+  /// No description provided for @equipmentFormRemoteNone.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma (gravar os botões)'**
+  String get equipmentFormRemoteNone;
+
+  /// No description provided for @equipmentFormRemoteRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escolha a marca'**
+  String get equipmentFormRemoteRequired;
+
+  /// No description provided for @remoteTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Controle remoto'**
+  String get remoteTitle;
+
+  /// No description provided for @remoteVolumeLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'VOL'**
+  String get remoteVolumeLabel;
+
+  /// No description provided for @remoteChannelLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'CANAL'**
+  String get remoteChannelLabel;
+
+  /// No description provided for @remoteNumbersToggle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Teclado numérico'**
+  String get remoteNumbersToggle;
+
+  /// No description provided for @remoteOtherButtons.
+  ///
+  /// In pt, this message translates to:
+  /// **'Outros botões'**
+  String get remoteOtherButtons;
+
+  /// No description provided for @equipmentInactiveBadge.
+  ///
+  /// In pt, this message translates to:
+  /// **'Inativo'**
+  String get equipmentInactiveBadge;
+
+  /// No description provided for @equipmentTypeAirConditioner.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ar-condicionado'**
+  String get equipmentTypeAirConditioner;
+
+  /// No description provided for @equipmentTypeTv.
+  ///
+  /// In pt, this message translates to:
+  /// **'TV'**
+  String get equipmentTypeTv;
+
+  /// No description provided for @equipmentTypeProjector.
+  ///
+  /// In pt, this message translates to:
+  /// **'Projetor'**
+  String get equipmentTypeProjector;
+
+  /// No description provided for @equipmentTypeFan.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ventilador'**
+  String get equipmentTypeFan;
+
+  /// No description provided for @equipmentTypeLight.
+  ///
+  /// In pt, this message translates to:
+  /// **'Iluminação'**
+  String get equipmentTypeLight;
+
+  /// No description provided for @equipmentTypeSound.
+  ///
+  /// In pt, this message translates to:
+  /// **'Som'**
+  String get equipmentTypeSound;
+
+  /// No description provided for @equipmentTypeScreen.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tela'**
+  String get equipmentTypeScreen;
+
+  /// No description provided for @equipmentTypeOther.
+  ///
+  /// In pt, this message translates to:
+  /// **'Outro'**
+  String get equipmentTypeOther;
+
+  /// No description provided for @equipmentDetailsTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Equipamento'**
+  String get equipmentDetailsTitle;
+
+  /// No description provided for @equipmentLoadError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível carregar o equipamento'**
+  String get equipmentLoadError;
+
+  /// No description provided for @equipmentUsageWindow.
+  ///
+  /// In pt, this message translates to:
+  /// **'Uso das {start} às {end}'**
+  String equipmentUsageWindow(String start, String end);
+
+  /// No description provided for @equipmentControllerInfo.
+  ///
+  /// In pt, this message translates to:
+  /// **'Controlador: {name}'**
+  String equipmentControllerInfo(String name);
+
+  /// No description provided for @equipmentNoControlTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Somente visualização'**
+  String get equipmentNoControlTitle;
+
+  /// No description provided for @equipmentNoControlMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Peça a um gestor do espaço para liberar o controle dos equipamentos para você.'**
+  String get equipmentNoControlMessage;
+
+  /// No description provided for @equipmentLastChange.
+  ///
+  /// In pt, this message translates to:
+  /// **'Última alteração por {name} em {date}'**
+  String equipmentLastChange(String name, String date);
+
+  /// No description provided for @equipmentCommandOk.
+  ///
+  /// In pt, this message translates to:
+  /// **'Comando confirmado pelo equipamento.'**
+  String get equipmentCommandOk;
+
+  /// No description provided for @equipmentCommandFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'O controlador não conseguiu executar o comando.'**
+  String get equipmentCommandFailed;
+
+  /// No description provided for @equipmentCommandFailedReason.
+  ///
+  /// In pt, this message translates to:
+  /// **'O controlador não conseguiu executar o comando: {reason}'**
+  String equipmentCommandFailedReason(String reason);
+
+  /// No description provided for @equipmentCommandTimeout.
+  ///
+  /// In pt, this message translates to:
+  /// **'O controlador não respondeu. Verifique se ele está ligado e conectado.'**
+  String get equipmentCommandTimeout;
+
+  /// No description provided for @equipmentUpdated.
+  ///
+  /// In pt, this message translates to:
+  /// **'Equipamento atualizado.'**
+  String get equipmentUpdated;
+
+  /// No description provided for @equipmentDeleted.
+  ///
+  /// In pt, this message translates to:
+  /// **'Equipamento removido.'**
+  String get equipmentDeleted;
+
+  /// No description provided for @equipmentDeleteTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Remover equipamento?'**
+  String get equipmentDeleteTitle;
+
+  /// No description provided for @equipmentDeleteMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'\"{name}\" será removido junto com seus botões e agendamentos.'**
+  String equipmentDeleteMessage(String name);
+
+  /// No description provided for @equipmentErrorForbidden.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você não tem permissão para controlar este equipamento.'**
+  String get equipmentErrorForbidden;
+
+  /// No description provided for @equipmentErrorNotFound.
+  ///
+  /// In pt, this message translates to:
+  /// **'Equipamento não encontrado.'**
+  String get equipmentErrorNotFound;
+
+  /// No description provided for @equipmentErrorProtocol.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escolha uma marca de ar-condicionado ou capture o controle original.'**
+  String get equipmentErrorProtocol;
+
+  /// No description provided for @equipmentFormNewTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Novo equipamento'**
+  String get equipmentFormNewTitle;
+
+  /// No description provided for @equipmentFormEditTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Editar equipamento'**
+  String get equipmentFormEditTitle;
+
+  /// No description provided for @equipmentFormSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Defina qual ESP32 controla o aparelho e quando ele pode ser usado.'**
+  String get equipmentFormSubtitle;
+
+  /// No description provided for @equipmentFormNameLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nome'**
+  String get equipmentFormNameLabel;
+
+  /// No description provided for @equipmentFormNameHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ex.: Ar da sala 12'**
+  String get equipmentFormNameHint;
+
+  /// No description provided for @equipmentFormTypeLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tipo'**
+  String get equipmentFormTypeLabel;
+
+  /// No description provided for @equipmentFormControllerLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Controlador (ESP32)'**
+  String get equipmentFormControllerLabel;
+
+  /// No description provided for @equipmentFormControllerHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'O ESP32 cujo LED infravermelho aponta para o aparelho.'**
+  String get equipmentFormControllerHint;
+
+  /// No description provided for @equipmentFormNoControllers.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cadastre um controlador neste espaço antes de adicionar equipamentos.'**
+  String get equipmentFormNoControllers;
+
+  /// No description provided for @equipmentFormControllerRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escolha o controlador.'**
+  String get equipmentFormControllerRequired;
+
+  /// No description provided for @equipmentFormProtocolTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Marca do ar-condicionado'**
+  String get equipmentFormProtocolTitle;
+
+  /// No description provided for @equipmentFormProtocolHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Capture um sinal do controle original para detectar a marca automaticamente, ou escolha na lista.'**
+  String get equipmentFormProtocolHint;
+
+  /// No description provided for @equipmentFormLearnButton.
+  ///
+  /// In pt, this message translates to:
+  /// **'Capturar do controle original'**
+  String get equipmentFormLearnButton;
+
+  /// No description provided for @equipmentFormLearned.
+  ///
+  /// In pt, this message translates to:
+  /// **'Detectado: {protocol}'**
+  String equipmentFormLearned(String protocol);
+
+  /// No description provided for @equipmentFormProtocolLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Marca / protocolo'**
+  String get equipmentFormProtocolLabel;
+
+  /// No description provided for @equipmentFormProtocolRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escolha a marca do aparelho.'**
+  String get equipmentFormProtocolRequired;
+
+  /// No description provided for @equipmentFormModelLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Modelo'**
+  String get equipmentFormModelLabel;
+
+  /// No description provided for @equipmentFormMinTemperature.
+  ///
+  /// In pt, this message translates to:
+  /// **'Temp. mínima'**
+  String get equipmentFormMinTemperature;
+
+  /// No description provided for @equipmentFormMaxTemperature.
+  ///
+  /// In pt, this message translates to:
+  /// **'Temp. máxima'**
+  String get equipmentFormMaxTemperature;
+
+  /// No description provided for @equipmentFormTemperatureInvalid.
+  ///
+  /// In pt, this message translates to:
+  /// **'Use um valor entre 10 e 35.'**
+  String get equipmentFormTemperatureInvalid;
+
+  /// No description provided for @equipmentFormUsageWindow.
+  ///
+  /// In pt, this message translates to:
+  /// **'Limitar horário de uso'**
+  String get equipmentFormUsageWindow;
+
+  /// No description provided for @equipmentFormUsageWindowHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fora desse horário, só gestores conseguem usar o aparelho.'**
+  String get equipmentFormUsageWindowHint;
+
+  /// No description provided for @equipmentFormUsageStart.
+  ///
+  /// In pt, this message translates to:
+  /// **'Início'**
+  String get equipmentFormUsageStart;
+
+  /// No description provided for @equipmentFormUsageEnd.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fim'**
+  String get equipmentFormUsageEnd;
+
+  /// No description provided for @equipmentFormAutoOff.
+  ///
+  /// In pt, this message translates to:
+  /// **'Desligar no fim do horário'**
+  String get equipmentFormAutoOff;
+
+  /// No description provided for @equipmentFormAutoOffHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Se estiver ligado, o ar é desligado automaticamente no horário final.'**
+  String get equipmentFormAutoOffHint;
+
+  /// No description provided for @equipmentFormActive.
+  ///
+  /// In pt, this message translates to:
+  /// **'Equipamento ativo'**
+  String get equipmentFormActive;
+
+  /// No description provided for @equipmentFormActiveHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Equipamentos inativos ficam ocultos para os membros.'**
+  String get equipmentFormActiveHint;
+
+  /// No description provided for @airConditionerOn.
+  ///
+  /// In pt, this message translates to:
+  /// **'LIGADO'**
+  String get airConditionerOn;
+
+  /// No description provided for @airConditionerOff.
+  ///
+  /// In pt, this message translates to:
+  /// **'Desligado'**
+  String get airConditionerOff;
+
+  /// No description provided for @airConditionerAllowedRange.
+  ///
+  /// In pt, this message translates to:
+  /// **'Temperatura permitida: {min}° a {max}°'**
+  String airConditionerAllowedRange(String min, String max);
+
+  /// No description provided for @airConditionerModeLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Modo'**
+  String get airConditionerModeLabel;
+
+  /// No description provided for @airConditionerFanLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ventilação'**
+  String get airConditionerFanLabel;
+
+  /// No description provided for @airConditionerSwingLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Direção do ar'**
+  String get airConditionerSwingLabel;
+
+  /// No description provided for @airConditionerModeAuto.
+  ///
+  /// In pt, this message translates to:
+  /// **'Auto'**
+  String get airConditionerModeAuto;
+
+  /// No description provided for @airConditionerModeCool.
+  ///
+  /// In pt, this message translates to:
+  /// **'Frio'**
+  String get airConditionerModeCool;
+
+  /// No description provided for @airConditionerModeHeat.
+  ///
+  /// In pt, this message translates to:
+  /// **'Quente'**
+  String get airConditionerModeHeat;
+
+  /// No description provided for @airConditionerModeDry.
+  ///
+  /// In pt, this message translates to:
+  /// **'Desumidificar'**
+  String get airConditionerModeDry;
+
+  /// No description provided for @airConditionerModeFan.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ventilar'**
+  String get airConditionerModeFan;
+
+  /// No description provided for @airConditionerLevelAuto.
+  ///
+  /// In pt, this message translates to:
+  /// **'Auto'**
+  String get airConditionerLevelAuto;
+
+  /// No description provided for @airConditionerLevelOff.
+  ///
+  /// In pt, this message translates to:
+  /// **'Desligado'**
+  String get airConditionerLevelOff;
+
+  /// No description provided for @airConditionerFanMin.
+  ///
+  /// In pt, this message translates to:
+  /// **'Mínima'**
+  String get airConditionerFanMin;
+
+  /// No description provided for @airConditionerFanLow.
+  ///
+  /// In pt, this message translates to:
+  /// **'Baixa'**
+  String get airConditionerFanLow;
+
+  /// No description provided for @airConditionerFanMedium.
+  ///
+  /// In pt, this message translates to:
+  /// **'Média'**
+  String get airConditionerFanMedium;
+
+  /// No description provided for @airConditionerFanHigh.
+  ///
+  /// In pt, this message translates to:
+  /// **'Alta'**
+  String get airConditionerFanHigh;
+
+  /// No description provided for @airConditionerFanMax.
+  ///
+  /// In pt, this message translates to:
+  /// **'Máxima'**
+  String get airConditionerFanMax;
+
+  /// No description provided for @airConditionerSwingLowest.
+  ///
+  /// In pt, this message translates to:
+  /// **'Mais baixo'**
+  String get airConditionerSwingLowest;
+
+  /// No description provided for @airConditionerSwingLow.
+  ///
+  /// In pt, this message translates to:
+  /// **'Baixo'**
+  String get airConditionerSwingLow;
+
+  /// No description provided for @airConditionerSwingMiddle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Meio'**
+  String get airConditionerSwingMiddle;
+
+  /// No description provided for @airConditionerSwingHigh.
+  ///
+  /// In pt, this message translates to:
+  /// **'Alto'**
+  String get airConditionerSwingHigh;
+
+  /// No description provided for @airConditionerSwingHighest.
+  ///
+  /// In pt, this message translates to:
+  /// **'Mais alto'**
+  String get airConditionerSwingHighest;
+
+  /// No description provided for @airConditionerSwingLeftMax.
+  ///
+  /// In pt, this message translates to:
+  /// **'Extrema esquerda'**
+  String get airConditionerSwingLeftMax;
+
+  /// No description provided for @airConditionerSwingLeft.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esquerda'**
+  String get airConditionerSwingLeft;
+
+  /// No description provided for @airConditionerSwingRight.
+  ///
+  /// In pt, this message translates to:
+  /// **'Direita'**
+  String get airConditionerSwingRight;
+
+  /// No description provided for @airConditionerSwingRightMax.
+  ///
+  /// In pt, this message translates to:
+  /// **'Extrema direita'**
+  String get airConditionerSwingRightMax;
+
+  /// No description provided for @airConditionerSwingWide.
+  ///
+  /// In pt, this message translates to:
+  /// **'Amplo'**
+  String get airConditionerSwingWide;
+
+  /// No description provided for @airConditionerTurbo.
+  ///
+  /// In pt, this message translates to:
+  /// **'Turbo'**
+  String get airConditionerTurbo;
+
+  /// No description provided for @airConditionerEcono.
+  ///
+  /// In pt, this message translates to:
+  /// **'Econômico'**
+  String get airConditionerEcono;
+
+  /// No description provided for @airConditionerQuiet.
+  ///
+  /// In pt, this message translates to:
+  /// **'Silencioso'**
+  String get airConditionerQuiet;
+
+  /// No description provided for @airConditionerLight.
+  ///
+  /// In pt, this message translates to:
+  /// **'Luz do painel'**
+  String get airConditionerLight;
+
+  /// No description provided for @buttonsSection.
+  ///
+  /// In pt, this message translates to:
+  /// **'Botões do controle'**
+  String get buttonsSection;
+
+  /// No description provided for @buttonsAddButton.
+  ///
+  /// In pt, this message translates to:
+  /// **'Gravar botão'**
+  String get buttonsAddButton;
+
+  /// No description provided for @buttonsEmpty.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum botão gravado'**
+  String get buttonsEmpty;
+
+  /// No description provided for @buttonsEmptyMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Grave os botões do controle remoto original para usá-los pelo app.'**
+  String get buttonsEmptyMessage;
+
+  /// No description provided for @buttonCreated.
+  ///
+  /// In pt, this message translates to:
+  /// **'Botão gravado.'**
+  String get buttonCreated;
+
+  /// No description provided for @buttonDeleteTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Remover botão?'**
+  String get buttonDeleteTitle;
+
+  /// No description provided for @buttonDeleteMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'O botão \"{name}\" será removido.'**
+  String buttonDeleteMessage(String name);
+
+  /// No description provided for @buttonFormNewTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Novo botão'**
+  String get buttonFormNewTitle;
+
+  /// No description provided for @buttonFormEditTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Editar botão'**
+  String get buttonFormEditTitle;
+
+  /// No description provided for @buttonFormSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Dê um nome e um ícone para o sinal gravado.'**
+  String get buttonFormSubtitle;
+
+  /// No description provided for @buttonFormNameLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nome do botão'**
+  String get buttonFormNameLabel;
+
+  /// No description provided for @buttonFormNameHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ex.: Liga/desliga'**
+  String get buttonFormNameHint;
+
+  /// No description provided for @buttonFormIconLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ícone'**
+  String get buttonFormIconLabel;
+
+  /// No description provided for @schedulesSection.
+  ///
+  /// In pt, this message translates to:
+  /// **'Agendamentos'**
+  String get schedulesSection;
+
+  /// No description provided for @schedulesAddButton.
+  ///
+  /// In pt, this message translates to:
+  /// **'Agendar'**
+  String get schedulesAddButton;
+
+  /// No description provided for @schedulesEmpty.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum agendamento'**
+  String get schedulesEmpty;
+
+  /// No description provided for @schedulesEmptyMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ligue ou desligue o aparelho automaticamente em dias e horários fixos.'**
+  String get schedulesEmptyMessage;
+
+  /// No description provided for @scheduleSaved.
+  ///
+  /// In pt, this message translates to:
+  /// **'Agendamento salvo.'**
+  String get scheduleSaved;
+
+  /// No description provided for @scheduleDeleteTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Remover agendamento?'**
+  String get scheduleDeleteTitle;
+
+  /// No description provided for @scheduleDeleteMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'O agendamento deixará de ser executado.'**
+  String get scheduleDeleteMessage;
+
+  /// No description provided for @scheduleInactive.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pausado'**
+  String get scheduleInactive;
+
+  /// No description provided for @scheduleEveryDay.
+  ///
+  /// In pt, this message translates to:
+  /// **'Todos os dias'**
+  String get scheduleEveryDay;
+
+  /// No description provided for @scheduleWeekdays.
+  ///
+  /// In pt, this message translates to:
+  /// **'Dias úteis'**
+  String get scheduleWeekdays;
+
+  /// No description provided for @scheduleTurnOnAt.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ligar em {degrees}°'**
+  String scheduleTurnOnAt(String degrees);
+
+  /// No description provided for @schedulePress.
+  ///
+  /// In pt, this message translates to:
+  /// **'Apertar \"{name}\"'**
+  String schedulePress(String name);
+
+  /// No description provided for @scheduleActionTurnOn.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ligar'**
+  String get scheduleActionTurnOn;
+
+  /// No description provided for @scheduleActionTurnOff.
+  ///
+  /// In pt, this message translates to:
+  /// **'Desligar'**
+  String get scheduleActionTurnOff;
+
+  /// No description provided for @scheduleActionPressButton.
+  ///
+  /// In pt, this message translates to:
+  /// **'Apertar um botão'**
+  String get scheduleActionPressButton;
+
+  /// No description provided for @scheduleFormNewTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Novo agendamento'**
+  String get scheduleFormNewTitle;
+
+  /// No description provided for @scheduleFormEditTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Editar agendamento'**
+  String get scheduleFormEditTitle;
+
+  /// No description provided for @scheduleFormSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'O horário segue o fuso da organização.'**
+  String get scheduleFormSubtitle;
+
+  /// No description provided for @scheduleFormNameLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nome (opcional)'**
+  String get scheduleFormNameLabel;
+
+  /// No description provided for @scheduleFormNameHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ex.: Desligar ao fim do expediente'**
+  String get scheduleFormNameHint;
+
+  /// No description provided for @scheduleFormTimeLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Horário'**
+  String get scheduleFormTimeLabel;
+
+  /// No description provided for @scheduleFormActionLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ação'**
+  String get scheduleFormActionLabel;
+
+  /// No description provided for @scheduleFormButtonLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Botão'**
+  String get scheduleFormButtonLabel;
+
+  /// No description provided for @scheduleFormNoButtons.
+  ///
+  /// In pt, this message translates to:
+  /// **'Grave um botão neste equipamento para poder agendá-lo.'**
+  String get scheduleFormNoButtons;
+
+  /// No description provided for @scheduleFormTemperature.
+  ///
+  /// In pt, this message translates to:
+  /// **'Temperatura: {degrees}°'**
+  String scheduleFormTemperature(String degrees);
+
+  /// No description provided for @scheduleFormActive.
+  ///
+  /// In pt, this message translates to:
+  /// **'Agendamento ativo'**
+  String get scheduleFormActive;
+
+  /// No description provided for @scheduleFormDaysRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escolha pelo menos um dia.'**
+  String get scheduleFormDaysRequired;
+
+  /// No description provided for @scheduleFormButtonRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escolha o botão.'**
+  String get scheduleFormButtonRequired;
+
+  /// No description provided for @historySection.
+  ///
+  /// In pt, this message translates to:
+  /// **'Histórico de comandos'**
+  String get historySection;
+
+  /// No description provided for @historyEmpty.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum comando enviado ainda.'**
+  String get historyEmpty;
+
+  /// No description provided for @historySeeAll.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ver todos ({count})'**
+  String historySeeAll(int count);
+
+  /// No description provided for @historyAirConditioner.
+  ///
+  /// In pt, this message translates to:
+  /// **'Comando do ar-condicionado'**
+  String get historyAirConditioner;
+
+  /// No description provided for @historyButtonPressed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Botão do controle'**
+  String get historyButtonPressed;
+
+  /// No description provided for @historyLearn.
+  ///
+  /// In pt, this message translates to:
+  /// **'Captura de sinal'**
+  String get historyLearn;
+
+  /// No description provided for @historySourceManual.
+  ///
+  /// In pt, this message translates to:
+  /// **'Manual'**
+  String get historySourceManual;
+
+  /// No description provided for @historySourceSchedule.
+  ///
+  /// In pt, this message translates to:
+  /// **'Agendamento'**
+  String get historySourceSchedule;
+
+  /// No description provided for @historySourceAutoOff.
+  ///
+  /// In pt, this message translates to:
+  /// **'Desligamento automático'**
+  String get historySourceAutoOff;
+
+  /// No description provided for @learnTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Gravar sinal'**
+  String get learnTitle;
+
+  /// No description provided for @learnSubtitleAirConditioner.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aponte o controle do ar para o ESP32 e aperte o botão de ligar.'**
+  String get learnSubtitleAirConditioner;
+
+  /// No description provided for @learnSubtitleButton.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aponte o controle remoto para o ESP32 e aperte o botão que deseja gravar.'**
+  String get learnSubtitleButton;
+
+  /// No description provided for @learnStarting.
+  ///
+  /// In pt, this message translates to:
+  /// **'Preparando o controlador…'**
+  String get learnStarting;
+
+  /// No description provided for @learnListening.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aguardando o sinal'**
+  String get learnListening;
+
+  /// No description provided for @learnListeningHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aperte o botão no controle remoto. {seconds} s restantes.'**
+  String learnListeningHint(int seconds);
+
+  /// No description provided for @learnCaptured.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sinal capturado'**
+  String get learnCaptured;
+
+  /// No description provided for @learnCapturedAirConditioner.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ar-condicionado detectado ({protocol}).'**
+  String learnCapturedAirConditioner(String protocol);
+
+  /// No description provided for @learnCapturedButton.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sinal {protocol} gravado.'**
+  String learnCapturedButton(String protocol);
+
+  /// No description provided for @learnUseSignal.
+  ///
+  /// In pt, this message translates to:
+  /// **'Usar este sinal'**
+  String get learnUseSignal;
+
+  /// No description provided for @learnCaptureAgain.
+  ///
+  /// In pt, this message translates to:
+  /// **'Capturar de novo'**
+  String get learnCaptureAgain;
+
+  /// No description provided for @learnFailedTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível gravar'**
+  String get learnFailedTitle;
+
+  /// No description provided for @learnFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'O controlador não recebeu nenhum sinal.'**
+  String get learnFailed;
+
+  /// No description provided for @learnTimeout.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum sinal recebido a tempo. Aproxime o controle do ESP32 e tente de novo.'**
+  String get learnTimeout;
+
+  /// No description provided for @learnNotAirConditioner.
+  ///
+  /// In pt, this message translates to:
+  /// **'O sinal ({protocol}) não é de um ar-condicionado suportado. Escolha a marca na lista.'**
+  String learnNotAirConditioner(String protocol);
+
+  /// No description provided for @learnErrorNotAirConditioner.
+  ///
+  /// In pt, this message translates to:
+  /// **'O sinal capturado não é de um ar-condicionado suportado.'**
+  String get learnErrorNotAirConditioner;
+
+  /// No description provided for @controllersSection.
+  ///
+  /// In pt, this message translates to:
+  /// **'Outros controladores'**
+  String get controllersSection;
+
+  /// No description provided for @controllersAddButton.
+  ///
+  /// In pt, this message translates to:
+  /// **'Adicionar'**
+  String get controllersAddButton;
+
+  /// No description provided for @controllersEmpty.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum controlador'**
+  String get controllersEmpty;
+
+  /// No description provided for @controllersEmptyMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Adicione aqui ESP32 extras para controlar equipamentos em outros pontos do espaço. O ESP32 da fechadura fica na tela do espaço.'**
+  String get controllersEmptyMessage;
+
+  /// No description provided for @controllersLoadError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível carregar os controladores'**
+  String get controllersLoadError;
+
+  /// No description provided for @spaceDeviceOtherControllersButton.
+  ///
+  /// In pt, this message translates to:
+  /// **'Outros controladores'**
+  String get spaceDeviceOtherControllersButton;
+
+  /// No description provided for @controllersScreenTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Controladores do espaço'**
+  String get controllersScreenTitle;
+
+  /// No description provided for @controllerNoKeysBadge.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sem chaves'**
+  String get controllerNoKeysBadge;
+
+  /// No description provided for @controllerNeverSeen.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nunca conectado'**
+  String get controllerNeverSeen;
+
+  /// No description provided for @controllerSeenNow.
+  ///
+  /// In pt, this message translates to:
+  /// **'Online agora'**
+  String get controllerSeenNow;
+
+  /// No description provided for @controllerSeenMinutes.
+  ///
+  /// In pt, this message translates to:
+  /// **'Visto há {count} min'**
+  String controllerSeenMinutes(int count);
+
+  /// No description provided for @controllerSeenHours.
+  ///
+  /// In pt, this message translates to:
+  /// **'Visto há {count} h'**
+  String controllerSeenHours(int count);
+
+  /// No description provided for @controllerSeenDays.
+  ///
+  /// In pt, this message translates to:
+  /// **'Visto há {count} d'**
+  String controllerSeenDays(int count);
+
+  /// No description provided for @controllerRotateKeysAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Gerar novas chaves'**
+  String get controllerRotateKeysAction;
+
+  /// No description provided for @controllerRotateKeysTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Gerar novas chaves?'**
+  String get controllerRotateKeysTitle;
+
+  /// No description provided for @controllerRotateKeysMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'O ESP32 \"{name}\" deixará de funcionar até ser gravado com as novas chaves.'**
+  String controllerRotateKeysMessage(String name);
+
+  /// No description provided for @controllerDeleteTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Remover controlador?'**
+  String get controllerDeleteTitle;
+
+  /// No description provided for @controllerDeleteMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'\"{name}\" será removido deste espaço.'**
+  String controllerDeleteMessage(String name);
+
+  /// No description provided for @controllerDeleted.
+  ///
+  /// In pt, this message translates to:
+  /// **'Controlador removido.'**
+  String get controllerDeleted;
+
+  /// No description provided for @controllerUpdated.
+  ///
+  /// In pt, this message translates to:
+  /// **'Controlador atualizado.'**
+  String get controllerUpdated;
+
+  /// No description provided for @controllerErrorHasEquipments.
+  ///
+  /// In pt, this message translates to:
+  /// **'Mova ou remova os equipamentos deste controlador antes.'**
+  String get controllerErrorHasEquipments;
+
+  /// No description provided for @controllerErrorWithoutKeys.
+  ///
+  /// In pt, this message translates to:
+  /// **'Gere as chaves do controlador antes.'**
+  String get controllerErrorWithoutKeys;
+
+  /// No description provided for @controllerFormNewTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Novo controlador'**
+  String get controllerFormNewTitle;
+
+  /// No description provided for @controllerFormEditTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Editar controlador'**
+  String get controllerFormEditTitle;
+
+  /// No description provided for @controllerFormSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Depois de salvar, grave as chaves geradas no firmware do ESP32.'**
+  String get controllerFormSubtitle;
+
+  /// No description provided for @controllerFormNameLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nome'**
+  String get controllerFormNameLabel;
+
+  /// No description provided for @controllerFormNameHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ex.: ESP32 do fundo da sala'**
+  String get controllerFormNameHint;
+
+  /// No description provided for @controllerFormCreateButton.
+  ///
+  /// In pt, this message translates to:
+  /// **'Criar e gerar chaves'**
+  String get controllerFormCreateButton;
+
+  /// No description provided for @provisionFirmwareIdsTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Identificação no firmware'**
+  String get provisionFirmwareIdsTitle;
+
+  /// No description provided for @provisionFirmwareIdsDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Use estes valores no lugar de <<SPACE_ID>> e <<CONTROLLER_ID>> no código do ESP32.'**
+  String get provisionFirmwareIdsDesc;
+
+  /// No description provided for @grantDeviceControlLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pode controlar equipamentos'**
+  String get grantDeviceControlLabel;
+
+  /// No description provided for @grantDeviceControlHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ar-condicionado, TV e outros aparelhos deste espaço.'**
+  String get grantDeviceControlHint;
+
+  /// No description provided for @grantDeviceControlEnabled.
+  ///
+  /// In pt, this message translates to:
+  /// **'{name} agora pode controlar os equipamentos.'**
+  String grantDeviceControlEnabled(String name);
+
+  /// No description provided for @grantDeviceControlDisabled.
+  ///
+  /// In pt, this message translates to:
+  /// **'{name} não pode mais controlar os equipamentos.'**
+  String grantDeviceControlDisabled(String name);
+
+  /// No description provided for @orgFormTimeZoneLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fuso horário'**
+  String get orgFormTimeZoneLabel;
+
+  /// No description provided for @orgFormTimeZoneHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Usado nos horários de uso e agendamentos dos equipamentos.'**
+  String get orgFormTimeZoneHint;
 }
 
 class _AppLocalizationsDelegate

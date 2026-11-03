@@ -46,10 +46,9 @@ Future<void> executeKeyAction({
         SnackBar(content: Text(context.l.keyExportSaved(file.path))),
       );
     } else {
-      await Share.shareXFiles(
-        [XFile(file.path, mimeType: 'application/x-pem-file')],
-        subject: filename,
-      );
+      await Share.shareXFiles([
+        XFile(file.path, mimeType: 'application/x-pem-file'),
+      ], subject: filename);
     }
   } catch (e) {
     if (context.mounted) {

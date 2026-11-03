@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/l10n/l10n.dart';
+import '../../../../modules/equipments/presentation/components/equipment_ui_helpers.dart';
+import '../../../../modules/equipments/presentation/equipment_providers.dart';
 import '../../../../modules/organizations/domain/value_objects/organization_member_role_vo.dart';
 import '../../../../modules/organizations/presentation/components/status_panels.dart';
 import '../../../../modules/organizations/presentation/organization_providers.dart';
@@ -89,6 +91,8 @@ class GrantsSection extends StatelessWidget {
                               notifier,
                             )
                           : null,
+                      onDeviceControlChanged: (value) =>
+                          _updateDeviceControl(parentContext, grant, value),
                     ),
                   )
                   .toList(),
@@ -179,6 +183,26 @@ class GrantsSection extends StatelessWidget {
       return;
     }
     showSpaceSnack(context, context.l.spaceGrantsRejectSuccess);
+  }
+
+  Future<void> _updateDeviceControl(
+    BuildContext context,
+    AccessGrant grant,
+    bool canControlDevices,
+  ) async {
+    final ok = await runEquipmentAction(
+      context,
+      () async {
+        await parentRef
+            .read(equipmentRepositoryProvider)
+            .updateDeviceControl(grant.id, canControlDevices);
+        return true;
+      },
+      successMessage: canControlDevices
+          ? context.l.grantDeviceControlEnabled(grant.authorizedUserName)
+          : context.l.grantDeviceControlDisabled(grant.authorizedUserName),
+    );
+    if (ok == true) await notifier.loadGrants(space.id);
   }
 
   Future<void> _confirmDeleteGrant(

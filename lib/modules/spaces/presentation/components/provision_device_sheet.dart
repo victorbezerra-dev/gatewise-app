@@ -93,7 +93,8 @@ class ProvisionDeviceSheet extends StatelessWidget {
             const SizedBox(height: 12),
             _PemKeyCard(
               label: 'Chave Privada do Dispositivo',
-              subtitle: 'Flashe esta chave no hardware. Não será exibida novamente.',
+              subtitle:
+                  'Flashe esta chave no hardware. Não será exibida novamente.',
               icon: Icons.lock_rounded,
               color: GateWiseColors.amber,
               pem: result.devicePrivateKeyPem,
@@ -253,8 +254,18 @@ class _CopyButtonState extends State<_CopyButton> {
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 200),
         child: _copied
-            ? Icon(Icons.check_rounded, key: const ValueKey('check'), color: GateWiseColors.mint, size: 18)
-            : Icon(Icons.copy_rounded, key: const ValueKey('copy'), color: widget.color, size: 18),
+            ? Icon(
+                Icons.check_rounded,
+                key: const ValueKey('check'),
+                color: GateWiseColors.mint,
+                size: 18,
+              )
+            : Icon(
+                Icons.copy_rounded,
+                key: const ValueKey('copy'),
+                color: widget.color,
+                size: 18,
+              ),
       ),
     );
   }

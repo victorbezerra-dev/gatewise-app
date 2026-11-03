@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/l10n.dart';
 import '../../../core/theme/gatewise_theme.dart';
+import '../../../modules/equipments/presentation/components/equipments_entry_card.dart';
+import '../../../modules/equipments/presentation/equipment_providers.dart';
 import '../../../modules/home/presentation/rsa_signing_service_provider.dart';
 import '../../../modules/host/presentation/dialog_notifier.dart';
 import '../../../modules/organizations/domain/value_objects/organization_member_role_vo.dart';
@@ -104,7 +106,11 @@ class _SpaceDetailsScreenState extends ConsumerState<SpaceDetailsScreen> {
               return RefreshIndicator(
                 color: GateWiseColors.electricBlue,
                 backgroundColor: GateWiseColors.surface,
-                onRefresh: () => notifier.loadSpaceDetails(space.id),
+                onRefresh: () {
+                  ref.invalidate(spaceControllersProvider(space.id));
+                  ref.invalidate(spaceEquipmentsProvider(space.id));
+                  return notifier.loadSpaceDetails(space.id);
+                },
                 child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
                   padding: const EdgeInsets.fromLTRB(18, 8, 18, 24),
@@ -127,6 +133,8 @@ class _SpaceDetailsScreenState extends ConsumerState<SpaceDetailsScreen> {
                         onDownloadKey: () =>
                             _downloadBackendKey(context, notifier),
                       ),
+                      const SizedBox(height: 18),
+                      EquipmentsEntryCard(spaceId: space.id, canManage: true),
                       const SizedBox(height: 18),
                       GrantsSection(
                         state: state,
@@ -184,7 +192,9 @@ class _SpaceDetailsScreenState extends ConsumerState<SpaceDetailsScreen> {
   }
 
   void _handleMembershipExpired(BuildContext context) {
-    ref.read(dialogProvider.notifier).showError(context.l.membershipExpiredMessage);
+    ref
+        .read(dialogProvider.notifier)
+        .showError(context.l.membershipExpiredMessage);
     ref.invalidate(organizationControllerProvider);
     ref.invalidate(spaceControllerProvider);
     context.go('/main');

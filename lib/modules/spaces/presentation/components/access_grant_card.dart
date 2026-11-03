@@ -13,12 +13,14 @@ class AccessGrantCard extends StatelessWidget {
     this.onApprove,
     this.onReject,
     this.onDelete,
+    this.onDeviceControlChanged,
   });
 
   final AccessGrant grant;
   final VoidCallback? onApprove;
   final VoidCallback? onReject;
   final VoidCallback? onDelete;
+  final ValueChanged<bool>? onDeviceControlChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +141,9 @@ class AccessGrantCard extends StatelessWidget {
                         style: OutlinedButton.styleFrom(
                           foregroundColor: GateWiseColors.danger,
                           side: BorderSide(
-                            color: GateWiseColors.danger.withValues(alpha: 0.42),
+                            color: GateWiseColors.danger.withValues(
+                              alpha: 0.42,
+                            ),
                           ),
                         ),
                         icon: const Icon(Icons.close_rounded, size: 16),
@@ -147,6 +151,36 @@ class AccessGrantCard extends StatelessWidget {
                       ),
                     ),
                 ],
+              ),
+            ],
+            if (onDeviceControlChanged != null &&
+                grant.status == AccessGrantStatus.granted) ...[
+              const SizedBox(height: 6),
+              SwitchListTile.adaptive(
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+                value: grant.canControlDevices,
+                activeThumbColor: GateWiseColors.mint,
+                secondary: const Icon(
+                  Icons.settings_remote_rounded,
+                  color: GateWiseColors.neonCyan,
+                  size: 20,
+                ),
+                title: Text(
+                  context.l.grantDeviceControlLabel,
+                  style: const TextStyle(
+                    color: GateWiseColors.textPrimary,
+                    fontSize: 13,
+                  ),
+                ),
+                subtitle: Text(
+                  context.l.grantDeviceControlHint,
+                  style: const TextStyle(
+                    color: GateWiseColors.textMuted,
+                    fontSize: 11,
+                  ),
+                ),
+                onChanged: onDeviceControlChanged,
               ),
             ],
             if (onDelete != null &&

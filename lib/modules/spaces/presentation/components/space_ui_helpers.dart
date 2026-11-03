@@ -29,8 +29,9 @@ Future<bool> confirmSpace(
         FilledButton(
           onPressed: () => Navigator.of(context).pop(true),
           style: FilledButton.styleFrom(
-            backgroundColor:
-                danger ? GateWiseColors.danger : GateWiseColors.electricBlue,
+            backgroundColor: danger
+                ? GateWiseColors.danger
+                : GateWiseColors.electricBlue,
           ),
           child: Text(confirmLabel),
         ),
@@ -49,8 +50,9 @@ void showSpaceSnack(
   messenger.hideCurrentSnackBar();
   messenger.showSnackBar(
     SnackBar(
-      backgroundColor:
-          isError ? GateWiseColors.danger : GateWiseColors.surfaceLight,
+      backgroundColor: isError
+          ? GateWiseColors.danger
+          : GateWiseColors.surfaceLight,
       content: Text(message),
       duration: const Duration(seconds: 3),
     ),
