@@ -555,6 +555,10 @@
   "controllerFormCreateButton": "Crear y generar claves",
   "provisionFirmwareIdsTitle": "Identificación en el firmware",
   "provisionFirmwareIdsDesc": "Usa estos valores en lugar de <<SPACE_ID>> y <<CONTROLLER_ID>> en el código del ESP32.",
+  "grantDeviceControlLabel": "Puede controlar equipos",
+  "grantDeviceControlHint": "Aire acondicionado, TV y otros aparatos de este espacio.",
+  "grantDeviceControlEnabled": "{name} ahora puede controlar los equipos.",
+  "grantDeviceControlDisabled": "{name} ya no puede controlar los equipos.",
   "orgFormTimeZoneLabel": "Zona horaria",
   "orgFormTimeZoneHint": "Se usa en los horarios de uso y programaciones de los equipos."
 }

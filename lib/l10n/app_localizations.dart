@@ -3212,6 +3212,30 @@ abstract class AppLocalizations {
   /// **'Use estes valores no lugar de <<SPACE_ID>> e <<CONTROLLER_ID>> no código do ESP32.'**
   String get provisionFirmwareIdsDesc;
 
+  /// No description provided for @grantDeviceControlLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pode controlar equipamentos'**
+  String get grantDeviceControlLabel;
+
+  /// No description provided for @grantDeviceControlHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ar-condicionado, TV e outros aparelhos deste espaço.'**
+  String get grantDeviceControlHint;
+
+  /// No description provided for @grantDeviceControlEnabled.
+  ///
+  /// In pt, this message translates to:
+  /// **'{name} agora pode controlar os equipamentos.'**
+  String grantDeviceControlEnabled(String name);
+
+  /// No description provided for @grantDeviceControlDisabled.
+  ///
+  /// In pt, this message translates to:
+  /// **'{name} não pode mais controlar os equipamentos.'**
+  String grantDeviceControlDisabled(String name);
+
   /// No description provided for @orgFormTimeZoneLabel.
   ///
   /// In pt, this message translates to:

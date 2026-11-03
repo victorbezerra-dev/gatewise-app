@@ -1754,6 +1754,23 @@ class AppLocalizationsEs extends AppLocalizations {
       'Usa estos valores en lugar de <<SPACE_ID>> y <<CONTROLLER_ID>> en el código del ESP32.';
 
   @override
+  String get grantDeviceControlLabel => 'Puede controlar equipos';
+
+  @override
+  String get grantDeviceControlHint =>
+      'Aire acondicionado, TV y otros aparatos de este espacio.';
+
+  @override
+  String grantDeviceControlEnabled(String name) {
+    return '$name ahora puede controlar los equipos.';
+  }
+
+  @override
+  String grantDeviceControlDisabled(String name) {
+    return '$name ya no puede controlar los equipos.';
+  }
+
+  @override
   String get orgFormTimeZoneLabel => 'Zona horaria';
 
   @override

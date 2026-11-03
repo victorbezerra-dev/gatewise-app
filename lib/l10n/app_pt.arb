@@ -714,6 +714,16 @@
   "controllerFormCreateButton": "Criar e gerar chaves",
   "provisionFirmwareIdsTitle": "Identificação no firmware",
   "provisionFirmwareIdsDesc": "Use estes valores no lugar de <<SPACE_ID>> e <<CONTROLLER_ID>> no código do ESP32.",
+  "grantDeviceControlLabel": "Pode controlar equipamentos",
+  "grantDeviceControlHint": "Ar-condicionado, TV e outros aparelhos deste espaço.",
+  "grantDeviceControlEnabled": "{name} agora pode controlar os equipamentos.",
+  "@grantDeviceControlEnabled": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "grantDeviceControlDisabled": "{name} não pode mais controlar os equipamentos.",
+  "@grantDeviceControlDisabled": {
+    "placeholders": { "name": { "type": "String" } }
+  },
   "orgFormTimeZoneLabel": "Fuso horário",
   "orgFormTimeZoneHint": "Usado nos horários de uso e agendamentos dos equipamentos."
 }

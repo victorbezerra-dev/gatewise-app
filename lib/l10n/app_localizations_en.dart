@@ -1743,6 +1743,23 @@ class AppLocalizationsEn extends AppLocalizations {
       'Use these values in place of <<SPACE_ID>> and <<CONTROLLER_ID>> in the ESP32 code.';
 
   @override
+  String get grantDeviceControlLabel => 'Can control equipment';
+
+  @override
+  String get grantDeviceControlHint =>
+      'Air conditioners, TVs and other devices in this space.';
+
+  @override
+  String grantDeviceControlEnabled(String name) {
+    return '$name can now control the equipment.';
+  }
+
+  @override
+  String grantDeviceControlDisabled(String name) {
+    return '$name can no longer control the equipment.';
+  }
+
+  @override
   String get orgFormTimeZoneLabel => 'Time zone';
 
   @override
